@@ -2,7 +2,7 @@
 
 <html>
   <head>
-    
+    {% include 'bootstrap.html' %}
     <title>TEG</title>
     
        <link rel="shortcut icon" href="{{ url_for('static',
@@ -12,6 +12,7 @@
       p {
         font-family: Arial;
         color: rgb(80,80,80);
+        margin-bottom: 20px;
         }
       h1{
         font-size: 40px;
@@ -123,15 +124,18 @@
   <br>
   <br>
     
-  <button  style="margin-left: 20px;
-    background-color: rgb(10,103,173,246); 
+<button style="margin-left: 20px;
+    background-color: rgb(10, 103, 173, 0.9); 
     color: white; 
     padding: 10px 30px; 
     border: none; 
     border-radius: 4px; 
     font-size: 16px; 
     font-weight: bold;"
-    type="button">
+    type="button"
+    onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
+    onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'"
+>
     Next
   </button>
     
