@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    {% include 'bootstrap.html' %}
+    <title>TEG</title>
+    
+    <style>
+      p {
+        font-family: Arial;
+        color: rgb(80,80,80);
+        margin-bottom: 20px;
+        }
+      h1{
+        font-size: 40px;
+        font-family: Arial;
+        color: rgb(80,80,80);
+      }
+      #container {
+        max-width: 70%;
+        margin: 10px auto;
+        justify-content: center;
+        align-items: center;
+        background-color: black;
+      }
+      .fixed-box-0 {
+      height: 85px; 
+      border: 1px solid #ccc; 
+      padding: 10px; 
+      position: relative;
+      margin-left:20px;
+      margin-right:20px;
+      margin-top:20px;
+      background-color: white;
+      border-radius: 10px;
+        
+    }
+      .fixed-box-1 {
+      font-family: Arial;
+      color: rgb(80,80,80);
+      height: 450px; 
+      overflow: auto; 
+      border: 1px solid black; 
+      padding: 10px; 
+      position: relative;
+      margin-left:20px;
+      margin-right:20px;
+      margin-top:20px;
+    }
+      .fixed-box-2 {
+      font-family: Arial;
+      font-size: 25px;
+      color: rgb(80,80,80);
+      height: 60px; 
+      overflow: auto; 
+      border: 1px solid red;
+      padding: 10px; 
+      border-radius: 10px;
+      margin-left:40px;
+      margin-right:0px;
+      display: flex;
+      justify-content: center;
+      
+    }
+
+    .fixed-box-2 span {
+      margin-left: 5px; 
+    }
+        
+    </style>
+  
+   
+  </head>
+  
+<body>
+  
+  <div id="container">
+
+  <div style="background-color: white; position: relative; height: 30px;"></div>
+    
+  <div class="fixed-box-0">
+    
+  <h1>
+    
+    <div class='row'>
+      
+      <div class="col-md-7" 
+        style="margin-left: 20px;">
+      Round
+      </div>
+     
+      <div class="col-md-4">
+        
+         <div class="fixed-box-2">
+      Time:<span>  </span>
+           <span id="countdown">60</span>s
+        </div class="fixed-box-2">
+      <script>
+      var timer = 60 /* 60 seconds */
+      var timerText = document.getElementById("countdown");
+        
+      var countdown = setInterval(function() {
+        if (timer == 0) {
+          clearInterval(); /* End */
+          timerText.innerHTML = "0";
+        } else {
+          timer -= 1 /* Countdown */
+          timerText.innerHTML = timer;
+          };
+        }, 1000 /* Miliseconds */);
+  
+       document.addEventListener("keydown", function(event) {
+      if (event.key === " ") {
+        var timerValue = timer; /* Get the current timer value */
+        // Perform the AJAX request to send the timer value to your endpoint
+        // Replace '/your-endpoint' with the actual endpoint URL
+        // Example using fetch API:
+        fetch('/sendData', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ timerValue: timerValue })
+            })
+              .then(response => response.json())
+              .then(data => {
+                // Handle the response from your endpoint if needed
+              })
+              .catch(error => {
+                console.error('Error:', error);
+              });
+          }
+        });
+        </script>
+           
+
+
+        
+      </div>
+      
+    </div>
+    
+  </h1>
+  </div>
+  
+  <div class="fixed-box-1">
+     <div class='row'>
+       <div class="col-md-3" 
+        style="margin-left: 20px;"> 
+            
+            <div style="height: 125px; 
+              background-color: black; 
+              border: 1px solid black; 
+              padding: 10px;">
+              
+              <p style="line-height:1;
+                margin: 0;color: white;">Crypto Price</p>
+              <p style="font-size:35px;line-height:1;
+                margin: 0;color: white;"><i>f </i>100,000</p>
+              
+          </div>
+         
+       </div>
+       
+       <div class="col-md-7" 
+        style="margin-left: 20px;"> 
+       </div>
+       
+       <div class="col-md-2" 
+        style="margin-left: 20px;"> 
+       
+       </div>
+       
+     </div class='row'>
+    
+  </div class="fixed-box-0">
+  
+  
+</body>
+  
+</html>

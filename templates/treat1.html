@@ -4,10 +4,7 @@
   <head>
     {% include 'bootstrap.html' %}
     <title>TEG</title>
-    
-       <link rel="shortcut icon" href="{{ url_for('static',
-      filename='favicon.png') }}">
-    
+  
     <style>
       p {
         font-family: Arial;
@@ -83,7 +80,8 @@
     </b>
   </h4>
 
-  <input type="checkbox" id="consentCheckbox" style="margin-left: 20px;">
+<form action="/games">
+  <input type="checkbox" required id="consentCheckbox" style="margin-left: 20px;">
   <label for="consentCheckbox" style="font-family: Arial;
     color: rgb(80,80,80);">
     I have reviewed the instructions and I am prepared to participate in the experiment
@@ -100,13 +98,16 @@
     border-radius: 4px; 
     font-size: 16px; 
     font-weight: bold;"
-    type="button"
+    type="submit"
     onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
     onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'"
 >
     Next
   </button>
-    
+
+<form action="/games">
+
+  
   </div class="fixed-box-0">
   
   </div>

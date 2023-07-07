@@ -18,8 +18,17 @@ def instruction_group():
   else:
     return render_template('error.html')
 
+@app.route("/sendData", methods=['POST'])
+def send_games_data():
+    timerValue = request.json.get('timerValue')  # Access the timerValue from the request data
+    with engine.connect() as conn:
+      conn.execute(text("INSERT INTO `teg-simulation`.`responses` (`sec`) VALUES (:sec)"), {"sec": timerValue})
+    
 
 
+@app.route("/games")
+def games_group():
+  return render_template('rounds.html')
 
 if __name__ == "__main__":
   app.run(host="0.0.0.0", debug=True)
