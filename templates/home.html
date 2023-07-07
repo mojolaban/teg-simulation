@@ -61,7 +61,6 @@
     }
      
     </style>
-    
   </head>
   
 <body>
@@ -75,7 +74,6 @@
   </p>
   
   <div class="fixed-box-1">
-    <!-- Place your long text content here -->
     <img src='https://teg-simulation.mojolaban.repl.co/static/monashuni.png'>
 
     <h2 style= "margin-bottom: 3px;
@@ -115,7 +113,8 @@
     </b>
   </h4>
 
-  <input type="checkbox" id="consentCheckbox" style="margin-left: 20px;">
+<form action="/instruction">
+  <input type="checkbox" id="consentCheckbox" required style="margin-left: 20px;">
   <label for="consentCheckbox" style="font-family: Arial;
     color: rgb(80,80,80);">
     I approve to the Consent Form
@@ -123,8 +122,10 @@
   
   <br>
   <br>
-    
-<button style="margin-left: 20px;
+      
+  <input type="hidden" name="submitValue" value="1">
+
+  <button style="margin-left: 20px;
     background-color: rgb(10, 103, 173, 0.9); 
     color: white; 
     padding: 10px 30px; 
@@ -132,12 +133,13 @@
     border-radius: 4px; 
     font-size: 16px; 
     font-weight: bold;"
-    type="button"
+    type="submit"
     onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
-    onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'"
->
+    onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'">
     Next
   </button>
+  </form>
+
     
   </div class="fixed-box-0">
   
@@ -148,3 +150,4 @@
 </body>
   
 </html>
+

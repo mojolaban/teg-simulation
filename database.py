@@ -1,6 +1,7 @@
 from sqlalchemy import create_engine, text
+import os
 
-db_connection_string = "mysql+pymysql://sq8bvsyd7fysrl9uaiao:pscale_pw_FipM9Tn6F6p5Mghz2BhDgt7dZ38JSJeXvcb6BmIZe4Q@aws.connect.psdb.cloud/teg-simulation?charset=utf8mb4"
+db_connection_string = os.environ['DB_CONNECTION_STRING']
 
 engine = create_engine(db_connection_string,
                        connect_args={
@@ -9,7 +10,10 @@ engine = create_engine(db_connection_string,
                          }
                        })
 
-with engine.connect() as conn:
-  result = conn.execute(text("select*from responses"))
-  print(result.all())
-  
+def load_group_treatment():
+  with engine.connect() as conn:
+    result = conn.execute(text("select from log"))
+    print(result.all())
+
+from datetime import datetime
+print(type(datetime.now()))
