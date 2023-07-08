@@ -197,7 +197,7 @@
               padding: 10px;
               margin-left: 0px;
               margin-top:20px;
-              margin-bottom:20px;">
+              margin-bottom:10px;">
 
               <div>
                   <div style="text-align: center;">
@@ -218,13 +218,13 @@
                           Buy Price</p>
                     </div>
                   </div>
-                  <div class="row align-items-center">
+                  <div class="row justify-content-evenly">
                     <div class="col-1">
                         <p style="font-size:11px;line-height:1;
                           margin: 0;color: rgb(80,80,80);" class="text-center">
                           <i>f</i></p>
                     </div>
-                    <div class="col-5">
+                    <div class="col-4">
                         <p style="font-size:11px;line-height:1;
                         margin: 0;color: rgb(80,80,80);" class="text-center">
                         100,000</p>
@@ -234,24 +234,24 @@
                         margin: 0;color: rgb(80,80,80);"class="text-center">
                         <i>f</i></p>
                     </div>  
-                    <div class="col-3">
+                    <div class="col-4">
                         <p style="font-size:11px;line-height:1;
                           margin: 0;color: rgb(80,80,80);"class="text-center">
                           100,000</p>
                     </div>
                   </div>
-                  <div class="row align-items-center">
-                    <div class="col-6">
+                  <div class="row justify-content-evenly">
+                    <div class="col-4">
                         <p style="font-size:11px;line-height:3;
                           margin: 0;color: rgb(130,130,130);">
                           Gain</p>
                     </div>
-                    <div class="col-3 d-flex align-items-center">
+                    <div class="col-2 d-flex align-items-center">
                         <p style="font-size:11px;line-height:2;
                           margin: 0;color: rgb(130,130,130);">
                           <i>f</i></p>
                     </div>
-                    <div class="col-3">
+                    <div class="col-3 d-flex align-items-center">
                         <p style="font-size:11px;line-height:2;
                           margin: 0;color: rgb(130,130,130);">
                           100,000</p>
@@ -261,11 +261,20 @@
             </div>
 <!-- Tax and Net Gain -->
     <!-- Tax  -->
-              <div>
+              <div style="height: 90px; width: 200px;
+              background-color: black; 
+              border: 1px solid #111111; 
+              border-radius: 10px;
+              padding: 10px;
+              margin-left: 0px;
+              margin-top:0px;
+              margin-bottom:0px;">
+                
                 <div class="row align-items-center">
                   <div class="col-6">
                      <p style="font-size:12px;line-height:3;
-                      margin: 0;color: rgb(200,50,20);">Tax (20%)</p>
+                      margin: 0;color: rgb(200,50,20);">
+                       Tax (20%)</p>
                   </div>
                   <div class="col-2 d-flex align-items-center">
                      <p style="font-size:12px;line-height:2;
@@ -282,7 +291,8 @@
                 <div class="row align-items-center">
                   <div class="col-6">
                       <p style="font-size:12px;line-height:3;
-                      margin: 0;color: rgb(40, 180, 120);">Net Gain</p>
+                      margin: 0;color: rgb(40, 180, 120);">
+                        Net Gain</p>
                   </div>
                   <div class="col-2 d-flex align-items-center">
                       <p style="font-size:12px;line-height:2;
@@ -303,7 +313,7 @@
               border-radius: 10px;
               padding: 5px;
               margin-left: 10px;
-              margin-top:30px;
+              margin-top:20px;
               text-align: right;">
                 <div class="row align-items-center">
                   <div class="col-3 d-flex justify-content-center align-items-center">
@@ -326,13 +336,12 @@
         </div> <!-- End of left pane  --> 
          
 <!-- This is the price chart area -->
-               
        <div class="col-md-6 offset-md-3" 
-        style="margin-left: 20px;">
+        style="margin-left: 0px;">
 <!-- Price chart -->
-          <div style="height: 300px; width: 200px;
+          <div style="height: 300px; width: 550px;
           background-color: black; 
-          border: 1px solid #333333; 
+          border: 1px solid #222222; 
           border-radius: 10px;
           padding: 10px;
           margin-left: 0px;
@@ -340,33 +349,36 @@
           margin-bottom:20px;">
           </div>
 <!-- Buy and Sell Button -->
-          <div class="row align-items-center">
+          <div class="row justify-content-evenly" style="margin-left: 10px;">
              <div class="col-6">
-                 <button style="margin-left: 20px;
-                  background-color: rgb(10, 103, 173, 0.9); 
-                  color: white; 
+                 <button type="button"
+                  style="margin-left: 20px;
+                  width: 230px;
                   padding: 10px 30px; 
                   border: none; 
                   border-radius: 4px; 
                   font-size: 16px; 
-                  font-weight: bold;"
-                  type="button"
-                  onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
-                  onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'">
+                  font-weight: bold;
+                  background-color: rgb(40, 180, 120);
+                  color: white;" 
+                  onmouseover="this.style.backgroundColor = 'rgb(48, 216, 144)'"
+                  onmouseout="this.style.backgroundColor = 'rgb(40, 180, 120)'">
                   Buy
                 </button>
              </div>
              <div class="col-6">
-               <button style="margin-left: 20px;
-                  background-color: rgb(10, 103, 173, 0.9); 
-                  color: white; 
+               <button type="button"
+                  style="margin-left: 20px;
+                  width: 230px; 
                   padding: 10px 30px; 
                   border: none; 
                   border-radius: 4px; 
                   font-size: 16px; 
-                  font-weight: bold;"
-                  type="button"
-                  onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
+                  font-weight: bold;
+                  background-color: rgb(10, 103, 173, 0.9); 
+                  color: white;"
+                  
+                  onmouseover="this.style.backgroundColor = 'rgb(77, 180, 255, 0.9)'"
                   onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'">
                   Sell
                 </button>
@@ -376,13 +388,28 @@
 
 
 <!-- This is the accumulative stats -->
+         <div class="col-md-1 offset-md-11"
+           style="margin-left: 15px;">
+              <div class='row'>
+                <div class="col-3" style="margin-left: 0px;"> 
+                  <div style="height: 80px; width:200px;
+                    background-color: black; 
+                    border: 1px solid gray; 
+                    padding: 10px;">
+                    <p style="line-height:1;
+                      margin: 0;color: rgb(130,130,130);text-align: center;">
+                      Transaction</p>
+                    <p style="font-size:18px;line-height:1;
+                      margin: 0;color: rgb(130,130,130);text-align: center;">
+                      1 of 5</p>
+                  </div>
+                </div>
+          </div>
+         
+         
+       </div> <!-- End of right pane   -->
        
-       <div class="col-md-2" 
-        style="margin-left: 20px;"> 
-       
-       </div>
-       
-     </div class='row'> <!-- End of right pane   --> 
+     </div class='row'>  
     
   </div class="fixed-box-0">
   
