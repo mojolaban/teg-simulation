@@ -1,0 +1,95 @@
+<script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
+<script>
+window.onload = function() {
+
+	var dataPoints = [];
+
+	var chart = new CanvasJS.Chart("chartContainer", {
+		backgroundColor: "black", // 1. Set background color to black
+		animationEnabled: true,
+		zoomEnabled: true,
+		width: 550, // 6. Set width to 550px
+		height: 300, // 6. Set height to 500px
+		title: {
+			text: null // 3. Remove title
+		},
+		axisX: {
+			minimum: 0.5, // 4. Set minimum value for x-axis
+			maximum: 60.5, // 4. Set maximum value for x-axis
+			interval: 1,
+      gridColor: "black", // 1. Set gridlines color to black
+      lineColor: "black",
+      tickColor: "black",
+		},
+    axisY: {
+			gridColor: "black", // 1. Set gridlines color to black
+      lineColor: "black",
+      tickColor: "black",
+		},
+		data: [{
+			type: "line",
+			lineColor: "rgb(90, 50, 10)", // 1. Set line color to darker orange
+			markerSize: 5,
+			markerColor: "rgb(180, 120, 70)", // 1. Set marker color to darker orange
+			markerType: "circle",
+			markerBorderColor: "rgb(180, 120, 70)", // 1. Set marker border color to darker orange
+			markerBorderThickness: 1,
+			toolTipContent: "Value: {y}",
+			dataPoints: dataPoints
+		}]
+	});
+
+	updateData();
+
+	// Initial Values
+  var xStart = 1;
+  var newDataCount = 60;
+  var updateCount = 0;
+  var updateInterval;
+
+
+  function addData(data) {
+    for (var i = 0; i < data.length; i++) {
+      var x = data[i][0] - updateCount;
+      var y = data[i][1];
+      dataPoints.push({ x: x, y: y });
+    }
+    
+    if (dataPoints.length > newDataCount) {
+      dataPoints.splice(0, dataPoints.length - newDataCount);
+    }
+
+		// Loop through dataPoints and set glowing property to false for older data points
+		for (var i = 0; i < dataPoints.length - 1; i++) {
+			dataPoints[i].markerSize = 0;
+		}
+    if (dataPoints.length > newDataCount) {
+		dataPoints.shift();
+		}
+    
+   
+		chart.render();
+
+
+
+    updateCount++;
+
+    if (updateCount === 60) {
+        clearInterval(updateInterval);
+      }
+    }
+
+    function updateData() {
+      var url = "https://raw.githubusercontent.com/mojolaban/simul-numbers/main/simul-asset-price.json";
+      $.getJSON(url, function(data) {
+        var slicedData = data.slice(xStart - 1, xStart - 1 + newDataCount);
+        addData(slicedData);
+        xStart++;
+      });
+    }
+
+    updateData();
+    updateInterval = setInterval(updateData, 1000);
+  }
+</script>
