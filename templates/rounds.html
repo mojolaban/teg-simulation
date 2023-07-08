@@ -22,6 +22,7 @@
         justify-content: center;
         align-items: center;
         background-color: black;
+        border: 1px solid white;
       }
       .fixed-box-0 {
       height: 85px; 
@@ -32,7 +33,6 @@
       margin-right:20px;
       margin-top:20px;
       background-color: white;
-      border-radius: 10px;
         
     }
       .fixed-box-1 {
@@ -76,71 +76,69 @@
   
   <div id="container">
 
-  <div style="background-color: white; position: relative; height: 30px;"></div>
-    
+<!-- Round and Timer -->
+
   <div class="fixed-box-0">
     
-  <h1>
+    
     
     <div class='row'>
-      
+
+<!-- Round -->
       <div class="col-md-7" 
-        style="margin-left: 20px;">
-      Round
+        style="margin-left: 20px;"><h1>
+      Round</h1>
       </div>
-     
+<!-- Timer -->
       <div class="col-md-4">
-        
          <div class="fixed-box-2">
-      Time:<span>  </span>
+          Time:<span>  </span>
            <span id="countdown">60</span>s
         </div class="fixed-box-2">
-      <script>
-      var timer = 60 /* 60 seconds */
-      var timerText = document.getElementById("countdown");
-        
-      var countdown = setInterval(function() {
-        if (timer == 0) {
-          clearInterval(); /* End */
-          timerText.innerHTML = "0";
-        } else {
-          timer -= 1 /* Countdown */
-          timerText.innerHTML = timer;
-          };
-        }, 1000 /* Miliseconds */);
-  
-       document.addEventListener("keydown", function(event) {
-      if (event.key === " ") {
-        var timerValue = timer; /* Get the current timer value */
-        // Perform the AJAX request to send the timer value to your endpoint
-        // Replace '/your-endpoint' with the actual endpoint URL
-        // Example using fetch API:
-        fetch('/sendData', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-              },
-              body: JSON.stringify({ timerValue: timerValue })
-            })
-              .then(response => response.json())
-              .then(data => {
-                // Handle the response from your endpoint if needed
-              })
-              .catch(error => {
-                console.error('Error:', error);
-              });
-          }
-        });
-        </script>
-           
 
-
-        
-      </div>
+        <script>
+          var timer = 60 /* 60 seconds */
+          var timerText = document.getElementById("countdown");
+            
+          var countdown = setInterval(function() {
+            if (timer == 0) {
+              clearInterval(); /* End */
+              timerText.innerHTML = "0";
+            } else {
+              timer -= 1 /* Countdown */
+              timerText.innerHTML = timer;
+              };
+            }, 1000 /* Miliseconds */);
       
+             document.addEventListener("keydown", function(event) {
+            if (event.key === " ") {
+              var timerValue = timer; /* Get the current timer value */
+              // Perform the AJAX request to send the timer value to your endpoint
+              // Replace '/your-endpoint' with the actual endpoint URL
+              // Example using fetch API:
+              fetch('/sendData', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ timerValue: timerValue })
+                  })
+                    .then(response => response.json())
+                    .then(data => {
+                      // Handle the response from your endpoint if needed
+                    })
+                    .catch(error => {
+                      console.error('Error:', error);
+                    });
+                }
+            });
+            </script>
+
+      </div>
+    
     </div>
     
-  </h1>
+    </h1>
   </div>
   
   <div class="fixed-box-1">
@@ -148,21 +146,20 @@
 
 <!-- This is the transaction stats -->
 <!-- Crypto/Stock Price -->
-       <div class="col-md-3" 
+       <div class="col-3"  
         style="margin-left: 0px;"> 
             
             <div style="height: 80px; 
               background-color: black; 
               border: 1px solid black; 
               padding: 10px;">
-              
               <p style="line-height:1;
-                margin: 0;color: white;">Crypto Price</p>
+                margin: 0;color: white;">
+                Crypto Price</p>
               <p style="font-size:35px;line-height:1;
-                margin: 0;color: white;"><i>f </i>100,000</p>
-              
-           </div>
-
+                margin: 0;color: white;">
+                <i>f </i>100,000</p>
+            </div>
 
 <!-- Your Total Asset -->
             <div style="height: 50px; width: 197px;
@@ -170,24 +167,27 @@
               border: 1px solid #222222; 
               border-radius: 10px;
               padding: 10px;
-              margin-bottom: 20px;" >
+              margin-bottom: 20px;">
 
-              <div>
-                <div style="text-align: center;">
-              <p style="line-height:1;
-                margin: 0;color: rgb(130,130,130);font-size:11px">
-                <b>Total Asset</b>
-              </p>
+                <div>
+                  <div style="text-align: center;">
+                    <p style="line-height:1;
+                      margin: 0;color: rgb(130,130,130);font-size:11px">
+                      <b>Total Asset</b>
+                    </p>
+                  </div>
+                  <div class="row align-items-center">
+                      <div class="col">
+                      <p style="font-size:11px;line-height:2;
+                        margin: 0;color: rgb(80,80,80);">Fiat 100,000</p>
+                      </div>
+                      <div class="col">
+                       <p style="font-size:11px;line-height:2;
+                        margin: 0;color: rgb(80,80,80);">Crypto 100,000</p>
+                      </div>
+                  </div>
                 </div>
-                <div class="row align-items-center">
-                  <div class="col">
-              <p style="font-size:11px;line-height:2;
-                margin: 0;color: rgb(80,80,80);">Fiat 100,000</p></div>
-                  <div class="col">
-              <p style="font-size:11px;line-height:2;
-                margin: 0;color: rgb(80,80,80);">Crypto 100,000</p></div>
-                </div>
-              </div>
+            </div>
 
 <!-- Current Crypto Transaction -->
             <div style="height: 90px; width: 200px;
@@ -196,141 +196,184 @@
               border-radius: 10px;
               padding: 10px;
               margin-left: 0px;
-              margin-top:30px;
+              margin-top:20px;
               margin-bottom:20px;">
 
               <div>
-                <div style="text-align: center;">
-              <p style="line-height:2;
-                margin: 0;color: rgb(130,130,130);font-size:11px">
-                <b>Current Crypto Transaction</b>
-              </p>
-                </div>
-                <div class="row align-items-center">
-                  <div class="col">
-              <p style="font-size:11px;line-height:1;
-                margin: 0;color: rgb(80,80,80);" class="text-center">
-                Sell Price</p>
-                  </div>
-                  <div class="col">
-              <p style="font-size:11px;line-height:1;
-                margin: 0;color: rgb(80,80,80);" class="text-center">
-                Buy Price</p>
+                  <div style="text-align: center;">
+                    <p style="line-height:2;
+                      margin: 0;color: rgb(130,130,130);font-size:11px">
+                      <b>Current Crypto Transaction</b>
+                    </p>
                   </div>
                   <div class="row align-items-center">
-                  <div class="col-1">
-              <p style="font-size:11px;line-height:1;
-                margin: 0;color: rgb(80,80,80);" class="text-center">
-                <i>f</i></p>
+                    <div class="col">
+                        <p style="font-size:11px;line-height:1;
+                        margin: 0;color: rgb(80,80,80);" class="text-center">
+                        Sell Price</p>
+                    </div>
+                    <div class="col">
+                        <p style="font-size:11px;line-height:1;
+                          margin: 0;color: rgb(80,80,80);" class="text-center">
+                          Buy Price</p>
+                    </div>
                   </div>
-                  <div class="col-5">
-              <p style="font-size:11px;line-height:1;
-                margin: 0;color: rgb(80,80,80);" class="text-center">
-                100,000</p>
+                  <div class="row align-items-center">
+                    <div class="col-1">
+                        <p style="font-size:11px;line-height:1;
+                          margin: 0;color: rgb(80,80,80);" class="text-center">
+                          <i>f</i></p>
+                    </div>
+                    <div class="col-5">
+                        <p style="font-size:11px;line-height:1;
+                        margin: 0;color: rgb(80,80,80);" class="text-center">
+                        100,000</p>
+                    </div>
+                    <div class="col-1">
+                        <p style="font-size:11px;line-height:1;
+                        margin: 0;color: rgb(80,80,80);"class="text-center">
+                        <i>f</i></p>
+                    </div>  
+                    <div class="col-3">
+                        <p style="font-size:11px;line-height:1;
+                          margin: 0;color: rgb(80,80,80);"class="text-center">
+                          100,000</p>
+                    </div>
                   </div>
-                  <div class="col-1">
-              <p style="font-size:11px;line-height:1;
-                margin: 0;color: rgb(80,80,80);"class="text-center">
-                <i>f</i></p>
+                  <div class="row align-items-center">
+                    <div class="col-6">
+                        <p style="font-size:11px;line-height:3;
+                          margin: 0;color: rgb(130,130,130);">
+                          Gain</p>
+                    </div>
+                    <div class="col-3 d-flex align-items-center">
+                        <p style="font-size:11px;line-height:2;
+                          margin: 0;color: rgb(130,130,130);">
+                          <i>f</i></p>
+                    </div>
+                    <div class="col-3">
+                        <p style="font-size:11px;line-height:2;
+                          margin: 0;color: rgb(130,130,130);">
+                          100,000</p>
+                    </div>
                   </div>
-                  <div class="col-3">
-              <p style="font-size:11px;line-height:1;
-                margin: 0;color: rgb(80,80,80);"class="text-center">
-                100,000</p>
-                  </div>
-              <div class="row align-items-center">
+              </div>
+            </div>
+<!-- Tax and Net Gain -->
+    <!-- Tax  -->
+              <div>
+                <div class="row align-items-center">
                   <div class="col-6">
-              <p style="font-size:11px;line-height:3;
-                margin: 0;color: rgb(130,130,130);">Gain</p>
+                     <p style="font-size:12px;line-height:3;
+                      margin: 0;color: rgb(200,50,20);">Tax (20%)</p>
                   </div>
-                  <div class="col-3 d-flex align-items-center">
-              <p style="font-size:11px;line-height:2;
-                margin: 0;color: rgb(130,130,130);">
-                <i>f</i>
-              </p>
+                  <div class="col-2 d-flex align-items-center">
+                     <p style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(200,50,20);">
+                      <i>f</i></p>
                   </div>
-                  <div class="col-3">
-              <p style="font-size:11px;line-height:2;
-                margin: 0;color: rgb(130,130,130);">100,000</p>
+                  <div class="col-1">
+                     <p style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(200,50,20);" class="text-center">
+                       100,000</p>
+                  </div>
+                </div>
+    <!-- Net Gain  -->
+                <div class="row align-items-center">
+                  <div class="col-6">
+                      <p style="font-size:12px;line-height:3;
+                      margin: 0;color: rgb(40, 180, 120);">Net Gain</p>
+                  </div>
+                  <div class="col-2 d-flex align-items-center">
+                      <p style="font-size:12px;line-height:2;
+                        margin: 0;color: rgb(40, 180, 120);">
+                        <i>f</i></p>
+                  </div>
+                  <div class="col-1">
+                      <p style="font-size:12px;line-height:2;
+                        margin: 0;color: rgb(40, 180, 120);"class="text-center">
+                        100,000</p>
                   </div>
                 </div>
               </div>
-<!-- Tax and Net Gain -->
-    <!-- Tax  -->
-              <div class="row align-items-center">
-                <div class="col-6">
-             <p style="font-size:12px;line-height:3;
-              margin: 0;color: rgb(200,50,20);">Tax (20%)</p>
-                </div>
-                <div class="col-2 d-flex align-items-center">
-             <p style="font-size:12px;line-height:2;
-              margin: 0;color: rgb(200,50,20);">
-              <i>f</i>
-              </p>
-                </div>
-                <div class="col-1">
-             <p style="font-size:12px;line-height:2;
-              margin: 0;color: rgb(200,50,20);" class="text-center">
-               100,000</p>
-                </div>
-    <!-- Net Gain  -->
-              <div class="row align-items-center">
-                  <div class="col-7">
-              <p style="font-size:12px;line-height:3;
-                margin: 0;color: rgb(40, 180, 120);">Net Gain</p>
-                  </div>
-                  <div class="col-2 d-flex align-items-center">
-              <p style="font-size:12px;line-height:2;
-                margin: 0;color: rgb(40, 180, 120);">
-                <i>f</i>
-              </p>
-                  </div>
-                  <div class="col-1">
-              <p style="font-size:12px;line-height:2;
-                margin: 0;color: rgb(40, 180, 120);"class="text-center">
-                100,000</p>
-                  </div>
-                
 <!-- Position  -->       
-              <div style="height: 33px; width: 240px;
+              <div style="height: 33px; width: 180px;
               background-color: black; 
               border: 1px solid #111111; 
               border-radius: 10px;
               padding: 5px;
-              margin-left: 0px;
+              margin-left: 10px;
               margin-top:30px;
               text-align: right;">
-
-                    <div class="row align-items-center">
-                    <div class="col-3 d-flex justify-content-center align-items-center">
-                     <img src="{{ url_for('static', filename='star.png') }}" alt="Small Image" style="width: 13px; height: 13px;">
-
-                     </div>    
-                    <div class="col-4">                    
+                <div class="row align-items-center">
+                  <div class="col-3 d-flex justify-content-center align-items-center">
+                     <img src="{{ url_for('static', filename='star.png') }}" alt="Small Image" 
+                       style="width: 13px; height: 13px;">
+                  </div>    
+                  <div class="col-4">                    
                      <p style="line-height:2;
                       margin: 0;color: rgb(130,130,130);font-size:11px">
-                      <b>POSITION:</b>
-                    </p>
-                        </div>
-                    <div class="col-3">                   
-                     <p style="line-height:2;
-                      margin: 0;color: rgb(130,130,130);font-size:11px">
-                      <b>SELL</b>
-                    </p>
+                      <b>POSITION:</b></p>
                   </div>
-    
+                  <div class="col-3">                   
+                     <p style="line-height:2;
+                      margin: 0;color: rgb(130,130,130);font-size:11px">
+                      <b>SELL</b></p>
+                  </div>
                 </div>
-                    
-              </div>
+              </div>  <!-- End of Position  --> 
               
-            </div>
+        </div> <!-- End of left pane  --> 
          
-       </div>
-
 <!-- This is the price chart area -->
-       <div class="col-md-7" 
-        style="margin-left: 20px;"> 
-       </div>
+               
+       <div class="col-md-6 offset-md-3" 
+        style="margin-left: 20px;">
+<!-- Price chart -->
+          <div style="height: 300px; width: 200px;
+          background-color: black; 
+          border: 1px solid #333333; 
+          border-radius: 10px;
+          padding: 10px;
+          margin-left: 0px;
+          margin-top:30px;
+          margin-bottom:20px;">
+          </div>
+<!-- Buy and Sell Button -->
+          <div class="row align-items-center">
+             <div class="col-6">
+                 <button style="margin-left: 20px;
+                  background-color: rgb(10, 103, 173, 0.9); 
+                  color: white; 
+                  padding: 10px 30px; 
+                  border: none; 
+                  border-radius: 4px; 
+                  font-size: 16px; 
+                  font-weight: bold;"
+                  type="button"
+                  onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
+                  onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'">
+                  Buy
+                </button>
+             </div>
+             <div class="col-6">
+               <button style="margin-left: 20px;
+                  background-color: rgb(10, 103, 173, 0.9); 
+                  color: white; 
+                  padding: 10px 30px; 
+                  border: none; 
+                  border-radius: 4px; 
+                  font-size: 16px; 
+                  font-weight: bold;"
+                  type="button"
+                  onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
+                  onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'">
+                  Sell
+                </button>
+             </div>
+          </div>
+       </div> <!-- End of middle pane  --> 
+
 
 <!-- This is the accumulative stats -->
        
@@ -339,7 +382,7 @@
        
        </div>
        
-     </div class='row'>
+     </div class='row'> <!-- End of right pane   --> 
     
   </div class="fixed-box-0">
   

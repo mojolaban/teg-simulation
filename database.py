@@ -16,7 +16,7 @@ def insert_group_treatment():
         # Generate a random 5-character ID
         random_id = ''.join(random.choices(string.ascii_uppercase +
                                            string.ascii_lowercase + string.digits,
-                                           k=3))
+                                           k=2))
         # Fetch the treatment value from the log table,
         #handling the case when access_num is 1
         result = conn.execute(text
