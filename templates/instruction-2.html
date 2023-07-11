@@ -4,7 +4,7 @@
   <head>
     {% include 'bootstrap.html' %}
     <title>TEG</title>
-  
+    
     <style>
       p {
         font-family: Arial;
@@ -56,13 +56,13 @@
   
   <div class="fixed-box-1">
     <ul>
-      <li>You will play a role as a crypto user. You only have two kinds of assets: fiat currency and crypto. You will have 1 unit of crypto and 0 unit of fiat currency (f) at the beginning. </li>
+      <li>You will play a role as a stock user. You only have two kinds of assets: share of stocks and crypto. You will have 1 unit of share and 0 unit of fiat currency (f) at the beginning. </li>
       <li>You will play in a 15 rounds of trading simulation. In each round, you will engage in alternating transactions of buying and selling entire amounts of assets between your two kinds of assets. </li>
       <li>There will be 5 (five) chances to commit the transactions in one round. The duration of each round is 60 seconds.</li>
       <li>To commit a transaction, you only need to press a button (enter/space).</li>
       <li>At the end of each round, there will be a tax reporting page where you have to pay 20% of your gain. </li>
       <li>An example of the tax calculation:
-      <ul><li>Let's say you purchased 1 crypto for f 10,000. Later, you sold it for f 15,000. To calculate the gain, subtract the purchase price from the selling price: f 15,000 - f 10,000 = f 5,000. With a 20% capital gains tax rate, you would owe taxes on your gain. Multiply the capital gain by the tax rate: f 5,000 x 0.20 = f 1,000. This calculation is automatic, and the figures will be displayed on your page.</li></ul>
+      <ul><li>Let's say you purchased 1 share for f 10,000. Later, you sold it for f 15,000. To calculate the gain, subtract the purchase price from the selling price: f 15,000 - f 10,000 = f 5,000. With a 20% capital gains tax rate, you would owe taxes on your gain. Multiply the capital gain by the tax rate: f 5,000 x 0.20 = f 1,000. This calculation is automatic, and the figures will be displayed on your page.</li></ul>
       </li>
       <li>You need maximise your gain in order to receive higher compensation from this study. You will receive a percentage dollar of real money from the undisclosed taxes of one random round. However, you will only receive AUD 20 if the authority caught you.</li>
       <li>The probability of the authority to attain the data and conduct an audit on you is 20%. However, because you are operating in a decentralised exchange, the percentage may be reduced to half or even lower.</li>
@@ -79,8 +79,8 @@
     <b>
     </b>
   </h4>
-
-<form action="/games">
+    
+<form action="/start">
   <input type="checkbox" required id="consentCheckbox" style="margin-left: 20px;">
   <label for="consentCheckbox" style="font-family: Arial;
     color: rgb(80,80,80);">
@@ -105,10 +105,9 @@
     Next
   </button>
 
-<form action="/games">
-
+  </form>
   
-  </div class="fixed-box-0">
+  </div>
   
   </div>
 

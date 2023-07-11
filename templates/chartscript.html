@@ -1,95 +1,182 @@
 <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
 <script src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
 <script>
-window.onload = function() {
 
-	var dataPoints = [];
+    window.onload = function() {
+        initializeChart();
+        setupEventListeners();
+        calculateResult();
+      
+    };
 
-	var chart = new CanvasJS.Chart("chartContainer", {
-		backgroundColor: "black", // 1. Set background color to black
-		animationEnabled: true,
-		zoomEnabled: true,
-		width: 550, // 6. Set width to 550px
-		height: 300, // 6. Set height to 500px
-		title: {
-			text: null // 3. Remove title
-		},
-		axisX: {
-			minimum: 0.5, // 4. Set minimum value for x-axis
-			maximum: 60.5, // 4. Set maximum value for x-axis
-			interval: 1,
-      gridColor: "black", // 1. Set gridlines color to black
-      lineColor: "black",
-      tickColor: "black",
-		},
-    axisY: {
-			gridColor: "black", // 1. Set gridlines color to black
-      lineColor: "black",
-      tickColor: "black",
-		},
-		data: [{
-			type: "line",
-			lineColor: "rgb(90, 50, 10)", // 1. Set line color to darker orange
-			markerSize: 5,
-			markerColor: "rgb(180, 120, 70)", // 1. Set marker color to darker orange
-			markerType: "circle",
-			markerBorderColor: "rgb(180, 120, 70)", // 1. Set marker border color to darker orange
-			markerBorderThickness: 1,
-			toolTipContent: "Value: {y}",
-			dataPoints: dataPoints
-		}]
-	});
+    function initializeChart() {
+        var dataPoints = [];
 
-	updateData();
+        var chart = new CanvasJS.Chart("chartContainer", {
+            backgroundColor: "black",
+            animationEnabled: true,
+            zoomEnabled: true,
+            width: 550,
+            height: 310,
+            title: {
+                text: null
+            },
+            axisX: {
+                minimum: 0.1,
+                maximum: 60.9,
+                interval: 1,
+                gridColor: "black",
+                lineColor: "black",
+                tickColor: "black",
+            },
+            axisY: {
+                gridColor: "black",
+                lineColor: "black",
+                tickColor: "black",
+                lineThickness: 0,
+                tickLength: 0,
+                labelFormatter: function() {
+                    return "";
+                }
+            },
+            data: [{
+                type: "line",
+                lineThickness: 1.5,
+                lineColor: "rgb(230, 120, 40)",
+                markerSize: 6,
+                markerColor: "rgb(180, 120, 70)",
+                markerType: "circle",
+                markerBorderColor: "rgb(180, 120, 70)",
+                markerBorderThickness: 1,
+                toolTipContent: "Value: {y}",
+                dataPoints: dataPoints
+            }]
+        });
 
-	// Initial Values
-  var xStart = 1;
-  var newDataCount = 60;
-  var updateCount = 0;
-  var updateInterval;
+        var xStart = 1;
+        var newDataCount = 60;
+        var updateCount = 0;
+        var updateInterval;
+
+        function addData(data) {
+            for (var i = 0; i < data.length; i++) {
+                var x = data[i][0] - updateCount;
+                var y = data[i][1];
+                dataPoints.push({ x: x, y: y });
+            }
+
+            if (dataPoints.length > newDataCount) {
+                dataPoints.splice(0, dataPoints.length - newDataCount);
+            }
+
+            for (var i = 0; i < dataPoints.length - 1; i++) {
+                dataPoints[i].markerSize = 0;
+            }
+
+            if (dataPoints.length > newDataCount) {
+                dataPoints.shift();
+            }
+
+            chart.render();
+
+            updateCount++;
+
+            if (updateCount === 60) {
+                clearInterval(updateInterval);
+            }
+        }
+
+        function updateData() {
+            var url = "https://raw.githubusercontent.com/mojolaban/simul-numbers/main/simul-asset-price.json";
+            $.getJSON(url, function(data) {
+                var slicedData = data.slice(xStart - 1, xStart - 1 + newDataCount);
+                addData(slicedData);
+                xStart++;
+                      
+              updatePricePoint(chart); // Call the updatePricePoint function after updating the data points
+
+            });
+        }
 
 
-  function addData(data) {
-    for (var i = 0; i < data.length; i++) {
-      var x = data[i][0] - updateCount;
-      var y = data[i][1];
-      dataPoints.push({ x: x, y: y });
-    }
-    
-    if (dataPoints.length > newDataCount) {
-      dataPoints.splice(0, dataPoints.length - newDataCount);
-    }
+        function updatePricePoint(chart) {
+            var dataPoints = chart.options.data[0].dataPoints;
+            var latestDataPoint = dataPoints[dataPoints.length - 1].y;
+            var previousDataPoint = dataPoints[dataPoints.length - 2].y;
+        
+            var pricePoint = document.getElementById("pricePoint");
+            pricePoint.textContent = formatNumber(latestDataPoint);
 
-		// Loop through dataPoints and set glowing property to false for older data points
-		for (var i = 0; i < dataPoints.length - 1; i++) {
-			dataPoints[i].markerSize = 0;
-		}
-    if (dataPoints.length > newDataCount) {
-		dataPoints.shift();
-		}
-    
+            var percentage = ((latestDataPoint - previousDataPoint) / previousDataPoint) * 100;
+            var percPoint = document.getElementById("percPoint");
+//            percPoint.textContent = formatNumber(percentage.toFixed(2)) + "%";
+            if (percentage < 0) {
+                  percPoint.textContent = "▼ " + formatNumber(percentage.toFixed(2)) + "%";
+                  percPoint.style.color = "rgb(200, 50, 20)";
+              } else if (percentage > 0) {
+                  percPoint.textContent = "▲ " + formatNumber(percentage.toFixed(2)) + "%";
+                  percPoint.style.color = "rgb(40, 180, 120)";
+              } else {
+                  percPoint.textContent = formatNumber(percentage.toFixed(2)) + "%";
+                  percPoint.style.color = "rgb(40, 180, 120)";
+              }
+          
+        
+            setTimeout(function() {
+                updatePricePoint(chart); // Schedule the next update after 1 second
+            }, 1000);
+        }
+
    
-		chart.render();
+        updateData();
+        updateInterval = setInterval(updateData, 1000);
+    }
 
+    function setupEventListeners() {
+        var buyPriceInput = document.getElementById("buy");
+        var sellPriceInput = document.getElementById("sell");
 
+        buyPriceInput.addEventListener("input", calculateResult);
+        sellPriceInput.addEventListener("input", calculateResult);
+    }
 
-    updateCount++;
+      function calculateResult() {
+          var buyPrice = parseInt(document.getElementById("buy").textContent);
+          var sellPrice = parseInt(document.getElementById("sell").textContent);
+      
+          var gainValue = sellPrice - buyPrice;
+      
+          var tax = gainValue > 0 ? 0.2 * gainValue : 0;
+          var netGain = gainValue - tax;
+      
+          var formattedGainValue = formatNumber(gainValue);
+          var formattedTax = formatNumber(tax);
+          var formattedNetGain = formatNumber(netGain);
+      
+          document.getElementById("t_gain").textContent = formattedGainValue;
+          document.getElementById("t_tax").textContent = formattedTax;
+          document.getElementById("t_gain_net").textContent = formattedNetGain;
 
-    if (updateCount === 60) {
-        clearInterval(updateInterval);
+             
+          // Calculate percentage increase or decrease
+          var chart = window.chart; // Retrieve the chart instance
+          var dataPoints = chart.options.data[0].dataPoints;
+          var latestDataPoint = dataPoints[dataPoints.length - 1].y;
+          var oneDataPointBefore = dataPoints[dataPoints.length - 2].y;
+          var percentage = ((latestDataPoint - oneDataPointBefore) / oneDataPointBefore) * 100;
+      
+          // Set the percentage value
+          var percPoint = document.getElementById("percPoint");
+          percPoint.textContent = formatNumber(percentage.toFixed(2)) + "%";
       }
-    }
-
-    function updateData() {
-      var url = "https://raw.githubusercontent.com/mojolaban/simul-numbers/main/simul-asset-price.json";
-      $.getJSON(url, function(data) {
-        var slicedData = data.slice(xStart - 1, xStart - 1 + newDataCount);
-        addData(slicedData);
-        xStart++;
-      });
-    }
-
-    updateData();
-    updateInterval = setInterval(updateData, 1000);
-  }
+  
+  
+      function formatNumber(value) {
+          if (value < 0) {
+              return "(" + Math.abs(value).toLocaleString() + ")";
+          } else {
+              return value.toLocaleString();
+          }
+      }
+      
 </script>

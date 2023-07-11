@@ -1,0 +1,55 @@
+<script>
+  var timer = 60 /* 60 seconds */
+  var timerText = document.getElementById("countdown");
+    
+  var countdown = setInterval(function() {
+    if (timer == 0) {
+      clearInterval(); /* End */
+      timerText.innerHTML = "0";
+    } else {
+      timer -= 1 /* Countdown */
+      timerText.innerHTML = timer;
+      };
+    }, 1000 /* Miliseconds */);
+
+     document.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+      var timerValue = timer; /* Get the current timer value */
+      var priceValue = document.getElementById("pricePoint").textContent; /* Get the current price value */
+      var userid = document.getElementById("id").textContent; /* Get the user id    */
+      var groupid = document.getElementById("gr").textContent; /* Get the group    */
+      var posValue = document.getElementById("pos").innerText; /* Get the pos value */
+      var trxValue = document.getElementById("trx").textContent; /* Get the trx value */
+
+      // Increment trxValue and reset to 0 if it reaches 15
+      trxValue = (trxValue + 1) % 6;
+
+      // Convert posValue to the desired values
+      if (posValue === "SELL") {
+        posValue = "b";
+      } else if (posValue === "BUY") {
+        posValue = "s";
+      }
+      
+
+      // Perform the AJAX request to send the timer value to your endpoint
+      // Replace '/your-endpoint' with the actual endpoint URL
+      // Example using fetch API:
+      fetch('/sendData', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ timerValue: timerValue , priceValue: priceValue , userid: userid, groupid: groupid, posValue: posValue , trxValue: trxValue
+                                 })
+          })
+            .then(response => response.json())
+            .then(data => {
+              // Handle the response from your endpoint if needed
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }
+    });
+</script>
