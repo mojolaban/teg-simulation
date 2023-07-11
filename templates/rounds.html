@@ -473,8 +473,11 @@
            {{ data.gr }}
          </span>
           <span id="id" style="color:rgb(10,10,10);size=1px;"> 
-           {{ data.id }}
-         </span>
+           {{ data.id }}</span>
+          <span id="crypto_prev" style="color:rgb(0,0,0);
+            size=1px;">{{ data.crypto_prev }}</span>
+          <span id="fiat_prev"  style="color:rgb(0,0,0);
+            size=1px;">{{ data.fiat_prev }}</span>
         </div>  
        
       {% include 'chartscript.html' %}      

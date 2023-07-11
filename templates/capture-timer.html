@@ -20,16 +20,41 @@
       var groupid = document.getElementById("gr").textContent; /* Get the group    */
       var posValue = document.getElementById("pos").innerText; /* Get the pos value */
       var trxValue = document.getElementById("trx").textContent; /* Get the trx value */
+      var roundValue = document.getElementById("round").textContent; /* Get the round value */
+      var cryptoPrevValue = document.getElementById("crypto_prev").textContent; /* Get the cryptoPrev value */
+      var fiatPrevValue = document.getElementById("fiat_prev").textContent; /* Get the fiatPrev value */
+
 
       // Increment trxValue and reset to 0 if it reaches 15
-      trxValue = (trxValue + 1) % 6;
-
-      // Convert posValue to the desired values
-      if (posValue === "SELL") {
-        posValue = "b";
-      } else if (posValue === "BUY") {
-        posValue = "s";
+      trxValue = (parseInt(trxValue) + 1) % 6;
+      
+      // Increment roundValue based if trxValue reaches 0
+      if (trxValue === "0") {
+        roundValue = parseInt(roundValue) + 1;
+      } else {
+        roundValue = roundValue;
       }
+
+    // Convert posValue to the desired values
+    var cryptoValue = 0.00;
+    var fiatValue = 0;
+    if (posValue === "SELL") {
+      posValue = "b";
+      cryptoValue = 0.00;
+      fiatValue = parseInt(cryptoPrevValue) * parseInt(priceValue); // Assuming crypto_prev is defined
+    } else if (posValue === "BUY") {
+      posValue = "s";
+      fiatValue = 0;
+      cryptoValue = fiatPrevValue / priceValue; // Assuming fiat_prev is defined
+    }
+
+      
+      // Convert posValue to the desired values
+//      if (posValue === "SELL") {
+//        posValue = "b";
+//      } else if (posValue === "BUY") {
+//        posValue = "s";
+ //     }
       
 
       // Perform the AJAX request to send the timer value to your endpoint
@@ -40,7 +65,7 @@
       headers: {
         'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ timerValue: timerValue , priceValue: priceValue , userid: userid, groupid: groupid, posValue: posValue , trxValue: trxValue
+            body: JSON.stringify({ timerValue: timerValue , priceValue: priceValue , userid: userid, groupid: groupid, posValue: posValue , trxValue: trxValue, roundValue: roundValue, cryptoPrevValue: cryptoPrevValue, fiatPrevValue: fiatPrevValue , cryptoValue: cryptoValue, fiatValue: fiatValue
                                  })
           })
             .then(response => response.json())

@@ -31,14 +31,14 @@ def insert_group_treatment():
         current_time = datetime.now()
             # Get the current timestamp
         conn.execute(
-            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`,`r_gain`,`t_tax`,`tax_disclos`,`tax_discre`,`audit`,`penalty`,`t_gain_net`,`r_gain_net`,`r_gain_final`,`r_tax`,`sec`,`price`)VALUES ('1', :treatment, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0')"), {"treatment": treatment, "id": random_id})
-        return str(treatment)   
+            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`,`r_gain`,`t_tax`,`tax_disclos`,`tax_discre`,`audit`,`penalty`,`t_gain_net`,`r_gain_net`,`r_gain_final`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`)VALUES ('1', :treatment, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','1','0')"), {"treatment": treatment, "id": random_id})
+        return str(treatment)
 
 
 #----Fecth initial game data from db 
 def fetch_init_data():
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax FROM responses ORDER BY ts DESC LIMIT 1;"))
+        result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev FROM responses ORDER BY ts DESC LIMIT 1;"))
         row = result.fetchone()
         if row:
             round_value = row[0]
@@ -53,6 +53,8 @@ def fetch_init_data():
             t_gain_value = row[9]
             r_gain_value = row[10]
             t_tax_value = row[11]
+            crypto_prev = row[12]
+            fiat_prev = row[13]
 
             if gr_value == '2':
                 asset_type = "Stock"
@@ -77,7 +79,9 @@ def fetch_init_data():
                 "t_gain": t_gain_value,
                 "r_gain": r_gain_value,
                 "t_tax": t_tax_value,
-                "asset_type": asset_type
+                "asset_type": asset_type,
+                "fiat_prev" : fiat_prev,
+                "crypto_prev": crypto_prev
             }
             return init_data
         return None
