@@ -39,6 +39,11 @@
       var rTaxValue = document.getElementById("r_tax").textContent; /* Get the tgain value */
       var rTaxPrevValue = document.getElementById("r_tax_prev").textContent; /* Get the tgain value */
       var rGainNetValue = document.getElementById("r_gain_net").textContent; /* Get the tgain value */
+      var taxDisclosValue = document.getElementById("tax_disclos").textContent; /* Get the tgain value */
+      var taxDiscreValue = document.getElementById("tax_discre").textContent; /* Get the tgain value */
+      var auditValue = document.getElementById("audit").textContent; /* Get the tgain value */
+      var penaltyValue = document.getElementById("penalty").textContent; /* Get the tgain value */
+      var rGainFinalValue = document.getElementById("r_gain_final").textContent; /* Get the tgain value */
 
 
       // Increment trxValue and reset to 0 if it reaches 15
@@ -94,7 +99,7 @@
       headers: {
         'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ timerValue: timerValue , priceValue: priceValue , userid: userid, groupid: groupid, posValue: posValue , trxValue: trxValue, roundValue: roundValue, cryptoPrevValue: cryptoPrevValue, fiatPrevValue: fiatPrevValue, cryptoValue: cryptoValue, fiatValue: fiatValue, buyPrevValue: buyPrevValue, sellValue: sellValue, buyValue: buyPrevValue, tGainValue: tGainValue, tTaxValue: tTaxValue, tGainNetValue: tGainNetValue, rGainValue: rGainValue, rGainPrevValue: rGainPrevValue, rTaxValue: rTaxValue, rTaxPrevValue: rTaxPrevValue, rGainNetValue: rGainNetValue
+            body: JSON.stringify({ timerValue: timerValue , priceValue: priceValue , userid: userid, groupid: groupid, posValue: posValue , trxValue: trxValue, roundValue: roundValue, cryptoPrevValue: cryptoPrevValue, fiatPrevValue: fiatPrevValue, cryptoValue: cryptoValue, fiatValue: fiatValue, buyPrevValue: buyPrevValue, sellValue: sellValue, buyValue: buyPrevValue, tGainValue: tGainValue, tTaxValue: tTaxValue, tGainNetValue: tGainNetValue, rGainValue: rGainValue, rGainPrevValue: rGainPrevValue, rTaxValue: rTaxValue, rTaxPrevValue: rTaxPrevValue, rGainNetValue: rGainNetValue, taxDisclosValue:taxDisclosValue, taxDiscreValue:taxDiscreValue,auditValue:auditValue, penaltyValue:penaltyValue, rGainFinalValue:rGainFinalValue
                                  })
           })
             .then(response => response.json())
@@ -108,6 +113,7 @@
     });
 
   
-// Getting the data from database and update it to the page
+// Getting the data from database and update it to the current page
+  //Perform the AJAX request retrieve the data to the page
 
 </script>

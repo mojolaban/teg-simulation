@@ -61,9 +61,15 @@ def send_games_data():
   r_tax_value = data.get('rTaxValue')
   r_tax_prev_value = data.get('rTaxPrevValue')
   r_gain_net_value = data.get('rGainNetValue')
+  tax_discre_value = data.get('taxDiscreValue')
+  tax_disclos_value =data.get('taxDisclosValue')
+  audit_value =data.get('auditValue')
+  penalty_value =data.get('penaltyValue')
+  r_gain_final_value =data.get('rGainFinalValue')
+  
 
   with engine.connect() as conn:
-    conn.execute(text("INSERT INTO `teg-simulation`.`responses` (`sec`,`price`,`id`, `gr`, `pos`, `trx`, `round`, `crypto_prev`, `fiat_prev`,`crypto`, `fiat`, `buy_prev`, `buy`, `sell`, `t_gain`,`t_tax`, `t_gain_net`, `r_gain`, `r_gain_prev`,`r_tax`,`r_tax_prev`,`r_gain_net`) VALUES (:sec, :price, :id, :gr, :pos, :trx, :round, :crypto_prev, :fiat_prev, :crypto, :fiat, :buy_prev,:buy, :sell, :t_gain, :t_tax, :t_gain_net, :r_gain, :r_gain_prev, :r_tax, :r_tax_prev,:r_gain_net)"), {"sec": timer_value, "price": price_value, "id": user_id, "gr" : group_id, "pos" : pos_value, "trx" : trx_value, "round" : round_value, "crypto_prev" :crypto_prev_value,  "fiat_prev" :fiat_prev_value, "crypto" :crypto_value,  "fiat" :fiat_value, "buy_prev":buy_prev_value,"buy":buy_value, "sell":sell_value, "t_gain":t_gain_value, "t_tax":t_tax_value, "t_gain_net": t_gain_net_value, "r_gain": r_gain_value, "r_gain_prev": r_gain_prev_value, "r_tax": r_tax_value, "r_tax_prev": r_tax_prev_value,"r_gain_net": r_gain_net_value})
+    conn.execute(text("INSERT INTO `teg-simulation`.`responses` (`sec`,`price`,`id`, `gr`, `pos`, `trx`, `round`, `crypto_prev`, `fiat_prev`,`crypto`, `fiat`, `buy_prev`, `buy`, `sell`, `t_gain`,`t_tax`, `t_gain_net`, `r_gain`, `r_gain_prev`,`r_tax`,`r_tax_prev`,`r_gain_net`,`tax_discre`,`tax_disclos`,`audit`,`penalty`,`r_gain_final`) VALUES (:sec, :price, :id, :gr, :pos, :trx, :round, :crypto_prev, :fiat_prev, :crypto, :fiat, :buy_prev,:buy, :sell, :t_gain, :t_tax, :t_gain_net, :r_gain, :r_gain_prev, :r_tax, :r_tax_prev,:r_gain_net,:tax_discre,:tax_disclos,:audit,:penalty,:r_gain_final)"), {"sec": timer_value, "price": price_value, "id": user_id, "gr" : group_id, "pos" : pos_value, "trx" : trx_value, "round" : round_value, "crypto_prev" :crypto_prev_value,  "fiat_prev" :fiat_prev_value, "crypto" :crypto_value,  "fiat" :fiat_value, "buy_prev":buy_prev_value,"buy":buy_value, "sell":sell_value, "t_gain":t_gain_value, "t_tax":t_tax_value, "t_gain_net": t_gain_net_value, "r_gain": r_gain_value, "r_gain_prev": r_gain_prev_value, "r_tax": r_tax_value, "r_tax_prev": r_tax_prev_value,"r_gain_net": r_gain_net_value,"tax_discre": tax_discre_value,"tax_disclos": tax_disclos_value,"audit": audit_value,"penalty": penalty_value,"r_gain_final": r_gain_final_value,})
 
 #"t_tax": t_tax_value, "t_gain_net": t_gain_net_value
     print(f"Timer Value: {timer_value}")
@@ -89,6 +95,11 @@ def send_games_data():
     print(f"Rnd Tax Value: {r_tax_value}")
     print(f"Rnd Tax_Prev Value: {r_tax_prev_value}")
     print(f"Rnd Gain Net Value: {r_gain_net_value}")
+    print(f"Tax Disclos Value: {tax_disclos_value}")
+    print(f"Tax Discre Value: {tax_discre_value}")
+    print(f"Audit Value: {audit_value}")
+    print(f"Penalty Value: {penalty_value}")
+    print(f"Rnd Gain Final Value: {r_gain_final_value}")
     
 #    print(t_tax_value)
 #    print(t_gain_net_value)
