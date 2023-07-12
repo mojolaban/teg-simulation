@@ -80,7 +80,8 @@
     </b>
   </h4>
     
-<form action="/start">
+<form action="/start" method="POST">
+  <input type="hidden" name="id" value="{{ id }}">
   <input type="checkbox" required id="consentCheckbox" style="margin-left: 20px;">
   <label for="consentCheckbox" style="font-family: Arial;
     color: rgb(80,80,80);">
@@ -110,8 +111,6 @@
   </div>
   
   </div>
-
-
   
 </body>
   

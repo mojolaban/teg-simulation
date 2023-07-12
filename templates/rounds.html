@@ -238,7 +238,7 @@
                     <div class="col-3 d-flex align-items-center">
                         <p id="t_gain" style="font-size:11px;line-height:2;
                           margin: 0;color: rgb(130,130,130);">
-                          </p>
+                          {{ data.t_gain }}</p>
                     </div>
 
                     
@@ -272,13 +272,14 @@
                   <div class="col-1">
                      <p id="t_tax" style="font-size:12px;line-height:2;
                       margin: 0;color: rgb(200,50,20);" class="text-center">
+                       {{ data.t_tax }}
                        </p>
                   </div>
                 </div>
     <!-- Net Gain  -->
                 <div class="row align-items-center">
                   <div class="col-6">
-                      <p style="font-size:12px;line-height:3;
+                      <p id="t_gain" style="font-size:12px;line-height:3;
                       margin: 0;color: rgb(40, 180, 120);">
                         Net Gain</p>
                   </div>
@@ -290,6 +291,7 @@
                   <div class="col-1">
                       <p id="t_gain_net" style="font-size:12px;line-height:2;
                         margin: 0;color: rgb(40, 180, 120);"class="text-center">
+                        {{ data.t_gain_net }}
                         </p>
                   </div>
                 </div>
@@ -407,9 +409,9 @@
                               <i>f</i></p>
                           </div>
                           <div class="col-5">
-                              <p style="font-size:14px;line-height:2;
+                              <p id="r_gain" style="font-size:14px;line-height:2;
                               margin: 0;color: rgb(40, 180, 120);text-align: right;">
-                              {{ data.t_gain }}</p>
+                              {{ data.r_gain }}</p>
                           </div>
                       </div>
                      </div>
@@ -430,9 +432,9 @@
                               <i>f</i></p>
                           </div>
                           <div class="col-5">
-                              <p style="font-size:14px;line-height:2;
+                              <p id="r_tax" style="font-size:14px;line-height:2;
                               margin: 0;color: rgb(200,50,20);text-align: right;">
-                              {{ data.t_tax }}</p>
+                              {{ data.r_tax }}</p>
                           </div>
                       </div>
                      </div>
@@ -453,9 +455,9 @@
                               <i>f</i></p>
                           </div>
                           <div class="col-5">
-                              <p style="font-size:14px;line-height:2;
+                              <p id="r_gain_net" style="font-size:14px;line-height:2;
                               margin: 0;color: rgb(40, 180, 120);text-align: right;">
-                              {{ data.r_gain }}</p>
+                              {{ data.r_gain_net }}</p>
                           </div>
                       </div>
                      </div>
@@ -478,6 +480,15 @@
             size=1px;">{{ data.crypto_prev }}</span>
           <span id="fiat_prev"  style="color:rgb(0,0,0);
             size=1px;">{{ data.fiat_prev }}</span>
+          <span id="buy_prev"  style="color:rgb(0,0,0);
+            size=1px;">{{ data.buy_prev }}</span>
+          <span id="r_gain_prev"  style="color:rgb(0,0,0);
+            size=1px;">{{ data.r_gain_prev }}</span>
+          <span id="r_tax_prev"  style="color:rgb(0,0,0);
+            size=1px;">{{ data.r_tax_prev }}</span>
+          <span id="r_gain_net_prev"  style="color:rgb(0,0,0);
+            size=1px;">{{ data.r_gain_net_prev }}</span>
+
         </div>  
        
       {% include 'chartscript.html' %}      

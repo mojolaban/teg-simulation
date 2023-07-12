@@ -26,19 +26,18 @@ def insert_group_treatment():
         # Insert the counter, treatment, and ID values into the 'log' table
         conn.execute(text("INSERT INTO `teg-simulation`.`log` (`counter`, `gr`, `id`) VALUES ('1', :treatment, :id);"),
             {"treatment": treatment, "id": random_id})
-        # Insert the treatment, ID, round, transaction, and initial asset values into the 'responses' table
-        # Get the current timestamp
-        current_time = datetime.now()
-            # Get the current timestamp
+        # Insert the treatment, ID, round, transaction, initial asset, and other values into the 'responses' table
         conn.execute(
-            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`,`r_gain`,`t_tax`,`tax_disclos`,`tax_discre`,`audit`,`penalty`,`t_gain_net`,`r_gain_net`,`r_gain_final`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`)VALUES ('1', :treatment, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','1','0')"), {"treatment": treatment, "id": random_id})
-        return str(treatment)
+            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`,`r_gain`,`t_tax`,`tax_disclos`,`tax_discre`,`audit`,`penalty`,`t_gain_net`,`r_gain_net`,`r_gain_final`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`,`buy_prev`,`r_gain_prev`, `r_tax_prev`)VALUES ('1', :treatment, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','1','0','0','0','0')"), {"treatment": treatment, "id": random_id})
+      # Create a dictionary with the treatment and id values
+        treatment = {"treatment": treatment, "id": random_id}
+        return treatment
 
 
 #----Fecth initial game data from db 
-def fetch_init_data():
+def fetch_init_data(id):
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev FROM responses ORDER BY ts DESC LIMIT 1;"))
+        result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, r_gain_net FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"), {"id": id})
         row = result.fetchone()
         if row:
             round_value = row[0]
@@ -55,6 +54,12 @@ def fetch_init_data():
             t_tax_value = row[11]
             crypto_prev = row[12]
             fiat_prev = row[13]
+            buy_prev = row[14]
+            r_tax = row[15]
+            r_gain_net = row[16]
+            t_gain_net = row[17]
+            r_gain_prev = row[18]
+            r_tax_prev = row[19]
 
             if gr_value == '2':
                 asset_type = "Stock"
@@ -81,7 +86,13 @@ def fetch_init_data():
                 "t_tax": t_tax_value,
                 "asset_type": asset_type,
                 "fiat_prev" : fiat_prev,
-                "crypto_prev": crypto_prev
+                "crypto_prev": crypto_prev,
+                "buy_prev": buy_prev,
+                "r_tax": r_tax,
+                "r_gain_net":r_gain_net,
+              "t_gain_net":t_gain_net,
+              "r_gain_prev":r_gain_prev,
+              "r_tax_prev":r_tax_prev              
             }
             return init_data
         return None

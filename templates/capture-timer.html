@@ -1,4 +1,9 @@
 <script>
+  
+  function rc(numberString) {
+    return parseFloat(numberString.toString().replace(/,/g, ''));
+  }
+      
   var timer = 60 /* 60 seconds */
   var timerText = document.getElementById("countdown");
     
@@ -23,6 +28,17 @@
       var roundValue = document.getElementById("round").textContent; /* Get the round value */
       var cryptoPrevValue = document.getElementById("crypto_prev").textContent; /* Get the cryptoPrev value */
       var fiatPrevValue = document.getElementById("fiat_prev").textContent; /* Get the fiatPrev value */
+      var buyPrevValue = document.getElementById("buy_prev").textContent; /* Get the buyPrev value */
+      var sellValue = document.getElementById("sell").textContent; /* Get the sell value */
+      var buyValue = document.getElementById("buy").textContent; /* Get the buy value */
+      var tGainValue = document.getElementById("t_gain").textContent; /* Get the tgain value */
+      var tTaxValue = document.getElementById("t_tax").textContent; /* Get the tgain value */
+      var tGainNetValue = document.getElementById("t_gain_net").textContent; /* Get the tgain value */
+      var rGainPrevValue = document.getElementById("r_gain_prev").textContent; /* Get the tgain value */
+      var rGainValue = document.getElementById("r_gain").textContent; /* Get the tgain value */
+      var rTaxValue = document.getElementById("r_tax").textContent; /* Get the tgain value */
+      var rTaxPrevValue = document.getElementById("r_tax_prev").textContent; /* Get the tgain value */
+      var rGainNetValue = document.getElementById("r_gain_net").textContent; /* Get the tgain value */
 
 
       // Increment trxValue and reset to 0 if it reaches 15
@@ -38,34 +54,47 @@
     // Convert posValue to the desired values
     var cryptoValue = 0.00;
     var fiatValue = 0;
+      
     if (posValue === "SELL") {
       posValue = "b";
       cryptoValue = 0.00;
-      fiatValue = parseInt(cryptoPrevValue) * parseInt(priceValue); // Assuming crypto_prev is defined
+      fiatValue = rc(cryptoPrevValue) * rc(priceValue);
+      sellValue = rc(priceValue);
+      buyValue = rc(buyPrevValue);
+      tGainValue =  rc(sellValue) - rc(buyValue);
+      if (tGainValue > 0) {
+        tTaxValue = 0.2 * rc(tGainValue);
+      }
+      tGainNetValue = rc(tGainValue) - rc(tTaxValue)
+    
     } else if (posValue === "BUY") {
       posValue = "s";
       fiatValue = 0;
-      cryptoValue = fiatPrevValue / priceValue; // Assuming fiat_prev is defined
+      cryptoValue = rc(fiatPrevValue) / rc(priceValue);
+      sellValue = 0;
+      buyValue =rc(priceValue);
+      tGainValue =  0;
+      tTaxValue = 0;
+      tGainNetValue = 0;
+    }
+      
+    // Calculate r_gain & r_tax
+    if (trxValue >= 1 && trxValue <= 5) {
+      rGainValue =  rc(tGainValue) + rc(rGainPrevValue);
+      rTaxValue =  rc(tTaxValue) + rc(rTaxPrevValue);
+      rGainNetValue = rc(rGainValue) - rc(rTaxValue);
+    } else {
+      rGainValue = 0;
+      rTaxValue = 0;
     }
 
-      
-      // Convert posValue to the desired values
-//      if (posValue === "SELL") {
-//        posValue = "b";
-//      } else if (posValue === "BUY") {
-//        posValue = "s";
- //     }
-      
-
-      // Perform the AJAX request to send the timer value to your endpoint
-      // Replace '/your-endpoint' with the actual endpoint URL
-      // Example using fetch API:
+       // Perform the AJAX request to send the values to  endpoint
       fetch('/sendData', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ timerValue: timerValue , priceValue: priceValue , userid: userid, groupid: groupid, posValue: posValue , trxValue: trxValue, roundValue: roundValue, cryptoPrevValue: cryptoPrevValue, fiatPrevValue: fiatPrevValue , cryptoValue: cryptoValue, fiatValue: fiatValue
+            body: JSON.stringify({ timerValue: timerValue , priceValue: priceValue , userid: userid, groupid: groupid, posValue: posValue , trxValue: trxValue, roundValue: roundValue, cryptoPrevValue: cryptoPrevValue, fiatPrevValue: fiatPrevValue, cryptoValue: cryptoValue, fiatValue: fiatValue, buyPrevValue: buyPrevValue, sellValue: sellValue, buyValue: buyPrevValue, tGainValue: tGainValue, tTaxValue: tTaxValue, tGainNetValue: tGainNetValue, rGainValue: rGainValue, rGainPrevValue: rGainPrevValue, rTaxValue: rTaxValue, rTaxPrevValue: rTaxPrevValue, rGainNetValue: rGainNetValue
                                  })
           })
             .then(response => response.json())
@@ -77,4 +106,8 @@
             });
         }
     });
+
+  
+// Getting the data from database and update it to the page
+
 </script>

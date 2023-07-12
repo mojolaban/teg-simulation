@@ -12,20 +12,27 @@ def hello_world():
 #-----After Instruction page, assign group and insert init data
 @app.route("/instructions")
 def after_instructions():
-  result = insert_group_treatment()
-  if result == "1":
-    return render_template('instruction-1.html')
-  elif result == "2":
-    return render_template('instruction-2.html')
-  else:
-    print("Error")
-    
+    result = insert_group_treatment()
+    treatment_value = result['treatment']
+    if treatment_value == 1:
+        return render_template('instruction-1.html', id=result["id"])
+    elif treatment_value == 2:
+        return render_template('instruction-2.html', id=result["id"])
+    else:
+        return Error
+
+
 #----Insert initial game data from db to html
-@app.route("/start")
+@app.route("/start", methods=["POST"])
 def starting_game():
-    init_data = fetch_init_data()
-    return render_template('rounds.html', 
-                           data=init_data)
+    id = request.form.get('id')
+    print("ID:", id)  # Debug statement
+    if id:
+        init_data = fetch_init_data(id)
+        print("Init Data:", init_data)  # Debug statement
+        if init_data:
+            return render_template('rounds.html', data=init_data)
+    return "Error: Invalid ID"
 
      
 #-----Start interacting with the data inside the game
@@ -43,9 +50,22 @@ def send_games_data():
   fiat_prev_value = data.get('fiatPrevValue').replace('\n', '').strip()
   crypto_value = data.get('cryptoValue')
   fiat_value = data.get('fiatValue')
+  buy_prev_value = data.get('buyPrevValue').replace(',', '')
+  sell_value = data.get('sellValue')
+  buy_value = data.get('buyValue').replace(',', '')
+  t_gain_value = data.get('tGainValue')
+  t_tax_value = data.get('tTaxValue')
+  t_gain_net_value = data.get('tGainNetValue')
+  r_gain_value = data.get('rGainValue')
+  r_gain_prev_value = data.get('rGainPrevValue')
+  r_tax_value = data.get('rTaxValue')
+  r_tax_prev_value = data.get('rTaxPrevValue')
+  r_gain_net_value = data.get('rGainNetValue')
 
   with engine.connect() as conn:
-    conn.execute(text("INSERT INTO `teg-simulation`.`responses` (`sec`,`price`,`id`, `gr`, `pos`, `trx`, `round`, `crypto_prev`, `fiat_prev`,`crypto`, `fiat`) VALUES (:sec, :price, :id, :gr, :pos, :trx, :round, :crypto_prev, :fiat_prev, :crypto, :fiat)"), {"sec": timer_value, "price": price_value, "id": user_id, "gr" : group_id, "pos" : pos_value, "trx" : trx_value, "round" : round_value, "crypto_prev" :crypto_prev_value,  "fiat_prev" :fiat_prev_value, "crypto" :crypto_value,  "fiat" :fiat_value})
+    conn.execute(text("INSERT INTO `teg-simulation`.`responses` (`sec`,`price`,`id`, `gr`, `pos`, `trx`, `round`, `crypto_prev`, `fiat_prev`,`crypto`, `fiat`, `buy_prev`, `buy`, `sell`, `t_gain`,`t_tax`, `t_gain_net`, `r_gain`, `r_gain_prev`,`r_tax`,`r_tax_prev`,`r_gain_net`) VALUES (:sec, :price, :id, :gr, :pos, :trx, :round, :crypto_prev, :fiat_prev, :crypto, :fiat, :buy_prev,:buy, :sell, :t_gain, :t_tax, :t_gain_net, :r_gain, :r_gain_prev, :r_tax, :r_tax_prev,:r_gain_net)"), {"sec": timer_value, "price": price_value, "id": user_id, "gr" : group_id, "pos" : pos_value, "trx" : trx_value, "round" : round_value, "crypto_prev" :crypto_prev_value,  "fiat_prev" :fiat_prev_value, "crypto" :crypto_value,  "fiat" :fiat_value, "buy_prev":buy_prev_value,"buy":buy_value, "sell":sell_value, "t_gain":t_gain_value, "t_tax":t_tax_value, "t_gain_net": t_gain_net_value, "r_gain": r_gain_value, "r_gain_prev": r_gain_prev_value, "r_tax": r_tax_value, "r_tax_prev": r_tax_prev_value,"r_gain_net": r_gain_net_value})
+
+#"t_tax": t_tax_value, "t_gain_net": t_gain_net_value
     print(f"Timer Value: {timer_value}")
     print(f"Price Value: {price_value}")
     print(f"User ID: {user_id}")
@@ -57,7 +77,21 @@ def send_games_data():
     print(f"Fiat_Prev Value: {fiat_prev_value}")
     print(f"Crypto Value: {crypto_value}")
     print(f"Fiat Value: {fiat_value}")
-    print(fiat_prev_value)
+    print(f"Fiat Prev Value: {fiat_prev_value}")
+    print(f"Buy_Prev Value: {buy_prev_value}")
+    print(f"Buy Value: {buy_value}")
+    print(f"Sell Value: {sell_value}")
+    print(f"T_Gain Value: {t_gain_value}")
+    print(f"T_Tax Value: {t_tax_value}")
+    print(f"Trx Gain Net Value: {t_gain_net_value}")
+    print(f"Rnd Gain Value: {r_gain_value}")
+    print(f"Rnd Gain_Prev Value: {r_gain_prev_value}")
+    print(f"Rnd Tax Value: {r_tax_value}")
+    print(f"Rnd Tax_Prev Value: {r_tax_prev_value}")
+    print(f"Rnd Gain Net Value: {r_gain_net_value}")
+    
+#    print(t_tax_value)
+#    print(t_gain_net_value)
     return jsonify({'message': 'Data successfully inserted'})
     #return render_template('rounds.html', data=update_data)
 

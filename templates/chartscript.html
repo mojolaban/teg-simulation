@@ -4,8 +4,8 @@
 
     window.onload = function() {
         initializeChart();
-        setupEventListeners();
-        calculateResult();
+//        setupEventListeners();
+//        calculateResult();
       
     };
 
@@ -135,9 +135,11 @@
     function setupEventListeners() {
         var buyPriceInput = document.getElementById("buy");
         var sellPriceInput = document.getElementById("sell");
-
+        var tGainInput = document.getElementById("t_gain");
+      
         buyPriceInput.addEventListener("input", calculateResult);
         sellPriceInput.addEventListener("input", calculateResult);
+        tGainInput.addEventListener("input", calculateResult);
     }
 
       function calculateResult() {
@@ -178,5 +180,5 @@
               return value.toLocaleString();
           }
       }
-      
+
 </script>
