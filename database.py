@@ -37,7 +37,7 @@ def insert_group_treatment():
 #----Fecth initial game data from db 
 def fetch_init_data(id):
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, r_gain_net, tax_disclos, tax_discre, audit, penalty, r_gain_final FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"), {"id": id})
+        result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"), {"id": id})
         row = result.fetchone()
         if row:
             round_value = row[0]
@@ -106,6 +106,80 @@ def fetch_init_data(id):
             }
             return init_data
         return None
+
+
+def fetch_update_data(id):
+    with engine.connect() as conn:
+        result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"), {"id": id})
+        row = result.fetchone()
+        if row:
+            round_value = row[0]
+            gr_value = row[1]
+            id_value = row[2]
+            trx_value = row[3]
+            crypto_value = row[4]
+            fiat_value = row[5]
+            buy_value = row[6]
+            sell_value = row[7]
+            pos_value = row[8]
+            t_gain_value = row[9]
+            r_gain_value = row[10]
+            t_tax_value = row[11]
+            crypto_prev = row[12]
+            fiat_prev = row[13]
+            buy_prev = row[14]
+            r_tax = row[15]
+            r_gain_net = row[16]
+            t_gain_net = row[17]
+            r_gain_prev = row[18]
+            r_tax_prev = row[19]
+            tax_disclos = row[20]
+            tax_discre = row[21]
+            audit = row[22]
+            penalty = row[23]
+            r_gain_final = row[24]
+
+            if gr_value == '2':
+                asset_type = "Stock"
+            elif gr_value == '1':
+                asset_type = "Crypto"
+              
+            if pos_value == "s":
+                pos_value = "SELL"
+            elif pos_value == "b":
+                pos_value = "BUY"
+
+            init_data = {
+                "round": round_value,
+                "gr": gr_value,
+                "id": id_value,
+                "trx": trx_value,
+                "crypto": crypto_value,
+                "fiat": fiat_value,
+                "buy": buy_value,
+                "sell": sell_value,
+                "pos": pos_value,
+                "t_gain": t_gain_value,
+                "r_gain": r_gain_value,
+                "t_tax": t_tax_value,
+                "asset_type": asset_type,
+                "fiat_prev" : fiat_prev,
+                "crypto_prev": crypto_prev,
+                "buy_prev": buy_prev,
+                "r_tax": r_tax,
+                "r_gain_net":r_gain_net,
+                "t_gain_net":t_gain_net,
+                "r_gain_prev":r_gain_prev,
+                "r_tax_prev":r_tax_prev,
+                "tax_disclos":tax_disclos,
+                "tax_discre":tax_discre,
+                "audit":audit,
+                "penalty":penalty,
+                "r_gain_final":r_gain_final
+            }
+            return update_data
+        return None
+
 
 def load_group_treatment():
   with engine.connect() as conn:

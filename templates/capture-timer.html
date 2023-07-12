@@ -9,7 +9,7 @@
     
   var countdown = setInterval(function() {
     if (timer == 0) {
-      clearInterval(); /* End */
+      clearInterval(countdown); /* End */
       timerText.innerHTML = "0";
     } else {
       timer -= 1 /* Countdown */
@@ -93,7 +93,8 @@
       rTaxValue = 0;
     }
 
-       // Perform the AJAX request to send the values to  endpoint
+
+             // Perform the AJAX request to send the values to  endpoint
       fetch('/sendData', {
       method: 'POST',
       headers: {
@@ -105,6 +106,64 @@
             .then(response => response.json())
             .then(data => {
               // Handle the response from your endpoint if needed
+    const roundElement = document.getElementById('round');
+    const grElement = document.getElementById('gr');
+    const idElement = document.getElementById('id');
+    const trxElement = document.getElementById('trx');
+              /*
+    const cryptoElement = document.getElementById('crypto');
+    const fiatElement = document.getElementById('fiat');
+    const buyElement = document.getElementById('buy');
+    const sellElement = document.getElementById('sell');
+    const posElement = document.getElementById('pos');
+    const tGainElement = document.getElementById('t_gain');
+    const rGainElement = document.getElementById('r_gain');
+    const tTaxElement = document.getElementById('t_tax');
+    const assetTypeElement = document.getElementById('asset_type');
+    const fiatPrevElement = document.getElementById('fiat_prev');
+    const cryptoPrevElement = document.getElementById('crypto_prev');
+    const buyPrevElement = document.getElementById('buy_prev');
+    const rTaxElement = document.getElementById('r_tax');
+    const rGainNetElement = document.getElementById('r_gain_net');
+    const tGainNetElement = document.getElementById('t_gain_net');
+    const rGainPrevElement = document.getElementById('r_gain_prev');
+    const rTaxPrevElement = document.getElementById('r_tax_prev');
+    const taxDisclosElement = document.getElementById('tax_disclos');
+    const taxDiscreElement = document.getElementById('tax_discre');
+    const auditElement = document.getElementById('audit');
+    const penaltyElement = document.getElementById('penalty');
+    const rGainFinalElement = document.getElementById('r_gain_final');
+    */
+    
+    roundElement.innerHTML = data.round;
+    grElement.innerHTML = data.gr;
+    idElement.innerHTML = data.id;
+    trxElement.innerHTML = data.trx;
+              /*
+    cryptoElement.innerHTML = data.crypto;
+    fiatElement.innerHTML = data.fiat;
+    buyElement.innerHTML = data.buy;
+    sellElement.innerHTML = data.sell;
+    posElement.innerHTML = data.pos;
+    tGainElement.innerHTML = data.t_gain;
+    rGainElement.innerHTML = data.r_gain;
+    tTaxElement.innerHTML = data.t_tax;
+    assetTypeElement.innerHTML = data.asset_type;
+    fiatPrevElement.innerHTML = data.fiat_prev;
+    cryptoPrevElement.innerHTML = data.crypto_prev;
+    buyPrevElement.innerHTML = data.buy_prev;
+    rTaxElement.innerHTML = data.r_tax;
+    rGainNetElement.innerHTML = data.r_gain_net;
+    tGainNetElement.innerHTML = data.t_gain_net;
+    rGainPrevElement.innerHTML = data.r_gain_prev;
+    rTaxPrevElement.innerHTML = data.r_tax_prev;
+    taxDisclosElement.innerHTML = data.tax_disclos;
+    taxDiscreElement.innerHTML = data.tax_discre;
+    auditElement.innerHTML = data.audit;
+    penaltyElement.innerHTML = data.penalty;
+    rGainFinalElement.innerHTML = data.r_gain_final;
+    */
+
             })
             .catch(error => {
               console.error('Error:', error);
@@ -112,6 +171,7 @@
         }
     });
 
+  
   
 // Getting the data from database and update it to the current page
   //Perform the AJAX request retrieve the data to the page

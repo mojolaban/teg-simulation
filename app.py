@@ -33,9 +33,24 @@ def starting_game():
         if init_data:
             return render_template('rounds.html', data=init_data)
     return "Error: Invalid ID"
+  
+'''
+#----Insert update game data from db to html
+@app.route("/getData", methods=["POST"])
+def get_games_data():
+    id = request.form.get('id') #request.json.get('id')
+    print("ID:", id)  # Debug statement
+    if id:
+        data = fetch_update_data(id)
+        print("Updated Data:", data)  # Debug statement
+        if data:
+            return jsonify(data)
+    return jsonify({"error": "Invalid ID"})
+'''
 
      
 #-----Start interacting with the data inside the game
+#-----Send data to the database
 @app.route("/sendData", methods=['POST'])
 def send_games_data():
   data = request.get_json()
@@ -67,11 +82,9 @@ def send_games_data():
   penalty_value =data.get('penaltyValue')
   r_gain_final_value =data.get('rGainFinalValue')
   
-
   with engine.connect() as conn:
     conn.execute(text("INSERT INTO `teg-simulation`.`responses` (`sec`,`price`,`id`, `gr`, `pos`, `trx`, `round`, `crypto_prev`, `fiat_prev`,`crypto`, `fiat`, `buy_prev`, `buy`, `sell`, `t_gain`,`t_tax`, `t_gain_net`, `r_gain`, `r_gain_prev`,`r_tax`,`r_tax_prev`,`r_gain_net`,`tax_discre`,`tax_disclos`,`audit`,`penalty`,`r_gain_final`) VALUES (:sec, :price, :id, :gr, :pos, :trx, :round, :crypto_prev, :fiat_prev, :crypto, :fiat, :buy_prev,:buy, :sell, :t_gain, :t_tax, :t_gain_net, :r_gain, :r_gain_prev, :r_tax, :r_tax_prev,:r_gain_net,:tax_discre,:tax_disclos,:audit,:penalty,:r_gain_final)"), {"sec": timer_value, "price": price_value, "id": user_id, "gr" : group_id, "pos" : pos_value, "trx" : trx_value, "round" : round_value, "crypto_prev" :crypto_prev_value,  "fiat_prev" :fiat_prev_value, "crypto" :crypto_value,  "fiat" :fiat_value, "buy_prev":buy_prev_value,"buy":buy_value, "sell":sell_value, "t_gain":t_gain_value, "t_tax":t_tax_value, "t_gain_net": t_gain_net_value, "r_gain": r_gain_value, "r_gain_prev": r_gain_prev_value, "r_tax": r_tax_value, "r_tax_prev": r_tax_prev_value,"r_gain_net": r_gain_net_value,"tax_discre": tax_discre_value,"tax_disclos": tax_disclos_value,"audit": audit_value,"penalty": penalty_value,"r_gain_final": r_gain_final_value,})
-
-#"t_tax": t_tax_value, "t_gain_net": t_gain_net_value
+    
     print(f"Timer Value: {timer_value}")
     print(f"Price Value: {price_value}")
     print(f"User ID: {user_id}")
@@ -100,35 +113,91 @@ def send_games_data():
     print(f"Audit Value: {audit_value}")
     print(f"Penalty Value: {penalty_value}")
     print(f"Rnd Gain Final Value: {r_gain_final_value}")
-    
-#    print(t_tax_value)
-#    print(t_gain_net_value)
-    return jsonify({'message': 'Data successfully inserted'})
+
+#    return jsonify({'message': 'Data successfully inserted'})
+  
+
+    result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"), {"id": user_id})
+    row = result.fetchone()
+    if row:
+            round_value = row[0]
+            gr_value = row[1]
+            id_value = row[2]
+            trx_value = row[3]
+            crypto_value = row[4]
+            fiat_value = row[5]
+            buy_value = row[6]
+            sell_value = row[7]
+            pos_value = row[8]
+            t_gain_value = row[9]
+            r_gain_value = row[10]
+            t_tax_value = row[11]
+            crypto_prev = row[12]
+            fiat_prev = row[13]
+            buy_prev = row[14]
+            r_tax = row[15]
+            r_gain_net = row[16]
+            t_gain_net = row[17]
+            r_gain_prev = row[18]
+            r_tax_prev = row[19]
+            tax_disclos = row[20]
+            tax_discre = row[21]
+            audit = row[22]
+            penalty = row[23]
+            r_gain_final = row[24]
+
+            if gr_value == '2':
+                asset_type = "Stock"
+            elif gr_value == '1':
+                asset_type = "Crypto"
+              
+            if pos_value == "s":
+                pos_value = "SELL"
+            elif pos_value == "b":
+                pos_value = "BUY"
+
+            updated_data = {
+                "round": round_value,
+                "gr": gr_value,
+                "id": id_value,
+                "trx": trx_value,
+                "crypto": crypto_value,
+                "fiat": fiat_value,
+                "buy": buy_value,
+                "sell": sell_value,
+                "pos": pos_value,
+                "t_gain": t_gain_value,
+                "r_gain": r_gain_value,
+                "t_tax": t_tax_value,
+                "asset_type": asset_type,
+                "fiat_prev" : fiat_prev,
+                "crypto_prev": crypto_prev,
+                "buy_prev": buy_prev,
+                "r_tax": r_tax,
+                "r_gain_net":r_gain_net,
+                "t_gain_net":t_gain_net,
+                "r_gain_prev":r_gain_prev,
+                "r_tax_prev":r_tax_prev,
+                "tax_disclos":tax_disclos,
+                "tax_discre":tax_discre,
+                "audit":audit,
+                "penalty":penalty,
+                "r_gain_final":r_gain_final
+            }
+
+            print("Retrieved Data:")
+            print(updated_data)
+            return jsonify(updated_data)
+  return jsonify({})
+   
+
     #return render_template('rounds.html', data=update_data)
 
 
-#  round_value = data.get('roundValue').replace('\n', '').strip()
- # gr_value = data.get('grValue').replace('\n', '').strip()
-#    conn.execute(text("INSERT INTO `teg-simulation`.`core` (`sec`,`price`,`id`) VALUES (:sec, :price, :id)"), {"sec": #timer_value, "price": price_value, "id": user_id})
-#    return jsonify({'message': 'Data successfully inserted'})
-#update current data with second and price
- #   conn.execute(
- #     text("UPDATE `teg-simulation`.`responses` SET `sec` = :sec, `price` = :price WHERE `id` = :id"),
- #     {"id": user_id, "sec": timer_value, "price": price_value})
-#    conn.execute(
-#    text("UPDATE `teg-simulation`.`responses` SET `sec` = :sec, `price` = :price WHERE `id` = :id AND `ts` = (SELECT MAX(`ts`) FROM `teg-simulation`.`responses` WHERE `id` = :id)"),
-#    {"id": user_id, "sec": timer_value, "price": price_value})
-
-#send the to the next records:
-#    conn.execute(text("INSERT INTO `teg-simulation`.`responses` (`round`) VALUES (:round)"), {"round": round_value})
 
 
-    
-# Insert the latest 'gr', 'id' into the 'log' table
-#  timer_value = data.get('timerValue')
-#  price_value = data.get('priceValue').replace(',', '')  # Remove commas from priceValue
-#  user_id = data.get('user_id')  # Assign the user_id from the request payload    
 
+  
 
 if __name__ == "__main__":
   app.run(host="0.0.0.0", debug=True)
