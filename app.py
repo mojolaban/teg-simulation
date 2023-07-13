@@ -62,7 +62,7 @@ def send_games_data():
   trx_value = data.get('trxValue')
   round_value = data.get('roundValue')
   crypto_prev_value = data.get('cryptoPrevValue').replace('\n', '').strip()
-  fiat_prev_value = data.get('fiatPrevValue').replace('\n', '').strip()
+  fiat_prev_value = data.get('fiatPrevValue')
   crypto_value = data.get('cryptoValue')
   fiat_value = data.get('fiatValue')
   buy_prev_value = data.get('buyPrevValue').replace(',', '')

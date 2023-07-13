@@ -155,7 +155,7 @@
                         Fiat</p>
                       </div>
                       <div class="col-3">
-                      <p style="font-size:11px;line-height:2;
+                      <p id="fiat" style="font-size:11px;line-height:2;
                         margin: 0;color: rgb(80,80,80);">
                         {{data['fiat']}}</p>
                       </div>
@@ -165,7 +165,7 @@
                          {{ data['asset_type'] }} </p>
                       </div>
                       <div class="col-3">
-                       <p style="font-size:11px;line-height:2;
+                       <p id="crypto" style="font-size:11px;line-height:2;
                         margin: 0;color: rgb(80,80,80);">
                          {{ data['crypto']}}</p>
                       </div>
@@ -315,8 +315,8 @@
                       margin: 0;color: rgb(130,130,130);font-size:11px">
                       <b>POSITION:</b></p>
                   </div>
-                  <div id="pos" class="col-3">                   
-                     <p style="line-height:2;
+                  <div class="col-3">                   
+                     <p id="pos" style="line-height:2;
                       margin: 0;color: rgb(130,130,130);font-size:11px">
                       <b>{{ data.pos }}</b></p>
                   </div>
@@ -342,7 +342,7 @@
 <!-- Buy and Sell Button -->
           <div class="row justify-content-evenly" style="margin-left: 0px;">
              <div class="col-6">
-                 <button type="button"
+                 <button type="button" id="buyButton"
                   style="margin-left: 20px;
                   width: 225px;
                   padding: 10px 30px; 
@@ -350,15 +350,15 @@
                   border-radius: 4px; 
                   font-size: 16px; 
                   font-weight: bold;
-                  background-color: {{ 'rgb(40, 180, 120)' if data.pos == 'BUY' else 'rgb(160,160,160)'}};
-                  color: {{ 'white' if data.pos == 'BUY' else 'black' }};" 
+                  background-color: {{ 'rgb(40, 180, 120)' if  data.pos.strip() == 'BUY' else 'rgb(160,160,160)'}};
+                  color: {{ 'white' if data.pos.strip() == 'BUY' else 'black' }};" 
                   onmouseover="this.style.backgroundColor = 'rgb(48, 216, 144)'"
                   onmouseout="this.style.backgroundColor = 'rgb(40, 180, 120)'">
                   Buy
                 </button>
              </div>
              <div class="col-6">
-               <button type="button"
+               <button type="button" id="sellButton"
                   style="margin-left: 20px;
                   width: 225px; 
                   padding: 10px 30px; 
@@ -366,12 +366,40 @@
                   border-radius: 4px; 
                   font-size: 16px; 
                   font-weight: bold;
-                  background-color: {{ 'rgb(200,50,20)' if data.pos == 'SELL' else 'rgb(160,160,160)'}}; 
-                  color: {{ 'white' if data.pos == 'SELL' else 'black' }};"
+                  background-color: {{ 'rgb(200,50,20)' if data.pos.strip() == 'SELL' else 'rgb(160,160,160)'}}; 
+                  color: {{ 'white' if data.pos.strip() == 'SELL' else 'black' }};"
                   onmouseover="this.style.backgroundColor = 'rgb(236, 141, 112)'"
                   onmouseout="this.style.backgroundColor = 'rgb(200,50,20)'">
                   Sell
                 </button>
+
+
+                <script>
+                // Update button styles based on data.pos value
+                function updateButtonStyles() {
+                  var buyButton = document.getElementById("buyButton");
+                  var sellButton = document.getElementById("sellButton");
+                  var posValue = "{{ data.pos }}";
+              
+                  if (posValue === "BUY") {
+                    buyButton.style.backgroundColor = "rgb(40, 180, 120)";
+                    buyButton.style.color = "white";
+                    sellButton.style.backgroundColor = "rgb(160, 160, 160)";
+                    sellButton.style.color = "black";
+                  } else if (posValue === "SELL") {
+                    buyButton.style.backgroundColor = "rgb(160, 160, 160)";
+                    buyButton.style.color = "black";
+                    sellButton.style.backgroundColor = "rgb(200, 50, 20)";
+                    sellButton.style.color = "white";
+                  }
+                }
+              
+                // Call the updateButtonStyles function initially
+                updateButtonStyles();
+              </script>
+
+
+               
              </div>
           </div>
        </div> <!-- End of middle pane  --> 
@@ -391,7 +419,7 @@
                       Transaction</p>
                     <p style="font-size:18px;line-height:1;
                       margin: 0;color: rgb(130,130,130);text-align: center;">
-                      <span id="trx">{{ data['trx'] }} </span>of 5</p>
+                      <span id="trx">{{ data['trx'] }} </span> of 5</p>
                   </div>
                 </div>
                 <div class="col-3" style="margin-left: 30px;margin-top: 30px"> 
