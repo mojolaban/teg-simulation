@@ -21,7 +21,6 @@ def after_instructions():
     else:
         return Error
 
-
 #----Insert initial game data from db to html
 @app.route("/start", methods=["POST"])
 def starting_game():
@@ -33,22 +32,7 @@ def starting_game():
         if init_data:
             return render_template('rounds.html', data=init_data)
     return "Error: Invalid ID"
-  
-'''
-#----Insert update game data from db to html
-@app.route("/getData", methods=["POST"])
-def get_games_data():
-    id = request.form.get('id') #request.json.get('id')
-    print("ID:", id)  # Debug statement
-    if id:
-        data = fetch_update_data(id)
-        print("Updated Data:", data)  # Debug statement
-        if data:
-            return jsonify(data)
-    return jsonify({"error": "Invalid ID"})
-'''
-
-     
+       
 #-----Start interacting with the data inside the game
 #-----Send data to the database
 @app.route("/sendData", methods=['POST'])
@@ -113,9 +97,6 @@ def send_games_data():
     print(f"Audit Value: {audit_value}")
     print(f"Penalty Value: {penalty_value}")
     print(f"Rnd Gain Final Value: {r_gain_final_value}")
-
-#    return jsonify({'message': 'Data successfully inserted'})
-  
 
     result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"), {"id": user_id})
     row = result.fetchone()
@@ -191,7 +172,11 @@ def send_games_data():
   return jsonify({})
    
 
-    #return render_template('rounds.html', data=update_data)
+#----Insert update game data from db to html
+@app.route("/tr")
+def tax_reporting():
+            return render_template('tax_reporting.html')
+    
 
 
 

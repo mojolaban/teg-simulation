@@ -3,6 +3,7 @@
   function rc(numberString) {
     return parseFloat(numberString.toString().replace(/,/g, ''));
   }
+  
   function formatNumber(value) {
     if (value < 0) {
         return "(" + Math.abs(value).toLocaleString() + ")";
@@ -10,193 +11,198 @@
         return value.toLocaleString();
     }
   }
-
-      
-  var timer = 60 /* 60 seconds */
+    
+  var timer = 60; /* 60 seconds */
   var timerText = document.getElementById("countdown");
     
   var countdown = setInterval(function() {
-    if (timer == 0) {
+    if (timer === 0) {
       clearInterval(countdown); /* End */
       timerText.innerHTML = "0";
+      window.location.href = "/tr"; // Redirect to "/tr" endpoint after timer reaches 0
     } else {
-      timer -= 1 /* Countdown */
+      timer -= 1; /* Countdown */
       timerText.innerHTML = timer;
-      };
-    }, 1000 /* Miliseconds */);
+    }
+  }, 1000); /* Milliseconds */
 
-     document.addEventListener("keydown", function(event) {
+  document.addEventListener("keydown", function(event) {
     if (event.key === "Enter") {
-      var timerValue = timer;
-      var priceValue = document.getElementById("pricePoint").textContent; 
-      var userid = document.getElementById("id").textContent;
-      var groupid = document.getElementById("gr").textContent; 
-      var posValue = document.getElementById("pos").innerText; 
-      var trxValue = document.getElementById("trx").textContent; 
-      var roundValue = document.getElementById("round").textContent; 
-      var cryptoValue = document.getElementById("crypto").textContent;
-      var fiatValue = document.getElementById("fiat").textContent;
-      var cryptoPrevValue = document.getElementById("crypto_prev").textContent;
-      var fiatPrevValue = document.getElementById("fiat_prev").textContent;
-      var buyPrevValue = document.getElementById("buy_prev").textContent.trim(); 
-      var sellValue = document.getElementById("sell").textContent; 
-      var buyValue = document.getElementById("buy").textContent.trim(); 
-      var tGainValue = document.getElementById("t_gain").textContent; 
-      var tTaxValue = document.getElementById("t_tax").textContent;
-      var tGainNetValue = document.getElementById("t_gain_net").textContent; 
-      var rGainPrevValue = document.getElementById("r_gain_prev").textContent; 
-      var rGainValue = document.getElementById("r_gain").textContent; 
-      var rTaxValue = document.getElementById("r_tax").textContent; 
-      var rTaxPrevValue = document.getElementById("r_tax_prev").textContent; 
-      var rGainNetValue = document.getElementById("r_gain_net").textContent; 
-      var taxDisclosValue = document.getElementById("tax_disclos").textContent; 
-      var taxDiscreValue = document.getElementById("tax_discre").textContent; 
-      var auditValue = document.getElementById("audit").textContent; 
-      var penaltyValue = document.getElementById("penalty").textContent; 
-      var rGainFinalValue = document.getElementById("r_gain_final").textContent; 
-
-
-      // Increment trxValue and reset to 0 if it reaches 15
-      trxValue = (parseInt(trxValue) + 1) % 6;
+      var trxValue = document.getElementById("trx").textContent;
       
-      // Increment roundValue based if trxValue reaches 0
-      if (trxValue === "0") {
-        roundValue = parseInt(roundValue) + 1;
-      } else {
-        roundValue = roundValue;
-      }
+      if (trxValue !== "5") { // Check if trxValue is not 5
+        var timerValue = timer;
+        var priceValue = document.getElementById("pricePoint").textContent; 
+        var userid = document.getElementById("id").textContent;
+        var groupid = document.getElementById("gr").textContent; 
+        var posValue = document.getElementById("pos").innerText; 
+        var roundValue = document.getElementById("round").textContent; 
+        var cryptoValue = document.getElementById("crypto").textContent;
+        var fiatValue = document.getElementById("fiat").textContent;
+        var cryptoPrevValue = document.getElementById("crypto_prev").textContent;
+        var fiatPrevValue = document.getElementById("fiat_prev").textContent;
+        var buyPrevValue = document.getElementById("buy_prev").textContent.trim(); 
+        var sellValue = document.getElementById("sell").textContent; 
+        var buyValue = document.getElementById("buy").textContent.trim(); 
+        var tGainValue = document.getElementById("t_gain").textContent; 
+        var tTaxValue = document.getElementById("t_tax").textContent;
+        var tGainNetValue = document.getElementById("t_gain_net").textContent; 
+        var rGainPrevValue = document.getElementById("r_gain_prev").textContent; 
+        var rGainValue = document.getElementById("r_gain").textContent; 
+        var rTaxValue = document.getElementById("r_tax").textContent; 
+        var rTaxPrevValue = document.getElementById("r_tax_prev").textContent; 
+        var rGainNetValue = document.getElementById("r_gain_net").textContent; 
+        var taxDisclosValue = document.getElementById("tax_disclos").textContent; 
+        var taxDiscreValue = document.getElementById("tax_discre").textContent; 
+        var auditValue = document.getElementById("audit").textContent; 
+        var penaltyValue = document.getElementById("penalty").textContent; 
+        var rGainFinalValue = document.getElementById("r_gain_final").textContent; 
 
-    // Convert posValue to the desired values
-//    var fiatValue = 0;
+        trxValue = (parseInt(trxValue) + 1) % 6;
       
-      if (trxValue % 2 !== 0) {  // if trx is odd
-          buyPrevValue = rc(buyValue);
-      } else {  // if trx is even
-          buyPrevValue = rc(priceValue);
-      }
-      buyValue = rc(buyPrevValue);
-      
-           
-    if (posValue === "SELL") {
-      posValue = "b";
-      cryptoPrevValue = cryptoValue;
-      cryptoValue = 0.00;
-      fiatPrevValue = rc(fiatValue);
-      fiatValue = rc(cryptoPrevValue) * rc(priceValue);
-      sellValue = rc(priceValue);
-      tGainValue =  rc(sellValue) - rc(buyValue);
-      if (tGainValue > 0) {
-        tTaxValue = 0.2 * rc(tGainValue);
-      }
-      tGainNetValue = rc(tGainValue) - rc(tTaxValue)
-    
-    } else if (posValue === "BUY") {
-      posValue = "s";
-
-      cryptoPrevValue = cryptoValue;
-      fiatPrevValue = rc(fiatValue);
-      fiatValue = 0;
-      cryptoValue = rc(fiatPrevValue) / rc(priceValue);
-      sellValue = 0;
-      tGainValue =  0;
-      tTaxValue = 0;
-      tGainNetValue = 0;
-    }
-      
-
-   
-    // Calculate r_gain & r_tax
-    if (trxValue >= 1 && trxValue <= 5) {
-      rGainPrevValue = rc(rGainValue);
-      rGainValue =  rc(tGainValue) + rc(rGainPrevValue);
-      rTaxPrevValue =  0.2 * rc(rGainPrevValue);
-      rTaxValue =  0.2 * rc(rGainValue) ;
-      rGainNetValue = rc(rGainValue) - rc(rTaxValue);
-    } else {
-      rGainValue = 0;
-      rTaxValue = 0;
-    }
-
-
-             // Perform the AJAX request to send the values to  endpoint
-      fetch('/sendData', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ timerValue: timerValue , priceValue: priceValue , userid: userid, groupid: groupid, posValue: posValue , trxValue: trxValue, roundValue: roundValue, cryptoPrevValue: cryptoPrevValue, fiatPrevValue: fiatPrevValue, cryptoValue: cryptoValue, fiatValue: fiatValue, buyPrevValue: buyPrevValue, sellValue: sellValue, buyValue: buyPrevValue, tGainValue: tGainValue, tTaxValue: tTaxValue, tGainNetValue: tGainNetValue, rGainValue: rGainValue, rGainPrevValue: rGainPrevValue, rTaxValue: rTaxValue, rTaxPrevValue: rTaxPrevValue, rGainNetValue: rGainNetValue, taxDisclosValue:taxDisclosValue, taxDiscreValue:taxDiscreValue,auditValue:auditValue, penaltyValue:penaltyValue, rGainFinalValue:rGainFinalValue
-                                 })
-          })
-            .then(response => response.json())
-            .then(data => {
-              // Handle the response from your endpoint if needed
-              
-    const roundElement = document.getElementById('round');
-    const grElement = document.getElementById('gr');
-    const idElement = document.getElementById('id');
-    const trxElement = document.getElementById('trx');
-    const cryptoElement = document.getElementById('crypto');
-    const fiatElement = document.getElementById('fiat');
-    const buyElement = document.getElementById('buy');
-    const sellElement = document.getElementById('sell');
-    const posElement = document.getElementById('pos');
-    const tGainElement = document.getElementById('t_gain');
-    const rGainElement = document.getElementById('r_gain');
-    const tTaxElement = document.getElementById('t_tax');
-    const assetTypeElement = document.getElementById('asset_type');
-    const fiatPrevElement = document.getElementById('fiat_prev');
-    const cryptoPrevElement = document.getElementById('crypto_prev');
-    const buyPrevElement = document.getElementById('buy_prev');
-    const rTaxElement = document.getElementById('r_tax');
-    const rGainNetElement = document.getElementById('r_gain_net');
-    const tGainNetElement = document.getElementById('t_gain_net');
-    const rGainPrevElement = document.getElementById('r_gain_prev');
-    const rTaxPrevElement = document.getElementById('r_tax_prev');
-    const taxDisclosElement = document.getElementById('tax_disclos');
-    const taxDiscreElement = document.getElementById('tax_discre');
-    const auditElement = document.getElementById('audit');
-    const penaltyElement = document.getElementById('penalty');
-    const rGainFinalElement = document.getElementById('r_gain_final');
-              
-   //Below is the elements shown in html from updated db:
-    roundElement.innerHTML = data.round;
-    grElement.innerHTML = data.gr;
-    idElement.innerHTML = data.id;
-    trxElement.innerHTML = data.trx;
-    cryptoElement.textContent = data['crypto'];
-    fiatElement.textContent =  formatNumber(data['fiat']);
-    buyElement.innerHTML = formatNumber(data.buy);
-    sellElement.innerHTML = formatNumber(data.sell);
-    posElement.innerHTML = data.pos;
-    tGainElement.innerHTML = formatNumber(data.t_gain);
-    rGainElement.innerHTML = formatNumber(data.r_gain);
-    tTaxElement.innerHTML = formatNumber(data.t_tax);
-    assetTypeElement.innerHTML = data.asset_type;
-    fiatPrevElement.innerHTML = data.fiat_prev;
-    cryptoPrevElement.innerHTML = data.crypto_prev;
-    buyPrevElement.innerHTML = data.buy_prev;
-    rTaxElement.innerHTML = formatNumber(data.r_tax);
-    rGainNetElement.innerHTML = formatNumber(data.r_gain_net);
-    tGainNetElement.innerHTML = formatNumber(data.t_gain_net);
-    rGainPrevElement.innerHTML = data.r_gain_prev;
-    rTaxPrevElement.innerHTML = data.r_tax_prev;
-    taxDisclosElement.innerHTML = data.tax_disclos;
-    taxDiscreElement.innerHTML = data.tax_discre;
-    auditElement.innerHTML = data.audit;
-    penaltyElement.innerHTML = data.penalty;
-    rGainFinalElement.innerHTML = data.r_gain_final;
-    
-
-            })
-            .catch(error => {
-              console.error('Error:', error);
-            });
+        if (trxValue % 2 !== 0) {  // if trx is odd
+            buyPrevValue = rc(buyValue);
+        } else {  // if trx is even
+            buyPrevValue = rc(priceValue);
         }
-    });
+        buyValue = rc(buyPrevValue);
 
-  
-  
-// Getting the data from database and update it to the current page
-  //Perform the AJAX request retrieve the data to the page
+        if (posValue === "SELL") {
+          posValue = "b";
+          cryptoPrevValue = cryptoValue;
+          cryptoValue = 0.00;
+          fiatPrevValue = rc(fiatValue);
+          fiatValue = rc(cryptoPrevValue) * rc(priceValue);
+          sellValue = rc(priceValue);
+          tGainValue = rc(sellValue) - rc(buyValue);
+          if (tGainValue > 0) {
+            tTaxValue = 0.2 * rc(tGainValue);
+          }
+          tGainNetValue = rc(tGainValue) - rc(tTaxValue);
+
+        } else if (posValue === "BUY") {
+          posValue = "s";
+
+          cryptoPrevValue = cryptoValue;
+          fiatPrevValue = rc(fiatValue);
+          fiatValue = 0;
+          cryptoValue = rc(fiatPrevValue) / rc(priceValue);
+          sellValue = 0;
+          tGainValue =  0;
+          tTaxValue = 0;
+          tGainNetValue = 0;
+        }
+
+        if (trxValue >= 1 && trxValue <= 5) {
+          rGainPrevValue = rc(rGainValue);
+          rGainValue =  rc(tGainValue) + rc(rGainPrevValue);
+          rTaxPrevValue =  0.2 * rc(rGainPrevValue);
+          rTaxValue =  0.2 * rc(rGainValue) ;
+          rGainNetValue = rc(rGainValue) - rc(rTaxValue);
+        } else {
+          rGainValue = 0;
+          rTaxValue = 0;
+        }
+
+        fetch('/sendData', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            timerValue: timerValue, 
+            priceValue: priceValue, 
+            userid: userid, 
+            groupid: groupid, 
+            posValue: posValue, 
+            trxValue: trxValue, 
+            roundValue: roundValue, 
+            cryptoPrevValue: cryptoPrevValue, 
+            fiatPrevValue: fiatPrevValue, 
+            cryptoValue: cryptoValue, 
+            fiatValue: fiatValue, 
+            buyPrevValue: buyPrevValue, 
+            sellValue: sellValue, 
+            buyValue: buyPrevValue, 
+            tGainValue: tGainValue, 
+            tTaxValue: tTaxValue, 
+            tGainNetValue: tGainNetValue, 
+            rGainValue: rGainValue, 
+            rGainPrevValue: rGainPrevValue, 
+            rTaxValue: rTaxValue, 
+            rTaxPrevValue: rTaxPrevValue, 
+            rGainNetValue: rGainNetValue, 
+            taxDisclosValue: taxDisclosValue, 
+            taxDiscreValue: taxDiscreValue, 
+            auditValue: auditValue, 
+            penaltyValue: penaltyValue, 
+            rGainFinalValue: rGainFinalValue
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Handle the response from your endpoint if needed
+          
+          const roundElement = document.getElementById('round');
+          const grElement = document.getElementById('gr');
+          const idElement = document.getElementById('id');
+          const trxElement = document.getElementById('trx');
+          const cryptoElement = document.getElementById('crypto');
+          const fiatElement = document.getElementById('fiat');
+          const buyElement = document.getElementById('buy');
+          const sellElement = document.getElementById('sell');
+          const posElement = document.getElementById('pos');
+          const tGainElement = document.getElementById('t_gain');
+          const rGainElement = document.getElementById('r_gain');
+          const tTaxElement = document.getElementById('t_tax');
+          const assetTypeElement = document.getElementById('asset_type');
+          const fiatPrevElement = document.getElementById('fiat_prev');
+          const cryptoPrevElement = document.getElementById('crypto_prev');
+          const buyPrevElement = document.getElementById('buy_prev');
+          const rTaxElement = document.getElementById('r_tax');
+          const rGainNetElement = document.getElementById('r_gain_net');
+          const tGainNetElement = document.getElementById('t_gain_net');
+          const rGainPrevElement = document.getElementById('r_gain_prev');
+          const rTaxPrevElement = document.getElementById('r_tax_prev');
+          const taxDisclosElement = document.getElementById('tax_disclos');
+          const taxDiscreElement = document.getElementById('tax_discre');
+          const auditElement = document.getElementById('audit');
+          const penaltyElement = document.getElementById('penalty');
+          const rGainFinalElement = document.getElementById('r_gain_final');
+
+          // Below are the elements shown in HTML from the updated database:
+          roundElement.innerHTML = data.round;
+          grElement.innerHTML = data.gr;
+          idElement.innerHTML = data.id;
+          trxElement.innerHTML = data.trx;
+          cryptoElement.textContent = data['crypto'];
+          fiatElement.textContent =  formatNumber(data['fiat']);
+          buyElement.innerHTML = formatNumber(data.buy);
+          sellElement.innerHTML = formatNumber(data.sell);
+          posElement.innerHTML = data.pos;
+          tGainElement.innerHTML = formatNumber(data.t_gain);
+          rGainElement.innerHTML = formatNumber(data.r_gain);
+          tTaxElement.innerHTML = formatNumber(data.t_tax);
+          assetTypeElement.innerHTML = data.asset_type;
+          fiatPrevElement.innerHTML = data.fiat_prev;
+          cryptoPrevElement.innerHTML = data.crypto_prev;
+          buyPrevElement.innerHTML = data.buy_prev;
+          rTaxElement.innerHTML = formatNumber(data.r_tax);
+          rGainNetElement.innerHTML = formatNumber(data.r_gain_net);
+          tGainNetElement.innerHTML = formatNumber(data.t_gain_net);
+          rGainPrevElement.innerHTML = data.r_gain_prev;
+          rTaxPrevElement.innerHTML = data.r_tax_prev;
+          taxDisclosElement.innerHTML = data.tax_disclos;
+          taxDiscreElement.innerHTML = data.tax_discre;
+          auditElement.innerHTML = data.audit;
+          penaltyElement.innerHTML = data.penalty;
+          rGainFinalElement.innerHTML = data.r_gain_final;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+        });
+      }
+    }
+  });
 
 </script>
