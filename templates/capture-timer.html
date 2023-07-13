@@ -158,14 +158,14 @@
     const penaltyElement = document.getElementById('penalty');
     const rGainFinalElement = document.getElementById('r_gain_final');
               
-   
+   //Below is the elements shown in html from updated db:
     roundElement.innerHTML = data.round;
     grElement.innerHTML = data.gr;
     idElement.innerHTML = data.id;
     trxElement.innerHTML = data.trx;
     cryptoElement.textContent = data['crypto'];
     fiatElement.textContent =  formatNumber(data['fiat']);
-    buyElement.innerHTML = data.buy;
+    buyElement.innerHTML = formatNumber(data.buy);
     sellElement.innerHTML = formatNumber(data.sell);
     posElement.innerHTML = data.pos;
     tGainElement.innerHTML = formatNumber(data.t_gain);
@@ -175,9 +175,9 @@
     fiatPrevElement.innerHTML = data.fiat_prev;
     cryptoPrevElement.innerHTML = data.crypto_prev;
     buyPrevElement.innerHTML = data.buy_prev;
-    rTaxElement.innerHTML = data.r_tax;
-    rGainNetElement.innerHTML = data.r_gain_net;
-    tGainNetElement.textContent = data.t_gain_net;
+    rTaxElement.innerHTML = formatNumber(data.r_tax);
+    rGainNetElement.innerHTML = formatNumber(data.r_gain_net);
+    tGainNetElement.innerHTML = formatNumber(data.t_gain_net);
     rGainPrevElement.innerHTML = data.r_gain_prev;
     rTaxPrevElement.innerHTML = data.r_tax_prev;
     taxDisclosElement.innerHTML = data.tax_disclos;
