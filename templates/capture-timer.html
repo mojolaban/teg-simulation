@@ -38,9 +38,9 @@
       var fiatValue = document.getElementById("fiat").textContent;
       var cryptoPrevValue = document.getElementById("crypto_prev").textContent;
       var fiatPrevValue = document.getElementById("fiat_prev").textContent;
-      var buyPrevValue = document.getElementById("buy_prev").textContent; 
+      var buyPrevValue = document.getElementById("buy_prev").textContent.trim(); 
       var sellValue = document.getElementById("sell").textContent; 
-      var buyValue = document.getElementById("buy").textContent; 
+      var buyValue = document.getElementById("buy").textContent.trim(); 
       var tGainValue = document.getElementById("t_gain").textContent; 
       var tTaxValue = document.getElementById("t_tax").textContent;
       var tGainNetValue = document.getElementById("t_gain_net").textContent; 
@@ -69,14 +69,21 @@
     // Convert posValue to the desired values
 //    var fiatValue = 0;
       
+      if (trxValue % 2 !== 0) {  // if trx is odd
+          buyPrevValue = rc(buyValue);
+      } else {  // if trx is even
+          buyPrevValue = rc(priceValue);
+      }
+      buyValue = rc(buyPrevValue);
+      
+           
     if (posValue === "SELL") {
       posValue = "b";
       cryptoPrevValue = cryptoValue;
-      fiatPrevValue = rc(fiatValue);
       cryptoValue = 0.00;
+      fiatPrevValue = rc(fiatValue);
       fiatValue = rc(cryptoPrevValue) * rc(priceValue);
       sellValue = rc(priceValue);
-      buyValue = rc(buyPrevValue);
       tGainValue =  rc(sellValue) - rc(buyValue);
       if (tGainValue > 0) {
         tTaxValue = 0.2 * rc(tGainValue);
@@ -85,24 +92,25 @@
     
     } else if (posValue === "BUY") {
       posValue = "s";
+
       cryptoPrevValue = cryptoValue;
       fiatPrevValue = rc(fiatValue);
       fiatValue = 0;
       cryptoValue = rc(fiatPrevValue) / rc(priceValue);
       sellValue = 0;
-      buyValue =rc(priceValue);
       tGainValue =  0;
       tTaxValue = 0;
       tGainNetValue = 0;
     }
+      
 
-      rTaxPrevValue= rc(rTaxValue)
+   
     // Calculate r_gain & r_tax
     if (trxValue >= 1 && trxValue <= 5) {
       rGainPrevValue = rc(rGainValue);
-      
       rGainValue =  rc(tGainValue) + rc(rGainPrevValue);
-      rTaxValue =  rc(tTaxValue) + rc(rTaxPrevValue);
+      rTaxPrevValue =  0.2 * rc(rGainPrevValue);
+      rTaxValue =  0.2 * rc(rGainValue) ;
       rGainNetValue = rc(rGainValue) - rc(rTaxValue);
     } else {
       rGainValue = 0;
@@ -169,7 +177,7 @@
     buyPrevElement.innerHTML = data.buy_prev;
     rTaxElement.innerHTML = data.r_tax;
     rGainNetElement.innerHTML = data.r_gain_net;
-    tGainNetElement.innerHTML = data.t_gain_net;
+    tGainNetElement.textContent = data.t_gain_net;
     rGainPrevElement.innerHTML = data.r_gain_prev;
     rTaxPrevElement.innerHTML = data.r_tax_prev;
     taxDisclosElement.innerHTML = data.tax_disclos;
