@@ -14,12 +14,16 @@
     
   var timer = 60; /* 60 seconds */
   var timerText = document.getElementById("countdown");
+  var userid = document.getElementById("id").textContent; // Define userid here
+
     
   var countdown = setInterval(function() {
     if (timer === 0) {
       clearInterval(countdown); /* End */
       timerText.innerHTML = "0";
-      window.location.href = "/tr"; // Redirect to "/tr" endpoint after timer reaches 0
+//      var url = "/tr?id=" + encodeURIComponent(userid);
+  //    window.history.pushState({ path: url }, "", url);
+      window.location.href = "/tr?id=" + encodeURIComponent(userid); // Pass the id as a query parameter in the URL
     } else {
       timer -= 1; /* Countdown */
       timerText.innerHTML = timer;
@@ -33,7 +37,7 @@
       if (trxValue !== "5") { // Check if trxValue is not 5
         var timerValue = timer;
         var priceValue = document.getElementById("pricePoint").textContent; 
-        var userid = document.getElementById("id").textContent;
+//        var userid = document.getElementById("id").textContent;
         var groupid = document.getElementById("gr").textContent; 
         var posValue = document.getElementById("pos").innerText; 
         var roundValue = document.getElementById("round").textContent; 
@@ -131,7 +135,7 @@
             rGainPrevValue: rGainPrevValue, 
             rTaxValue: rTaxValue, 
             rTaxPrevValue: rTaxPrevValue, 
-            rGainNetValue: rGainNetValue, 
+            rGainNetValue: rc(rGainNetValue), 
             taxDisclosValue: taxDisclosValue, 
             taxDiscreValue: taxDiscreValue, 
             auditValue: auditValue, 

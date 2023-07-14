@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, jsonify
-from database import engine, insert_group_treatment, fetch_init_data
+from flask import Flask, render_template, request, jsonify, session
+from database import engine, insert_group_treatment, fetch_init_data, retrieve_data
 from sqlalchemy import text
 from datetime import datetime
+import json
 
 app = Flask(__name__)
 
@@ -35,11 +36,17 @@ def starting_game():
        
 #-----Start interacting with the data inside the game
 #-----Send data to the database
+
 @app.route("/sendData", methods=['POST'])
 def send_games_data():
   data = request.get_json()
   timer_value = data.get('timerValue')
-  price_value = data.get('priceValue').replace(',', '')  
+#  price_value = data.get('priceValue').replace(',', '')
+  
+  price_value = data.get('priceValue').replace(',', '')
+  if not price_value:
+      price_value = 0 
+  
   user_id = data.get('userid').replace('\n', '').strip()
   group_id = data.get('groupid').replace('\n', '').strip()
   pos_value = data.get('posValue').replace('\n', '').strip()
@@ -59,7 +66,8 @@ def send_games_data():
   r_gain_prev_value = data.get('rGainPrevValue')
   r_tax_value = data.get('rTaxValue')
   r_tax_prev_value = data.get('rTaxPrevValue')
-  r_gain_net_value = data.get('rGainNetValue')
+  r_gain_net_value = str(data.get('rGainNetValue'))
+  r_gain_net_value = r_gain_net_value.replace('\n', '').strip()
   tax_discre_value = data.get('taxDiscreValue')
   tax_disclos_value =data.get('taxDisclosValue')
   audit_value =data.get('auditValue')
@@ -68,7 +76,7 @@ def send_games_data():
   
   with engine.connect() as conn:
     conn.execute(text("INSERT INTO `teg-simulation`.`responses` (`sec`,`price`,`id`, `gr`, `pos`, `trx`, `round`, `crypto_prev`, `fiat_prev`,`crypto`, `fiat`, `buy_prev`, `buy`, `sell`, `t_gain`,`t_tax`, `t_gain_net`, `r_gain`, `r_gain_prev`,`r_tax`,`r_tax_prev`,`r_gain_net`,`tax_discre`,`tax_disclos`,`audit`,`penalty`,`r_gain_final`) VALUES (:sec, :price, :id, :gr, :pos, :trx, :round, :crypto_prev, :fiat_prev, :crypto, :fiat, :buy_prev,:buy, :sell, :t_gain, :t_tax, :t_gain_net, :r_gain, :r_gain_prev, :r_tax, :r_tax_prev,:r_gain_net,:tax_discre,:tax_disclos,:audit,:penalty,:r_gain_final)"), {"sec": timer_value, "price": price_value, "id": user_id, "gr" : group_id, "pos" : pos_value, "trx" : trx_value, "round" : round_value, "crypto_prev" :crypto_prev_value,  "fiat_prev" :fiat_prev_value, "crypto" :crypto_value,  "fiat" :fiat_value, "buy_prev":buy_prev_value,"buy":buy_value, "sell":sell_value, "t_gain":t_gain_value, "t_tax":t_tax_value, "t_gain_net": t_gain_net_value, "r_gain": r_gain_value, "r_gain_prev": r_gain_prev_value, "r_tax": r_tax_value, "r_tax_prev": r_tax_prev_value,"r_gain_net": r_gain_net_value,"tax_discre": tax_discre_value,"tax_disclos": tax_disclos_value,"audit": audit_value,"penalty": penalty_value,"r_gain_final": r_gain_final_value,})
-    
+    print(f"Sending Data:")
     print(f"Timer Value: {timer_value}")
     print(f"Price Value: {price_value}")
     print(f"User ID: {user_id}")
@@ -169,17 +177,16 @@ def send_games_data():
             print("Retrieved Data:")
             print(updated_data)
             return jsonify(updated_data)
-  return jsonify({})
-   
 
-#----Insert update game data from db to html
+
+#----Insert data to tax reporting page
 @app.route("/tr")
 def tax_reporting():
-            return render_template('tax_reporting.html')
-    
-
-
-
+    user_id = request.args.get('id')
+    response = retrieve_data(user_id)
+    response_data =  response.json  # Convert the content to a dictionary
+    print("Summary Data:", response_data)
+    return render_template('tax_reporting.html', summary_data=response_data)
 
 
   
