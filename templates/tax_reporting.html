@@ -106,32 +106,32 @@
               <div>
                 <div style="text-align: center;">
                   <p style="line-height:1;
-                    margin: 0;color: rgb(130,130,130);font-size:15px">
+                    margin: 0;color: rgb(200,50,20);font-size:15px">
                     <b>Total Asset</b>
                   </p>
                 </div>
                 <div class="row justify-content-evenly">
                   <div class="col-2">
                     <p style="font-size:13px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
+                      margin: 0;color: rgb(150, 30, 10);">
                       Fiat
                     </p>
                   </div>
                   <div class="col-4">
                     <p id="fiat" style="font-size:13px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
+                      margin: 0;color: rgb(150, 30, 10);">
                       {{ "{:,.0f}".format(summary_data['fiat']) }}
                     </p>   
                   </div>
                   <div class="col-3">
                     <p style="font-size:13px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
+                      margin: 0;color: rgb(150, 30, 10);">
                       {{ summary_data['asset_type'] }}
                     </p>
                   </div>
                   <div class="col-3">
                     <p id="crypto" style="font-size:13px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
+                      margin: 0;color: rgb(150, 30, 10);">
                       {{ summary_data['crypto'] }}
                     </p> 
                   </div>
@@ -151,20 +151,20 @@
               <div>
                 <div style="text-align: center;">
                   <p style="line-height:2;
-                    margin: 0;color: rgb(130,130,130);font-size:14px">
+                    margin: 0;color: rgb(200,50,20);font-size:14px">
                     <b>Gain</b>
                   </p>
                 </div>
                 <div class="row justify-content-center">
                   <div class="col-5">
                     <p style="font-size:15px;line-height:1.5;
-                      margin-left: 0;color: rgb(80,80,80);" class="text-center">
+                      margin-left: 0;color: rgb(150, 30, 10);" class="text-center">
                       <i>f</i>
                     </p>
                   </div>
                   <div class="col">
                     <p style="font-size:15px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      margin: 0;color: rgb(150, 30, 10);" class="text-center">
                       {{ "{:,.0f}".format(summary_data['t_gain'])  }}
                     </p>
                   </div>
@@ -184,20 +184,20 @@
               <div>
                 <div style="text-align: center;">
                   <p style="line-height:2;
-                    margin: 0;color: rgb(130,130,130);font-size:15px">
+                    margin: 0;color: rgb(200,50,20);font-size:15px">
                     <b>Tax</b>
                   </p>
                 </div>
                 <div class="row justify-content-evenly">
                   <div class="col-5">
                     <p style="font-size:15px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      margin: 0;color: rgb(150, 30, 10);" class="text-center">
                       <i>f</i>
                     </p>
                   </div>
                   <div class="col">
                     <p style="font-size:15px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      margin: 0;color: rgb(150, 30, 10);" class="text-center">
                       {{ "{:,.0f}".format(summary_data['t_tax']) }}
                     </p>
                   </div>
@@ -217,20 +217,20 @@
               <div>
                 <div style="text-align: center;">
                   <p style="line-height:2;
-                    margin: 0;color: rgb(130,130,130);font-size:15px">
-                    <b>Net Gain</b>
+                    margin: 0;color: rgb(1200,50,20);font-size:15px">
+                    Net Gain
                   </p>
                 </div>
                 <div class="row justify-content-evenly">
                   <div class="col-5">
                     <p style="font-size:15px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      margin: 0;color: rgb(150, 30, 10);" class="text-center">
                       <i>f</i>
                     </p>
                   </div>
                   <div class="col">
                     <p style="font-size:15px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      margin: 0;color: rgb(150, 30, 10);" class="text-center">
                       {{ "{:,.0f}".format(summary_data['t_gain']) }}
                     </p>
                   </div>
@@ -315,12 +315,28 @@
       </div>
     </div>
     
-    <script>
+  <script>
       // Format number with thousand separator comma
       function formatNumber(value) {
         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
-    
+
+      document.getElementById("button-addon2").addEventListener("click", function() {
+        var inputValue = document.getElementById("input-addon2").value.trim();
+      
+        // Check if input is empty
+        if (inputValue === "") {
+          alert("Please enter a value in the input field.");
+          return;
+        }
+      
+        // Check if input exceeds 7 digits
+        if (inputValue.length > 7) {
+          alert("Input should be a maximum of 7 digits.");
+          return;
+        }
+      });
+
       document.getElementById("input-addon2").addEventListener("input", function() {
         var input = parseFloat(document.getElementById("input-addon2").value);
         var expectedGain = document.getElementById("expected_fiat");
