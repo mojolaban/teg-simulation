@@ -283,28 +283,31 @@
           <!-- This is the accumulative stats -->
           <div  id="right-pane" class="col-md-4 offset-md-6" style="margin-left: 0px;">
             <div class='row'>
-              <div class="col-3" style="margin-left: 30px;margin-top: 30px"> 
-                <div style="height: 50px; width:200px;
+              <div class="col-3" style="margin-left: 30px;margin-top: 120px;margin-left: 0px;"> 
+
+                <div style="height: 50px; width:220px;
+                  background-color: black; 
+                  border: 1px solid black; margin-top:40px;
+                  padding: 10px;">
+                  <p style="line-height:0.5;font-size:40px;
+                    margin: 0;color: rgb(40, 180, 120);text-align: center;">
+                     <i>f</i> <span id="expected_fiat">{{"{:,.0f}".format(summary_data['t_gain'])}}</span></p>
+
+                </div>
+
+                <div style="height: 50px; width:220px;
                   background-color: black; 
                   border: 1px solid rgb(10,10,10); 
                   border-radius: 10px;
                   padding: 10px;">
                   <p style="line-height:1;font-size:12px;
-                    margin: 0;color: rgb(130,130,130);text-align: left;">
-                    Potential fiat you may obtain </p>
+                    margin: 0;color: rgb(40, 180, 120);text-align: center;">
+                    (Potential fiat you may obtain </p>
                   <p style="font-size:18px;line-height:1;font-size:12px;
-                    margin: 0;color: rgb(130,130,130);text-align: left;">
-                    from this round (net of taxes)</p>
+                    margin: 0;color: rgb(40, 180, 120);text-align: center;">
+                    from this round, net of taxes)</p>
                 </div>
-                <div style="height: 50px; width:200px;
-                  background-color: black; 
-                  border: 1px solid white; 
-                  padding: 10px;">
-                  <p style="line-height:1;
-                    margin: 0;color: rgb(130,130,130);text-align: center;">
-                     <i>f</i> <span id="expected_fiat">{{"{:,.0f}".format(summary_data['t_gain'])}}</span></p>
-
-                </div>
+                
               </div>
             </div>
           </div> <!-- End of right pane   -->
