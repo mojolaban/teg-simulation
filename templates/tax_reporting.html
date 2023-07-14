@@ -271,7 +271,7 @@
             display: flex;
             justify-content: center;
             align-items: center;">
-                <div class="input-group mb-3">
+                <div class="input-group input-group-lg">
                   <input type="number" class="form-control" placeholder="Reporting taxes" 
                     aria-label="Recipient's username" aria-describedby="button-addon2" id="input-addon2">
                   <button class="btn btn-outline-secondary" type="button" 
@@ -348,6 +348,23 @@
           expectedGain.textContent = formatNumber((totalGain - input).toFixed());
         }
       });
+
+          $("#input-addon2").on("keyup", function(event) {
+        // When the arrow keys are pressed, abort.
+        if ($.inArray(event.keyCode, [38, 40, 37, 39]) !== -1) {
+          return;
+        }
+        
+        var $this = $(this);
+        // Get the value.
+        var input = $this.val();
+        input = input.replace(/[\D\s\._\-]+/g, "");
+        input = input ? parseInt(input, 10) : 0;
+        $this.val(function() {
+          return (input === 0) ? "" : input.toLocaleString("en-US");
+        });
+      });
+          
     </script>
     
   </body>
