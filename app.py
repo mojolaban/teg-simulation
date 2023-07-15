@@ -182,6 +182,7 @@ def send_games_data():
 #----Insert data to tax reporting page
 @app.route("/tr")
 def tax_reporting():
+     
     user_id = request.args.get('id')
     response = retrieve_data(user_id)
     response_data =  response.json  # Convert the content to a dictionary
