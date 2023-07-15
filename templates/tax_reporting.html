@@ -319,68 +319,63 @@
     </div>
     
     <script>
-
-  
-  function formatNumber(value) {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
-      
-          function updateTextView(_obj){
-            var num = getNumber(_obj.val());
-            if(num==0){
-              _obj.val('');
-            }else{
-              var formattedNum = formatNumber(num); //new line from CG
-              _obj.val(formattedNum); //here is where the shown number is
-            }
-          }
-      
-          function getNumber(_str){
-            var arr = _str.split('');
-            var out = new Array();
-            for(var cnt=0;cnt<arr.length;cnt++){
-              if(isNaN(arr[cnt])==false){
-                out.push(arr[cnt]);
-              }
-            }
-            return Number(out.join(''));
-          }
-          $(document).ready(function(){
-            $('input[type=text]').on('keyup',function(){
-
-            var maxDigits = 7;
-            var inputValue = $(this).val();
-            if (inputValue.length > maxDigits) {
-            $(this).val(inputValue.slice(0, maxDigits));
-            }
-              
-              updateTextView($(this));
-            });
-          });
-
-
-
-  document.getElementById("tax-input").addEventListener("input", function() {
-    var input = getNumber(this.value);//parseFloat(this.value.trim());
-    var expectedFiat = document.getElementById("expected_fiat");
-    var rGain = parseFloat("{{ summary_data['r_gain']|int }}");
-
-    if (input==="") {
-      expectedFiat.textContent = formatNumber(rGain);
-    } else {
-      var inputNumber = parseFloat(input);
-      expectedFiat.textContent = formatNumber((rGain - inputNumber).toFixed());
-    }
-
-    // Validate input
-var inputLength = this.value.trim().replace(/,/g, '').length;
-if (isNaN(input) || inputLength > 7) {
-  this.setCustomValidity("Please enter a valid number up to 7 digits.");
-} else {
-  this.setCustomValidity("");
+      function formatNumber(value) {
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+function updateTextView(_obj) {
+  var num = getNumber(_obj.val());
+  if (num === 0) {
+    _obj.val('');
+  } else {
+    _obj.val(formatNumber(num));
+  }
+}
+
+function getNumber(_str) {
+  var arr = _str.replace(/,/g, '').split('');
+  var out = new Array();
+  for (var cnt = 0; cnt < arr.length && cnt < 7; cnt++) {
+    if (!isNaN(arr[cnt])) {
+      out.push(arr[cnt]);
+    }
+  }
+  return out.join('');
+}
+
+$(document).ready(function () {
+  $('input[type=text]').on('input', function () {
+    var maxDigits = 7;
+    var inputValue = $(this).val();
+    if (inputValue.length > maxDigits) {
+      $(this).val(inputValue.slice(0, maxDigits));
+    }
+    updateTextView($(this));
   });
+});
+
+document.getElementById("tax-input").addEventListener("input", function () {
+  var input = getNumber(this.value);
+  var expectedFiat = document.getElementById("expected_fiat");
+  var rGain = parseFloat("{{ summary_data['r_gain']|int }}");
+
+  if (input === "") {
+    expectedFiat.textContent = formatNumber(rGain);
+  } else {
+    var inputNumber = parseInt(input.substring(0, 6));
+    expectedFiat.textContent = formatNumber(rGain - inputNumber);
+  }
+
+  // Validate input
+  var inputLength = this.value.trim().replace(/,/g, '').length;
+  if (isNaN(inputNumber) || inputLength > 7) {
+    this.setCustomValidity("Please enter a valid number up to 7 digits.");
+  } else {
+    this.setCustomValidity("");
+  }
+});
+
+      
     </script>
     
   </body>
