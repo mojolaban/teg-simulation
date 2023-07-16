@@ -34,7 +34,7 @@ def insert_group_treatment():
         return treatment
 
 
-#----Fecth initial game data from db 
+#----2. Fecth initial game data from db 
 def fetch_init_data(id):
     with engine.connect() as conn:
         result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"), {"id": id})
@@ -108,14 +108,14 @@ def fetch_init_data(id):
         return None
       
 
-
-def retrieve_data(data):
-    user_id = data.replace('\n', '').strip()
+#----3. Retrieve data from db 
+def retrieve_data(id):
+    user_id = id.replace('\n', '').strip()
 
     with engine.connect() as conn:
         result = conn.execute(
             text(
-                "SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"),
+                "SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final, sec, price  FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"),
             {"id": user_id})
         row = result.fetchone()
         if row:
@@ -144,6 +144,8 @@ def retrieve_data(data):
             audit = row[22]
             penalty = row[23]
             r_gain_final = row[24]
+            sec_value = row[25]
+            price_value = row[26]
 
             if gr_value == '2':
                 asset_type = "Stock"
@@ -181,12 +183,30 @@ def retrieve_data(data):
                 "tax_discre": tax_discre,
                 "audit": audit,
                 "penalty": penalty,
-                "r_gain_final": r_gain_final
+                "r_gain_final": r_gain_final,
+                "sec" : sec_value,
+                "price": price_value
             }
+          
 
             return jsonify(updated_data)
 
     return jsonify({})
+
+#---4. Send data to db:
+def send_data(data):
+    user_id = data.replace('\n', '').strip()
+
+    with engine.connect() as conn:
+        # Insert the treatment, ID, round, transaction, initial asset, and other values into the 'responses' table
+        conn.execute(
+            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`,`r_gain`,`t_tax`,`tax_disclos`,`tax_discre`,`audit`,`penalty`,`t_gain_net`,`r_gain_net`,`r_gain_final`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`,`buy_prev`,`r_gain_prev`, `r_tax_prev`)VALUES ('1', :treatment, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"), {"treatment": treatment, "id": random_id})
+      # Create a dictionary with the treatment and id values
+        treatment = {"treatment": treatment, "id": random_id}
+        return treatment
+
+
+
 
 
 def fetch_update_data(id):

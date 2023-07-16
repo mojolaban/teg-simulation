@@ -88,7 +88,6 @@ def send_games_data():
     print(f"Fiat_Prev Value: {fiat_prev_value}")
     print(f"Crypto Value: {crypto_value}")
     print(f"Fiat Value: {fiat_value}")
-    print(f"Fiat Prev Value: {fiat_prev_value}")
     print(f"Buy_Prev Value: {buy_prev_value}")
     print(f"Buy Value: {buy_value}")
     print(f"Sell Value: {sell_value}")
@@ -189,6 +188,14 @@ def tax_reporting():
     print("Summary Data:", response_data)
     return render_template('tax_reporting.html', summary_data=response_data)
 
+#----Sending data from tax reporting page to db, then show them to audit page
+@app.route("/tax_disclosure", methods=["POST"])
+def tax_disclosure():
+    return render_template('tax_audit_0.html')
+ #   user_id = request.args.get('id')
+ #   response = retrieve_data(user_id)
+ #   response_data =  response.json  # Convert the content to a dictionary
+ #   print("Summary Data:", response_data)
 
   
 
