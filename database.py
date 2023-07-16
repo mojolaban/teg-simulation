@@ -28,7 +28,7 @@ def insert_group_treatment():
             {"treatment": treatment, "id": random_id})
         # Insert the treatment, ID, round, transaction, initial asset, and other values into the 'responses' table
         conn.execute(
-            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`,`r_gain`,`t_tax`,`tax_disclos`,`tax_discre`,`audit`,`penalty`,`t_gain_net`,`r_gain_net`,`r_gain_final`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`,`buy_prev`,`r_gain_prev`, `r_tax_prev`)VALUES ('1', :treatment, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"), {"treatment": treatment, "id": random_id})
+            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`, `r_gain`, `t_tax`, `tax_disclos`, `audit`, `t_gain_net`, `r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`, `buy_prev`, `r_gain_prev`,`r_tax_prev`)VALUES ('1', :treatment, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"), {"treatment": treatment, "id": random_id})
       # Create a dictionary with the treatment and id values
         treatment = {"treatment": treatment, "id": random_id}
         return treatment
@@ -200,7 +200,7 @@ def send_data(data):
     with engine.connect() as conn:
         # Insert the treatment, ID, round, transaction, initial asset, and other values into the 'responses' table
         conn.execute(
-            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`,`r_gain`,`t_tax`,`tax_disclos`,`tax_discre`,`audit`,`penalty`,`t_gain_net`,`r_gain_net`,`r_gain_final`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`,`buy_prev`,`r_gain_prev`, `r_tax_prev`)VALUES ('1', :treatment, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"), {"treatment": treatment, "id": random_id})
+            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`,`r_gain`,`t_tax`,`tax_disclos`,`audit`,`t_gain_net`,`r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`,`buy_prev`,`r_gain_prev`, `r_tax_prev`)VALUES ('1', :treatment, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"), {"treatment": treatment, "id": random_id})
       # Create a dictionary with the treatment and id values
         treatment = {"treatment": treatment, "id": random_id}
         return treatment

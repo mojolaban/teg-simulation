@@ -68,14 +68,14 @@ def send_games_data():
   r_tax_prev_value = data.get('rTaxPrevValue')
   r_gain_net_value = str(data.get('rGainNetValue'))
   r_gain_net_value = r_gain_net_value.replace('\n', '').strip()
-  tax_discre_value = data.get('taxDiscreValue')
+#  tax_discre_value = data.get('taxDiscreValue')
   tax_disclos_value =data.get('taxDisclosValue')
   audit_value =data.get('auditValue')
-  penalty_value =data.get('penaltyValue')
-  r_gain_final_value =data.get('rGainFinalValue')
+#  penalty_value =data.get('penaltyValue')
+#  r_gain_final_value =data.get('rGainFinalValue')
   
   with engine.connect() as conn:
-    conn.execute(text("INSERT INTO `teg-simulation`.`responses` (`sec`,`price`,`id`, `gr`, `pos`, `trx`, `round`, `crypto_prev`, `fiat_prev`,`crypto`, `fiat`, `buy_prev`, `buy`, `sell`, `t_gain`,`t_tax`, `t_gain_net`, `r_gain`, `r_gain_prev`,`r_tax`,`r_tax_prev`,`r_gain_net`,`tax_discre`,`tax_disclos`,`audit`,`penalty`,`r_gain_final`) VALUES (:sec, :price, :id, :gr, :pos, :trx, :round, :crypto_prev, :fiat_prev, :crypto, :fiat, :buy_prev,:buy, :sell, :t_gain, :t_tax, :t_gain_net, :r_gain, :r_gain_prev, :r_tax, :r_tax_prev,:r_gain_net,:tax_discre,:tax_disclos,:audit,:penalty,:r_gain_final)"), {"sec": timer_value, "price": price_value, "id": user_id, "gr" : group_id, "pos" : pos_value, "trx" : trx_value, "round" : round_value, "crypto_prev" :crypto_prev_value,  "fiat_prev" :fiat_prev_value, "crypto" :crypto_value,  "fiat" :fiat_value, "buy_prev":buy_prev_value,"buy":buy_value, "sell":sell_value, "t_gain":t_gain_value, "t_tax":t_tax_value, "t_gain_net": t_gain_net_value, "r_gain": r_gain_value, "r_gain_prev": r_gain_prev_value, "r_tax": r_tax_value, "r_tax_prev": r_tax_prev_value,"r_gain_net": r_gain_net_value,"tax_discre": tax_discre_value,"tax_disclos": tax_disclos_value,"audit": audit_value,"penalty": penalty_value,"r_gain_final": r_gain_final_value,})
+    conn.execute(text("INSERT INTO `teg-simulation`.`responses` (`sec`,`price`,`id`, `gr`, `pos`, `trx`, `round`, `crypto_prev`, `fiat_prev`,`crypto`, `fiat`, `buy_prev`, `buy`, `sell`, `t_gain`,`t_tax`, `t_gain_net`, `r_gain`, `r_gain_prev`, `r_tax`, `r_tax_prev`, `r_gain_net`, `tax_disclos`,`audit`) VALUES (:sec, :price, :id, :gr, :pos, :trx, :round, :crypto_prev, :fiat_prev, :crypto, :fiat, :buy_prev,:buy, :sell, :t_gain, :t_tax, :t_gain_net, :r_gain, :r_gain_prev, :r_tax, :r_tax_prev, :r_gain_net, :tax_disclos,:audit)"), {"sec": timer_value, "price": price_value, "id": user_id, "gr" : group_id, "pos" : pos_value, "trx" : trx_value, "round" : round_value, "crypto_prev" :crypto_prev_value,  "fiat_prev" :fiat_prev_value, "crypto" :crypto_value,  "fiat" :fiat_value, "buy_prev":buy_prev_value,"buy":buy_value, "sell":sell_value, "t_gain":t_gain_value, "t_tax":t_tax_value, "t_gain_net": t_gain_net_value, "r_gain": r_gain_value, "r_gain_prev": r_gain_prev_value, "r_tax": r_tax_value, "r_tax_prev": r_tax_prev_value,"r_gain_net": r_gain_net_value,"tax_disclos": tax_disclos_value,"audit": audit_value})
     print(f"Sending Data:")
     print(f"Timer Value: {timer_value}")
     print(f"Price Value: {price_value}")
@@ -100,10 +100,7 @@ def send_games_data():
     print(f"Rnd Tax_Prev Value: {r_tax_prev_value}")
     print(f"Rnd Gain Net Value: {r_gain_net_value}")
     print(f"Tax Disclos Value: {tax_disclos_value}")
-    print(f"Tax Discre Value: {tax_discre_value}")
     print(f"Audit Value: {audit_value}")
-    print(f"Penalty Value: {penalty_value}")
-    print(f"Rnd Gain Final Value: {r_gain_final_value}")
 
     result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"), {"id": user_id})
     row = result.fetchone()
@@ -189,9 +186,12 @@ def tax_reporting():
     return render_template('tax_reporting.html', summary_data=response_data)
 
 #----Sending data from tax reporting page to db, then show them to audit page
-@app.route("/tax_disclosure", methods=["POST"])
+@app.route("/tax_disclosure") #, methods=["POST"]
 def tax_disclosure():
-    return render_template('tax_audit_0.html')
+    data = request.args
+    
+    return jsonify(data)
+  #  return render_template('tax_audit_0.html')
  #   user_id = request.args.get('id')
  #   response = retrieve_data(user_id)
  #   response_data =  response.json  # Convert the content to a dictionary

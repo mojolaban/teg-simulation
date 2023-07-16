@@ -88,7 +88,7 @@
           <div class="col-md-4">
             <div class="fixed-box-2">
               Time:
-              <span id="countdown">30</span>s
+              <span id="countdown">0</span>s
             </div>
           </div>
         </div>
@@ -295,6 +295,7 @@
               </div>
             </div>
             <!-- The Submit Button -->
+                <form action="/tax_disclosure" > <!-- method="POST" -->
             <div id="reporting-box" class="mx-auto" style="height: 100px; width: 400px;
             background-color: black;
             border: 1px solid black;
@@ -306,7 +307,15 @@
             display: flex;
             justify-content: center;
             align-items: center;">
-              <input type="text" id="tax-input" placeholder="Reporting taxes" style="height: 50px; width: 800px; text-align: center;border-radius: 10px;"> </input>
+    
+                  <span id="id"  style="color:rgba(0,0,0,0);font-size:1px;"> 
+                   {{ summary_data['id'] }}</span>
+                  <span id="tax_disclos"  style="color:rgba(0,0,0,0);font-size:1px;"> 
+                   </span>
+  
+              <input type="text" required id="tax-input" name="tax_disclose" placeholder="Reporting taxes" style="height: 50px; width: 400px; text-align: center;border-radius: 10px;"> </input>
+
+
             </div>
 
             <div class="row justify-content-center" style="margin-left: 0px;">
@@ -321,13 +330,16 @@
                   font-weight: bold;
                   background-color:  white;
                   color: grey ;"
-                  onmouseover="showTotals()"
-                  onmouseout="hideTotals()">
+                  onmouseover="showTotals() ; this.style.backgroundColor = 'rgb(10,10,10)'"
+                  onmouseout="hideTotals();this.style.backgroundColor = 'white'">
                   Show Totals
                  </button>
               </div>
               <div class="col-5 d-flex justify-content-center">
-                <button type="button" id="reportTaxesButton"
+
+                <input type="hidden" name="id" value= {{summary_data.id}}>
+                
+                <button type="submit" id="reportTaxesButton"
                   style="margin-left: 0px;
                   width: 190px;
                   padding: 10px 30px;
@@ -339,15 +351,16 @@
                   color: grey;"
                   onmouseover="this.style.backgroundColor = 'rgb(10,10,10)'"
                   onmouseout="this.style.backgroundColor = 'white'">
-                  Report Taxes
-                </button>
+                  Next
+                </button>     
+                
+                </form>   
+              
               </div>
             </div>
           </div> <!-- End of middle section  -->
 
-
-
-          
+     
           <!-- This is the right section -->
           <div id="right-pane" class="col-md-1 offset-md-1" style="margin-left: 0px;">
             <div class='row'>
@@ -383,100 +396,8 @@
       </div>
     </div>
 
-    <form action="/tax_disclosure" method="POST">
-    
-      <span id="id"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.id'] }}</span>
-      <span id="tax_disclos"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.tax_disclos'] }}</span>
-          <span id="tax_discre"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.tax_discre'] }}</span>  
-      <span id="audit"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.audit'] }}</span>
-    <span id="penalty"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.penalty'] }}</span>
-      <span id="r_gain_final"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.r_gain_final'] }}</span>
-    </form>
-    
- <!--   
-    <span id="round"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.round'] }}</span>
-      <span id="gr"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.gr'] }}</span>
-
-      <span id="trx"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.trx'] }}</span>
-     <span id="gr"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.crypto'] }}</span>
-     <span id="gr"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.fiat'] }}</span> 
-      <span id="buy"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.buy'] }}</span>
-      <span id="sell"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.sell'] }}</span>    
-      <span id="pos"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.pos'] }}</span>
-      <span id="t_gain"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.t_gain'] }}</span>
-     <span id="gr"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.r_gain'] }}</span> 
-      <span id="t_tax"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.t_tax'] }}</span>
-      <span id="crypto_prev"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.crypto_prev'] }}</span>
-      <span id="fiat_prev"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.fiat_prev'] }}</span>
-      <span id="buy_prev"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.buy_prev'] }}</span>
-     <span id="gr"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.r_tax'] }}</span>    
-       <span id="gr"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.r_gain_net'] }}</span> 
-      <span id="t_gain_net"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.t_gain_net'] }}</span>
-      <span id="r_gain_prev"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.r_gain_prev'] }}</span>
-      <span id="r_tax_prev"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.r_tax_prev'] }}</span>
-
-
-          <span id="sec"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.sec'] }}</span>
-      <span id="price"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-           {{ summary_data['data.price'] }}</span> -->
-    
-    <script>
-    
-
-// new
-function startCountdown(duration, display) {
-  var timer = duration;
-  var interval = setInterval(function () {
-    var seconds = timer % 60; // Get the remaining seconds
-    seconds = seconds < 10 ? seconds.toString() : seconds; // Remove leading zero for single-digit numbers
-
-    display.textContent = seconds; // Update the display with seconds
-
-    if (--timer < 0) {
-      clearInterval(interval); // Stop the countdown when timer reaches 0
-      display.textContent = "0"; // Display 0 when the countdown ends
-      enableReportTaxesButton(); // Enable the "Report Taxes" button
-      
-
-      //starts
-      // Send data to the "/tax_disclosure" endpoint
-      //stops
-    }
-  }, 1000);
-}
-
-      
-      //newend
-
-      
-      var showTotalsFlag = false;
-
+  <script>
+// Input Number Validation
       function formatNumber(value) {
         return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
       }
@@ -500,6 +421,10 @@ function startCountdown(duration, display) {
         }
         return out.join('');
       }
+
+ // Hide or Show Totals
+      
+      var showTotalsFlag = false;
 
       function showTotals() {
         if (!showTotalsFlag) {
@@ -547,32 +472,28 @@ function startCountdown(duration, display) {
         // Validate input
         var inputLength = this.value.trim().replace(/,/g, '').length;
         if (isNaN(inputNumber) || inputLength > 7) {
-          this.setCustomValidity("Please enter a valid number up to 7 digits.");
+          this.setCustomValidity("Please enter a valid number up to 6 digits.");
         } else {
           this.setCustomValidity("");
         }
       });
 
+
+
 //Press "Report Taxes"
         
-     $('#reportTaxesButton').on('click', function () {
+     $('form').on('submit', function () {
         var id = "{{ summary_data['id'] }}";
         var taxInput = $('#tax-input').val();
-
-       var rTax = {{ summary_data['r_tax'] }};
-       var taxDiscre = rTax - parseInt(taxInput.replace(/,/g, '')) ;
-       var audit = Math.random() < 0.2 ? 1 : 0;
-       var penalty = audit === 1 ? 2 * taxDiscre : 0;
-       var rGain = {{ summary_data['r_gain'] }};
-       var rGainFinal = rGain - (taxDiscre + penalty);
-
        
         $('#id').text(id);
         $('#tax_disclos').text(taxInput);
-        $('#tax_discre').text(taxDiscre);
-        $('#audit').text(audit);
-        $('#penalty').text(penalty);
-        $('#r_gain_final').text(rGainFinal);
+
+        
+      // Include the "id" value in the form submission
+        $('form').append('<input type="hidden" name="id" value="' + id + '">');
+        $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">');
+ 
       
        
 /*
@@ -600,9 +521,7 @@ function startCountdown(duration, display) {
 
 //new
           // Start the countdown timer when the page loads
-  var countdownDuration = 10; // Duration in seconds
-  var countdownDisplay = document.getElementById("countdown");
-  startCountdown(countdownDuration, countdownDisplay);
+
         //newend
 
         
