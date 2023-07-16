@@ -3,6 +3,7 @@ from database import engine, insert_group_treatment, fetch_init_data, retrieve_d
 from sqlalchemy import text
 from datetime import datetime
 import json
+import random
 
 app = Flask(__name__)
 
@@ -169,7 +170,6 @@ def send_games_data():
                 "penalty":penalty,
                 "r_gain_final":r_gain_final
             }
-
             print("Retrieved Data:")
             print(updated_data)
             return jsonify(updated_data)
@@ -177,8 +177,7 @@ def send_games_data():
 
 #----Insert data to tax reporting page
 @app.route("/tr")
-def tax_reporting():
-     
+def tax_reporting():     
     user_id = request.args.get('id')
     response = retrieve_data(user_id)
     response_data =  response.json  # Convert the content to a dictionary
@@ -189,7 +188,25 @@ def tax_reporting():
 @app.route("/tax_disclosure") #, methods=["POST"]
 def tax_disclosure():
     data = request.args
-    
+    userid = (data['id'])
+    taxdisclos = (data['tax_disclose']).replace(',', '')
+    audit_value = 0 if random.random() < 0.8 else 1
+    print("Reported Data:")
+    print(f"UserID: {userid}")
+    print(f"Audit: {audit_value}")
+    print(f"Tax Disclos: {taxdisclos}")
+  
+  
+    with engine.connect() as conn:
+      update_statement = text("""
+        UPDATE `teg-simulation`.`responses`
+        SET `tax_disclos` = :new_tax_disclos_value, `audit` = :audit_value
+        WHERE `id` = :user_id
+        ORDER BY `ts` DESC
+        LIMIT 1
+        """)
+      conn.execute(update_statement, {"new_tax_disclos_value": taxdisclos, "audit_value": audit_value, "user_id": userid})
+
     return jsonify(data)
   #  return render_template('tax_audit_0.html')
  #   user_id = request.args.get('id')
