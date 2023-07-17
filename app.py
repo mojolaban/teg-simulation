@@ -195,8 +195,7 @@ def tax_disclosure():
     print(f"UserID: {userid}")
     print(f"Audit: {audit_value}")
     print(f"Tax Disclos: {taxdisclos}")
-  
-  
+ 
     with engine.connect() as conn:
       update_statement = text("""
         UPDATE `teg-simulation`.`responses`
@@ -206,8 +205,37 @@ def tax_disclosure():
         LIMIT 1
         """)
       conn.execute(update_statement, {"new_tax_disclos_value": taxdisclos, "audit_value": audit_value, "user_id": userid})
+      
+      select_statement = text("""
+        SELECT `round`, `audit`
+        FROM `teg-simulation`.`responses`
+        WHERE `id` = :user_id
+        ORDER BY `ts` DESC
+        LIMIT 1
+        """)
+      result = conn.execute(select_statement, {"user_id": userid})
+      latest_round, latest_audit = result.fetchone()
+        
+    print("Latest Data:")
+    print(f"Round: {latest_round}")
+    print(f"Audit: {latest_audit}")
 
+  
+    if latest_round < 15:
+        if latest_audit == 1:
+            response = retrieve_data(userid)
+            response_data =  response.json 
+            return render_template("tax_audit_1.html", summary_data=response_data)
+        elif latest_audit == 0:
+            response = retrieve_data(userid)
+            response_data =  response.json 
+            return render_template("tax_audit_0.html", summary_data=response_data)
+
+
+  
     return jsonify(data)
+
+
   #  return render_template('tax_audit_0.html')
  #   user_id = request.args.get('id')
  #   response = retrieve_data(user_id)
