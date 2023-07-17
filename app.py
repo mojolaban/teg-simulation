@@ -24,7 +24,7 @@ def after_instructions():
         return Error
 
 #----Insert initial game data from db to html
-@app.route("/start", methods=["POST"])
+@app.route("/start", methods=['POST'])
 def starting_game():
     id = request.form.get('id')
     print("ID:", id)  # Debug statement
@@ -187,9 +187,10 @@ def tax_reporting():
 #----Sending data from tax reporting page to db, then show them to audit page
 @app.route("/tax_disclosure") #, methods=["POST"]
 def tax_disclosure():
+  
     data = request.args
     userid = (data['id'])
-    taxdisclos = (data['tax_disclose']).replace(',', '')
+    taxdisclos = (data['tax_disclos']).replace(',', '')
     audit_value = 0 if random.random() < 0.8 else 1
     print("Reported Data:")
     print(f"UserID: {userid}")
@@ -219,8 +220,7 @@ def tax_disclosure():
     print("Latest Data:")
     print(f"Round: {latest_round}")
     print(f"Audit: {latest_audit}")
-
-  
+ 
     if latest_round < 15:
         if latest_audit == 1:
             response = retrieve_data(userid)
@@ -230,19 +230,42 @@ def tax_disclosure():
             response = retrieve_data(userid)
             response_data =  response.json 
             return render_template("tax_audit_0.html", summary_data=response_data)
-
-
-  
     return jsonify(data)
 
 
-  #  return render_template('tax_audit_0.html')
- #   user_id = request.args.get('id')
- #   response = retrieve_data(user_id)
- #   response_data =  response.json  # Convert the content to a dictionary
- #   print("Summary Data:", response_data)
+#----Sending data from tax audit page to db, initiate new round then go to rounds
+@app.route("/next_round") #, methods=["POST"])
+def next_round():
+    data = request.args
+    userid = (data['id'])
+    print("Next Round Data:")
+    print(f"UserID: {userid}")
+
+    with engine.connect() as conn:
+        select_statement = text("""
+            SELECT `round`, `gr` 
+            FROM `teg-simulation`.`responses`
+            WHERE `id` = :user_id
+            ORDER BY `ts` DESC
+            LIMIT 1
+        """)
+        result = conn.execute(select_statement, {"user_id": userid})
+        latest_round, gr = result.fetchone()
+
+        if latest_round is not None:
+            next_round = latest_round + 1
+        else:
+            next_round = 1
+
+        conn.execute(
+            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`, `r_gain`, `t_tax`, `tax_disclos`, `audit`, `t_gain_net`, `r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`, `buy_prev`, `r_gain_prev`,`r_tax_prev`)VALUES (:round, :gr, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"),
+            {"round": next_round, "gr": gr, "id": userid}
+        )
+    init_data = fetch_init_data({userid})
+#       print("Init Data:", init_data)  # Debug statement
+    if init_data:
+        return render_template('rounds.html', data=init_data)
 
   
-
 if __name__ == "__main__":
   app.run(host="0.0.0.0", debug=True)

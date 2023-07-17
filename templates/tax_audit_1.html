@@ -1,0 +1,566 @@
+<html>
+  <head>
+    {% include 'bootstrap.html' %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>TEG</title>
+
+    <style>
+      p {
+        font-family: Arial;
+        color: rgb(80, 80, 80);
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 40px;
+        font-family: Arial;
+        color: rgb(80, 80, 80);
+      }
+      #container {
+        max-width: 75%;
+        margin: 10px auto;
+        justify-content: center;
+        align-items: center;
+        background-color: black;
+        border: 1px solid white;
+        
+      }
+      .fixed-box-0 {
+        height: 85px;
+        max-width: 95%;
+        border: 1px solid #ccc;
+        padding: 10px;
+        position: relative;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 20px;
+        background-color: white;
+      }
+      .fixed-box-1 {
+        font-family: Arial;
+        color: rgb(80, 80, 80);
+        height: 450px;
+        overflow: auto;
+        border: 1px solid black;
+        padding: 10px;
+        position: relative;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 20px;
+      }
+      .fixed-box-2 {
+        font-family: Arial;
+        font-size: 25px;
+        color: rgb(80, 80, 80);
+        height: 60px;
+        overflow: auto;
+        border: 1px solid red;
+        padding: 10px;
+        border-radius: 10px;
+        margin-left: 40px;
+        margin-right: 0px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .fixed-box-2 span {
+        margin-left: 5px;
+      }
+      /* Remove up and down arrow from input[type="number"] */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+      <!-- Round and Timer -->
+      <div class="fixed-box-0">
+        <div class='row'>
+          <!-- Round -->
+          <div class="col-md-7" style="margin-left: 20px;">
+            <h1>End of Round {{ summary_data['round'] }}<span id="round"> </span></h1>
+          </div>
+          <!-- Timer -->
+          <div class="col-md-4">
+            <div class="fixed-box-2">
+              Time:
+              <span id="countdown">0</span>s
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fixed-box-1">
+        <div class='row'>
+          
+          <!-- This is the Totals Pane -->
+          <div id="left-pane" class="col-2" style="margin-left: 30px;">
+            <!-- Start of Left Pane -->
+            
+            <!-- Your Total Asset -->
+            <div id="total-asset-box" style="height: 60px; width: 200px;
+              background-color: black;
+              border: 1px solid #222222;
+              border-radius: 10px;
+              padding: 10px;
+              margin-bottom: 20px;">
+              <div>
+                <div style="text-align: center;">
+                  <p style="line-height:1;
+                    margin: 0;color: rgb(130,130,130);font-size:12px">
+                    <b>Total Asset</b>
+                  </p>
+                </div>
+                <div class="row justify-content-evenly">
+                  <div class="col-2">
+                    <p style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(80,80,80);">
+                      Fiat
+                    </p>
+                  </div>
+                  <div class="col-4">
+                    <p id="fiat" style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(80,80,80);">
+                      <!-- {{ "{:,.0f}".format(summary_data['fiat']) }} -->
+                    </p>
+                  </div>
+                  <div class="col-3">
+                    <p style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(80,80,80);">
+                      {{ summary_data['asset_type'] }}
+                    </p>
+                  </div>
+                  <div class="col-3">
+                    <p id="crypto" style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(80,80,80);">
+                      <!-- {{ summary_data['crypto'] }} -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+
+            <!-- TOTAL GAIN -->
+            <div id="total-gain-box" style="height: 60px; width: 200px;
+              background-color: black;
+              border: 1px solid #111111;
+              border-radius: 10px;
+              padding: 5px;
+              margin-left: 0px;
+              margin-top:5px;
+              margin-bottom:10px;">
+              <div>
+                <div style="text-align: center;">
+                  <p style="line-height:2;
+                    margin: 0;color: rgb(130,130,130);font-size:12px">
+                    <b>Total Gain</b>
+                  </p>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-5">
+                    <p style="font-size:12px;line-height:1.5;
+                      margin-left: 0;color: rgb(80,80,80);" class="text-center">
+                      <i>f</i>
+                    </p>
+                  </div>
+                  <div class="col">
+                    <p id="r_gain" style="font-size:12px;line-height:1.5;
+                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      <!-- {{ "{:,.0f}".format(summary_data['r_gain'])  }} -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TOTAL TAX -->
+            <div id="total-tax-box" style="height: 60px; width: 200px;
+              background-color: black;
+              border: 1px solid #111111;
+              border-radius: 10px;
+              padding: 5px;
+              margin-left: 0px;
+              margin-top:0px;
+              margin-bottom:10px;">
+              <div>
+                <div style="text-align: center;">
+                  <p style="line-height:2;
+                    margin: 0;color: rgb(130,130,130);font-size:12px">
+                    <b>Total Tax</b>
+                  </p>
+                </div>
+                <div class="row justify-content-evenly">
+                  <div class="col-5">
+                    <p style="font-size:12px;line-height:1.5;
+                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      <i>f</i>
+                    </p>
+                  </div>
+                  <div class="col">
+                    <p id="r_tax" style="font-size:12px;line-height:1.5;
+                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      <!-- {{ "{:,.0f}".format(summary_data['t_tax']) }} -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TOTAL NET GAIN -->
+            <div id="total-net-gain-box" style="height: 75px; width: 200px;
+              background-color: black;
+              border: 1px solid #111111;
+              border-radius: 10px;
+              padding: 10px;
+              margin-left: 0px;
+              margin-top:20px;
+              margin-bottom:10px;">
+              <div>
+                <div style="text-align: center;">
+                  <p style="line-height:2;
+                    margin: 0;color: rgb(130,130,130);font-size:12px">
+                    <b>Total Net Gain</b>
+                  </p>
+                </div>
+                <div class="row justify-content-evenly">
+                  <div class="col-5">
+                    <p style="font-size:12px;line-height:1.5;
+                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      <i>f</i>
+                    </p>
+                  </div>
+                  <div class="col">
+                    <p id="r_gain_net" style="font-size:12px;line-height:1.5;
+                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      <!-- {{ "{:,.0f}".format(summary_data['r_gain_net']) }} -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Position Tax Reporting -->
+            <div style="height: 33px; width: 200px;
+              background-color: black;
+              border: 1px solid #111111;
+              border-radius: 10px;
+              padding: 5px;
+              margin-left: 0px;
+              margin-top:20px;              display: flex;               align-items: center;
+              justify-content: center;
+              text-align: right;">
+              <div class="row">
+                <div id="img-star" class="col-3 d-flex justify-content-center align-items-center">
+                  <img src="{{ url_for('static', filename='star.png') }}" alt="Small Image"
+                    style="width: 13px; height: 13px;">
+                </div>
+                <div id="text-star" class="col-9">
+                  <span style="line-height:2;
+                      margin: 0;color: rgb(130,130,130);font-size:11px; text-align: center;">
+                    <b>TAX AUDIT</b></span>
+                </div>
+              </div>
+            </div>
+
+          </div> <!-- End of left pane  -->
+
+
+
+          
+
+          <!-- This is middle section -->
+          <div id="middle-pane" class="col-md-6 offset-md-1" style="margin-left: 0px;margin-right: 0px;border: 1px solid  rgba(0, 0, 0, 0)">
+            <!-- The Text -->
+            <div class="mx-auto text-center" style="height: 80px; width:100px
+            background-color: black;
+            border: 1px solid black;
+            border-radius: 1px;
+            padding: 0px;
+            margin-left: 0px;
+            margin-top:30px;
+            margin-bottom:0px;">
+              
+            
+                <p class="text-center" style="line-height:1;margin-bottom:0px;color:rgb(256,256,256);font-size: 30px">
+                Attention!
+                </p>
+                <p class="text-center" style="font-size:30px;line-height:1;margin-bottom:10px;color:rgb(256,256,256);font-size: 15px">
+                  Tax Authority received third-party data and conducted audit on you.
+                </p>
+                   <div class="mx-auto text-center">
+                      <p class="text-center" style="width:150px;
+                        line-height:1;margin:auto;color:rgb(125,125,125);
+                        font-size: 12px;border: 1px solid rgba(0,0,0,0);">
+                        Money You Receive from This Study
+                      </p>
+                          <div >
+                            <div id="compensation-box" class="row justify-content-center 
+                              d-flex align-items-center" style="padding:5px;
+                              border: 1px solid black; 
+                              width: 400px; margin: auto; border-radius: 10px;">
+                              <div class="col-4 d-flex align-items-center 
+                                justify-content-center" style="font-size: 11px; 
+                                color: rgb(125, 125, 125);">
+                                <p style="margin: auto;">
+                                  Total Gain <br>
+                                  Taxes Paid <br>
+                                  Undisclosed Tax <br>
+                                  Penalty <br>
+                                  Real Gain <br>
+                                  Compensation <br> </p>
+                              </div>
+                              
+                              <div class="col-1 col-1 d-flex align-items-center 
+                                justify-content-center" style="font-size: 11px; 
+                                color: rgb(125, 125, 125);">
+                                <p style="margin: auto;">
+                                  :<br>:<br>:<br>:<br>:<br>:</p>
+                              </div>
+                              
+                              <div class="col-6 d-flex justify-content-center" 
+                                style="font-size: 11px; color: rgb(125, 125, 125);">
+                                    <div>
+                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain) }}</span><br>
+                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.tax_disclos|int ) }}</span><br>
+                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.tax_discre) }} </span><br>
+                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.penalty) }} </span><br>
+                                      <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain_final) }} </span><br>
+                                    0.02% x <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain_final if summary_data.r_gain_final >= 0 else 100000)  }}</span>
+                                    </div>
+                              </div>
+                            </div>
+                            <p >Amount</p>
+                          </div>
+                   </div>
+
+              
+            </div>
+            
+            <!-- The Submit Button -->
+            <div id="reporting-box" class="mx-auto" style="height: 100px; width: 400px;
+            background-color: black;
+            border: 1px solid rgba(0,0,0,0);
+            border-radius: 1px;
+            padding: 0px;
+            margin-left: 0px;
+            margin-top:110px;
+            margin-bottom:20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;">
+
+              
+              <button type="button" id="compensation" name="compensation" placeholder="compensation" style="height: 50px; width: 225px; text-align: center;border-radius: 10px; background:rgb(200,50,20);">  AUD {{  '{:,.0f}'.format( (summary_data.r_gain_final * 0.0002) if summary_data.r_gain_final >= 0 else 100000 * 0.0002)  }} </button>
+
+
+            </div>
+  <form action="/next_round"> 
+                  
+  <input type="hidden" name="id" value= {{summary_data.id}}>
+                  
+            <div class="row justify-content-center" style="margin-left: 0px;">
+              <div class="col-5 d-flex justify-content-center">
+                <button type="button" id="showTotalsButton"
+                  style="margin-right: 0px;
+                  width: 190px;
+                  padding: 10px 30px;
+                  border: none;
+                  border-radius: 4px;
+                  font-size: 16px;
+                  font-weight: bold;
+                  background-color:  white;
+                  color: grey ;"
+                  onmouseover="showTotals() ; this.style.backgroundColor = 'rgb(10,10,10)'"
+                  onmouseout="hideTotals();this.style.backgroundColor = 'white'">
+                  Show Totals
+                 </button>
+              </div>
+              <div class="col-5 d-flex justify-content-center">
+                
+
+                  
+                <button type="submit" id="reportTaxesButton"
+                  style="margin-left: 0px;
+                  width: 190px;
+                  padding: 10px 30px;
+                  border: none;
+                  border-radius: 4px;
+                  font-size: 16px;
+                  font-weight: bold;
+                  background-color: white;
+                  color: grey;"
+                  onmouseover="this.style.backgroundColor = 'rgb(10,10,10)'"
+                  onmouseout="this.style.backgroundColor = 'white'">
+                  Next
+                </button>     
+                </form>
+              
+              </div>
+            </div>
+          </div> <!-- End of middle section  -->
+
+     
+          <!-- This is the right section -->
+          <div id="right-pane" class="col-md-1 offset-md-1" style="margin: auto;">
+
+          <div id="img-star" class="col-3 d-flex justify-content-center align-items-center">
+                  <img src="{{ url_for('static', filename='money.gif') }}" alt="Small Image"
+                    style="width: 300px; height: 180px;">
+                </div>
+
+            
+          </div> <!-- End of right pane   -->
+        </div>
+      </div>
+    </div>
+
+  <script>
+// Input Number Validation
+      function formatNumber(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      function updateTextView(_obj) {
+        var num = getNumber(_obj.val());
+        if (num === 0) {
+          _obj.val('');
+        } else {
+          _obj.val(formatNumber(num));
+        }
+      }
+
+      function getNumber(_str) {
+        var arr = _str.replace(/,/g, '').split('');
+        var out = new Array();
+        for (var cnt = 0; cnt < arr.length && cnt < 7; cnt++) {
+          if (!isNaN(arr[cnt])) {
+            out.push(arr[cnt]);
+          }
+        }
+        return out.join('');
+      }
+
+ // Hide or Show Totals
+      
+      var showTotalsFlag = false;
+
+      function showTotals() {
+        if (!showTotalsFlag) {
+          $('#fiat').text("{{ '{:,.0f}'.format(summary_data['fiat']) }}");
+          $('#crypto').text("{{ summary_data['crypto'] }}");
+          $('#r_gain').text("{{ '{:,.0f}'.format(summary_data['r_gain']) }}");
+          $('#r_gain_net').text("{{ '{:,.0f}'.format(summary_data['r_gain_net']) }}");
+          $('#r_tax').text("{{ '{:,.0f}'.format(summary_data['r_tax']) }}");
+        }
+      }
+
+      function hideTotals() {
+        if (!showTotalsFlag) {
+          $('#fiat').text('');
+          $('#crypto').text('');
+          $('#r_gain').text('');
+          $('#r_gain_net').text('');
+          $('#r_tax').text('');
+        }
+      }
+
+// Enter Input to "Reporting Taxes" 
+      $(document).ready(function () {
+        $('input[type=text]').on('input', function () {
+          var maxDigits = 7;
+          var inputValue = $(this).val();
+          if (inputValue.length > maxDigits) {
+            $(this).val(inputValue.slice(0, maxDigits));
+          }
+          updateTextView($(this));
+        });
+
+      document.getElementById("tax-input").addEventListener("input", function () {
+        var input = getNumber(this.value);
+        var expectedFiat = document.getElementById("expected_fiat");
+        var rGain = parseFloat("{{ summary_data['r_gain']|int }}");
+
+        if (input === "") {
+          expectedFiat.textContent = formatNumber(rGain);
+        } else {
+          var inputNumber = parseInt(input.substring(0, 6));
+          expectedFiat.textContent = formatNumber(rGain - inputNumber);
+        }
+
+        // Validate input
+        var inputLength = this.value.trim().replace(/,/g, '').length;
+        if (isNaN(inputNumber) || inputLength > 7) {
+          this.setCustomValidity("Please enter a valid number up to 6 digits.");
+        } else {
+          this.setCustomValidity("");
+        }
+      });
+
+
+
+//Press "Report Taxes"
+        
+     $('form').on('submit', function () {
+        var id = "{{ summary_data['id'] }}";
+        var taxInput = $('#tax-input').val();
+       
+        $('#id').text(id);
+        $('#tax_disclos').text(taxInput);
+
+        
+      // Include the "id" value in the form submission
+        $('form').append('<input type="hidden" name="id" value="' + id + '">');
+        $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">');
+ 
+      
+       
+/*
+          var taxInput = $('#tax-input').val();
+          var rTax = {{ summary_data['r_tax'] }};
+          var taxDiscre = parseInt(taxInput.replace(/,/g, '')) - rTax;
+          var audit = Math.random() < 0.2 ? 1 : 0;
+          var penalty = audit === 1 ? 2 * taxDiscre : 0;
+          var rGain = {{ summary_data['r_gain'] }};
+          var rGainFinal = rGain - (taxDiscre + penalty);
+      
+      
+          summary_data['tax_disclos'] = taxInput;
+          summary_data['tax_discre'] = taxDiscre;
+          summary_data['audit'] = audit;
+          summary_data['penalty'] = penalty;
+          summary_data['r_gain_final'] = rGainFinal;
+*/
+          // Insert the code to send the updated summary_data to the database here
+
+          // Testing - Print the updated summary_data object in the console
+//          console.log(summary_data);
+        });
+
+
+//new
+          // Start the countdown timer when the page loads
+
+        //newend
+
+        
+        
+      });
+      
+//newstart
+
+
+      
+      //newend
+
+
+      
+    </script>
+
+  </body>
+</html>

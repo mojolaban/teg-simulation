@@ -1,0 +1,376 @@
+<html>
+  <head>
+    {% include 'bootstrap.html' %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>TEG</title>
+
+    <style>
+      p {
+        font-family: Arial;
+        color: rgb(80, 80, 80);
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 40px;
+        font-family: Arial;
+        color: rgb(80, 80, 80);
+      }
+      #container {
+        max-width: 75%;
+        margin: 10px auto;
+        justify-content: center;
+        align-items: center;
+        background-color: black;
+        border: 1px solid white;
+        
+      }
+      .fixed-box-0 {
+        height: 85px;
+        max-width: 95%;
+        border: 1px solid #ccc;
+        padding: 10px;
+        position: relative;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 20px;
+        background-color: white;
+      }
+      .fixed-box-1 {
+        font-family: Arial;
+        color: rgb(80, 80, 80);
+        height: 450px;
+        overflow: auto;
+        border: 1px solid black;
+        padding: 10px;
+        position: relative;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 20px;
+      }
+      .fixed-box-2 {
+        font-family: Arial;
+        font-size: 25px;
+        color: rgb(80, 80, 80);
+        height: 60px;
+        overflow: auto;
+        border: 1px solid red;
+        padding: 10px;
+        border-radius: 10px;
+        margin-left: 40px;
+        margin-right: 0px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .fixed-box-2 span {
+        margin-left: 5px;
+      }
+      /* Remove up and down arrow from input[type="number"] */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+      <!-- Round and Timer -->
+      <div class="fixed-box-0">
+        <div class='row'>
+          <!-- Round -->
+          <div class="col-md-7" style="margin-left: 20px;">
+            <h1>End of Round {{'round' }}<span id="round"> </span></h1>
+          </div>
+          <!-- Timer -->
+          <div class="col-md-4">
+            <div class="fixed-box-2">
+              Time:
+              <span id="countdown">0</span>s
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fixed-box-1">
+        <div class='row'>
+          
+          <!-- This is the Totals Pane -->
+          <div id="left-pane" class="col-2" style="margin-left: 30px;">
+            <!-- Start of Left Pane -->
+            
+            <!-- Your Total Asset -->
+            <div id="total-asset-box" style="height: 60px; width: 200px;
+              background-color: black;
+              border: 1px solid black;
+              border-radius: 10px;
+              padding: 10px;
+              margin-bottom: 20px;">
+              <div>
+                <div style="text-align: center;">
+                  <p style="line-height:1;
+                    margin: 0;color: black;font-size:12px">
+                    <b>Total Asset</b>
+                  </p>
+                </div>
+                <div class="row justify-content-evenly">
+                  <div class="col-2">
+                    <p style="font-size:12px;line-height:2;
+                      margin: 0;color: black;">
+                      Fiat
+                    </p>
+                  </div>
+                  <div class="col-4">
+                    <p id="fiat" style="font-size:12px;line-height:2;
+                      margin: 0;color: black;">
+                      <!-- {{ "{:,.0f}".format(summary_data['fiat']) }} -->
+                    </p>
+                  </div>
+                  <div class="col-3">
+                    <p style="font-size:12px;line-height:2;
+                      margin: 0;color: black;">
+                      {{}}
+                    </p>
+                  </div>
+                  <div class="col-3">
+                    <p id="crypto" style="font-size:12px;line-height:2;
+                      margin: 0;color: black;">
+                      <!-- {{ summary_data['crypto'] }} -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+
+            <!-- TOTAL GAIN -->
+            <div id="total-gain-box" style="height: 60px; width: 200px;
+              background-color: black;
+              border: 1px solid black;
+              border-radius: 10px;
+              padding: 5px;
+              margin-left: 0px;
+              margin-top:5px;
+              margin-bottom:10px;">
+              <div>
+                <div style="text-align: center;">
+                  <p style="line-height:2;
+                    margin: 0;color: black;font-size:12px">
+                    <b>Total Gain</b>
+                  </p>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-5">
+                    <p style="font-size:12px;line-height:1.5;
+                      margin-left: 0;color: black;" class="text-center">
+                      <i>f</i>
+                    </p>
+                  </div>
+                  <div class="col">
+                    <p id="r_gain" style="font-size:12px;line-height:1.5;
+                      margin: 0;color: black;" class="text-center">
+                      <!-- {{ "{:,.0f}".format(summary_data['r_gain'])  }} -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TOTAL TAX -->
+            <div id="total-tax-box" style="height: 60px; width: 200px;
+              background-color: black;
+              border: 1px solid black;
+              border-radius: 10px;
+              padding: 5px;
+              margin-left: 0px;
+              margin-top:0px;
+              margin-bottom:10px;">
+              <div>
+                <div style="text-align: center;">
+                  <p style="line-height:2;
+                    margin: 0;color: black;font-size:12px">
+                    <b>Total Tax</b>
+                  </p>
+                </div>
+                <div class="row justify-content-evenly">
+                  <div class="col-5">
+                    <p style="font-size:12px;line-height:1.5;
+                      margin: 0;color: black;" class="text-center">
+                      <i>f</i>
+                    </p>
+                  </div>
+                  <div class="col">
+                    <p id="r_tax" style="font-size:12px;line-height:1.5;
+                      margin: 0;color: black;" class="text-center">
+                      <!-- {{ "{:,.0f}".format(summary_data['t_tax']) }} -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TOTAL NET GAIN -->
+            <div id="total-net-gain-box" style="height: 75px; width: 200px;
+              background-color: black;
+              border: 1px black;
+              border-radius: 10px;
+              padding: 10px;
+              margin-left: 0px;
+              margin-top:20px;
+              margin-bottom:10px;">
+              <div>
+                <div style="text-align: center;">
+                  <p style="line-height:2;
+                    margin: 0;color: black;font-size:12px">
+                    <b>Total Net Gain</b>
+                  </p>
+                </div>
+                <div class="row justify-content-evenly">
+                  <div class="col-5">
+                    <p style="font-size:12px;line-height:1.5;
+                      margin: 0;color: black;" class="text-center">
+                      <i>f</i>
+                    </p>
+                  </div>
+                  <div class="col">
+                    <p id="r_gain_net" style="font-size:12px;line-height:1.5;
+                      margin: 0;color: black;" class="text-center">
+                      <!-- {{ "{:,.0f}".format(summary_data['r_gain_net']) }} -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Position Tax Reporting -->
+            <div style="height: 33px; width: 200px;
+              background-color: black;
+              border: 1px solid #111111;
+              border-radius: 10px;
+              padding: 5px;
+              margin-left: 0px;
+              margin-top:20px;              display: flex;               align-items: center;
+              justify-content: center;
+              text-align: right;">
+              <div class="row">
+                <div id="img-star" class="col-3 d-flex justify-content-center align-items-center">
+                  <img src="{{ url_for('static', filename='star.png') }}" alt="Small Image"
+                    style="width: 13px; height: 13px;">
+                </div>
+                <div id="text-star" class="col-9">
+                  <span style="line-height:2;
+                      margin: 0;color: rgb(130,130,130);font-size:11px; text-align: center;">
+                    <b>COMPENSATION</b></span>
+                </div>
+              </div>
+            </div>
+
+          </div> <!-- End of left pane  -->
+
+
+
+          
+
+          <!-- This is middle section -->
+          <div id="middle-pane" class="col-md-6 offset-md-1" style="margin-left: 0px;margin-right: 0px;border: 1px solid  rgba(0, 0, 0, 0)">
+            <!-- The Text -->
+            <div class="mx-auto" style="height: 80px;
+            background-color: black;
+            border: 1px solid black;
+            border-radius: 1px;
+            padding: 0px;
+            margin-left: 0px;
+            margin-top:60px;
+            margin-bottom:0px;">
+              <div>
+                <p class="text-center" style="line-height:1.5;margin-bottom:0px;color:rgb(256,256,256);">
+                  Thank you for your participation in this study
+                </p>
+                <p class="text-center" style="font-size:30px;line-height:1;margin-bottom:0px;color:rgb(256,256,256)">
+                  As a token of appreciation You may collect this amount at the end of the session
+                </p>
+              </div>
+            </div>
+            <!-- The Submit Button -->
+                <form action="/survey" > <!-- method="POST" -->
+            <div id="reporting-box" class="mx-auto" style="height: 100px; width: 300px;
+            background-color: black;
+            border: 1px solid black;
+            border-radius: 1px;
+            padding: 0px;
+            margin-left: 0px;
+            margin-top:0px;
+            margin-bottom:20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;">
+    
+  
+              <button type="text" id="compensation-amt" 
+                name="compensation-amt" style="height: 50px; width: 300px; 
+                text-align: center;border-radius: 10px;"> 
+                AUD Amount
+              </button>
+
+
+            </div>
+
+            <div class="row justify-content-center" style="margin-left: 0px;">
+              <div class="col-5 d-flex justify-content-center">
+                
+                <button type="submit" id="buttonToSurvey"
+                  style="margin-left: 0px;
+                  width: 190px;
+                  padding: 10px 30px;
+                  border: none;
+                  border-radius: 4px;
+                  font-size: 16px;
+                  font-weight: bold;
+                  background-color: white;
+                  color: grey;"
+                  onmouseover="this.style.backgroundColor = 'rgb(10,10,10)'"
+                  onmouseout="this.style.backgroundColor = 'white'">
+                  Next
+                </button>     
+                
+                </form>   
+              
+              </div>
+            </div>
+          </div> <!-- End of middle section  -->
+
+     
+          <!-- This is the right section -->
+          <div id="right-pane" class="col-md-1 offset-md-1" style="margin-left: 0px;">
+            <div class='row'>
+              <div class="col-3" style="margin-top: 120px;margin-left: 0px;">
+
+                <div style="height: 50px; width:220px;
+                  background-color: black;
+                  border: 1px solid black; margin-top:0px;
+                  padding: 10px;">
+                  <p style="line-height:0.5;
+                    margin: 0;color: rgb(40, 180, 120);text-align: left;">
+                    <span style="font-size:11px;">Random Picker</span>
+                    <span style="font-size:40px;" id="random_picker">Number</span></p>
+
+                </div>
+
+
+              </div>
+            </div>
+          </div> <!-- End of right pane   -->
+        </div>
+      </div>
+    </div>
+
+  <script>
+
+      
+    </script>
+
+  </body>
+</html>

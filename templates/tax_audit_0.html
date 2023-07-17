@@ -297,20 +297,22 @@
                       <p class="text-center" style="width:150px;
                         line-height:1;margin:auto;color:rgb(125,125,125);
                         font-size: 12px;border: 1px solid rgba(0,0,0,0);">
-                        Potential Money You May Receive from This Study
+                        Money You Receive from This Study
                       </p>
                         <div >
                             <div id="compensation-box" class="row justify-content-center 
                               d-flex align-items-center" style="padding:5px;
                               border: 1px solid black; 
-                              width: 300px; margin: auto; border-radius: 10px;">
+                              width: 400px; margin: auto; border-radius: 10px;">
                               <div class="col-4 d-flex align-items-center 
                                 justify-content-center" style="font-size: 11px; 
                                 color: rgb(125, 125, 125);">
                                 <p style="margin: auto;">
                                   Total Gain <br>
-                                  Tax Paid <br>
-                                  Realised Gain <br> 
+                                  Taxes Paid <br>
+                                  Undisclosed Tax <br>
+                                  Penalty <br>
+                                  Real Gain <br>
                                   Compensation <br> </p>
                               </div>
                               
@@ -318,16 +320,18 @@
                                 justify-content-center" style="font-size: 11px; 
                                 color: rgb(125, 125, 125);">
                                 <p style="margin: auto;">
-                                  :<br>:<br>:<br>:</p>
+                                  :<br>:<br>:<br>:<br>:<br>:</p>
                               </div>
                               
                               <div class="col-6 d-flex justify-content-center" 
                                 style="font-size: 11px; color: rgb(125, 125, 125);">
                                     <div>
                                     <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain) }}</span><br>
-                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.tax_disclos) }} </span><br>
-                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain_final) }} </span><br>
-                                    0.02% x <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain_final) }}</span>
+                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.tax_disclos|int) }}</span><br>
+                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.tax_discre) }} </span><br>
+                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.penalty) }} </span><br>
+                                      <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain_final) }} </span><br>
+                                    0.02% x <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain_final if summary_data.r_gain_final >= 0 else 100000)  }}</span>
                                     </div>
                               </div>
                             </div>
@@ -341,21 +345,25 @@
             <!-- The Submit Button -->
             <div id="reporting-box" class="mx-auto" style="height: 100px; width: 400px;
             background-color: black;
-            border: 1px solid black;
+            border: 1px solid rgba(0,0,0,0);
             border-radius: 1px;
             padding: 0px;
             margin-left: 0px;
-            margin-top:80px;
+            margin-top:110px;
             margin-bottom:20px;
             display: flex;
             justify-content: center;
             align-items: center;">
 
-              <button type="button" id="compensation" name="compensation" placeholder="compensation" style="height: 50px; width: 225px; text-align: center;border-radius: 10px; background:rgb(40, 180, 120);">  AUD {{  '{:,.0f}'.format(summary_data.r_gain_final * 0.0002)  }} </button>
+              
+              <button type="button" id="compensation" name="compensation" placeholder="compensation" style="height: 50px; width: 225px; text-align: center;border-radius: 10px; background:rgb(40, 180, 120);">  AUD {{  '{:,.0f}'.format( (summary_data.r_gain_final * 0.0002) if summary_data.r_gain_final >= 0 else 100000 * 0.0002)  }} </button>
 
 
             </div>
-
+  <form action="/next_round"> 
+                  
+  <input type="hidden" name="id" value= {{summary_data.id}}>
+                  
             <div class="row justify-content-center" style="margin-left: 0px;">
               <div class="col-5 d-flex justify-content-center">
                 <button type="button" id="showTotalsButton"
@@ -374,8 +382,9 @@
                  </button>
               </div>
               <div class="col-5 d-flex justify-content-center">
+                
 
-              
+                  
                 <button type="submit" id="reportTaxesButton"
                   style="margin-left: 0px;
                   width: 190px;
@@ -390,7 +399,7 @@
                   onmouseout="this.style.backgroundColor = 'white'">
                   Next
                 </button>     
-
+                </form>
               
               </div>
             </div>
