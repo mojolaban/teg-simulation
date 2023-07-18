@@ -66,11 +66,27 @@
       .fixed-box-2 span {
         margin-left: 5px;
       }
-      /* Remove up and down arrow from input[type="number"] */
-      input[type="number"]::-webkit-inner-spin-button,
-      input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
+ 
+      #number-container {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+      }
+      
+      @keyframes numberChange {
+        0% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      
+      .number-changing {
+        animation: numberChange 0.5s linear infinite;
       }
     </style>
   </head>
@@ -82,7 +98,7 @@
         <div class='row'>
           <!-- Round -->
           <div class="col-md-7" style="margin-left: 20px;">
-            <h1>End of Round {{'round' }}<span id="round"> </span></h1>
+            <h1>End of Round 15</h1>
           </div>
           <!-- Timer -->
           <div class="col-md-4">
@@ -125,19 +141,19 @@
                   <div class="col-4">
                     <p id="fiat" style="font-size:12px;line-height:2;
                       margin: 0;color: black;">
-                      <!-- {{ "{:,.0f}".format(summary_data['fiat']) }} -->
                     </p>
                   </div>
                   <div class="col-3">
                     <p style="font-size:12px;line-height:2;
                       margin: 0;color: black;">
-                      {{}}
+                     
                     </p>
                   </div>
                   <div class="col-3">
                     <p id="crypto" style="font-size:12px;line-height:2;
                       margin: 0;color: black;">
-                      <!-- {{ summary_data['crypto'] }} -->
+                      <span id="comp_round" style="font-size:1px;line-height:0.5;
+                      margin: 0;color: black;" >{{comp_round}}</span>
                     </p>
                   </div>
                 </div>
@@ -172,7 +188,6 @@
                   <div class="col">
                     <p id="r_gain" style="font-size:12px;line-height:1.5;
                       margin: 0;color: black;" class="text-center">
-                      <!-- {{ "{:,.0f}".format(summary_data['r_gain'])  }} -->
                     </p>
                   </div>
                 </div>
@@ -205,7 +220,7 @@
                   <div class="col">
                     <p id="r_tax" style="font-size:12px;line-height:1.5;
                       margin: 0;color: black;" class="text-center">
-                      <!-- {{ "{:,.0f}".format(summary_data['t_tax']) }} -->
+   
                     </p>
                   </div>
                 </div>
@@ -238,7 +253,7 @@
                   <div class="col">
                     <p id="r_gain_net" style="font-size:12px;line-height:1.5;
                       margin: 0;color: black;" class="text-center">
-                      <!-- {{ "{:,.0f}".format(summary_data['r_gain_net']) }} -->
+   
                     </p>
                   </div>
                 </div>
@@ -256,7 +271,8 @@
               justify-content: center;
               text-align: right;">
               <div class="row">
-                <div id="img-star" class="col-3 d-flex justify-content-center align-items-center">
+                <div id="img-star" class="col-3 d-flex
+                  justify-content-center align-items-center">
                   <img src="{{ url_for('static', filename='star.png') }}" alt="Small Image"
                     style="width: 13px; height: 13px;">
                 </div>
@@ -274,88 +290,90 @@
 
           
 
-          <!-- This is middle section -->
-          <div id="middle-pane" class="col-md-6 offset-md-1" style="margin-left: 0px;margin-right: 0px;border: 1px solid  rgba(0, 0, 0, 0)">
-            <!-- The Text -->
-            <div class="mx-auto" style="height: 80px;
-            background-color: black;
-            border: 1px solid black;
-            border-radius: 1px;
-            padding: 0px;
-            margin-left: 0px;
-            margin-top:60px;
-            margin-bottom:0px;">
-              <div>
-                <p class="text-center" style="line-height:1.5;margin-bottom:0px;color:rgb(256,256,256);">
-                  Thank you for your participation in this study
-                </p>
-                <p class="text-center" style="font-size:30px;line-height:1;margin-bottom:0px;color:rgb(256,256,256)">
-                  As a token of appreciation You may collect this amount at the end of the session
-                </p>
-              </div>
-            </div>
-            <!-- The Submit Button -->
-                <form action="/survey" > <!-- method="POST" -->
-            <div id="reporting-box" class="mx-auto" style="height: 100px; width: 300px;
-            background-color: black;
-            border: 1px solid black;
-            border-radius: 1px;
-            padding: 0px;
-            margin-left: 0px;
-            margin-top:0px;
-            margin-bottom:20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;">
-    
-  
-              <button type="text" id="compensation-amt" 
-                name="compensation-amt" style="height: 50px; width: 300px; 
-                text-align: center;border-radius: 10px;"> 
-                AUD Amount
-              </button>
+          <!-- This is middle section --><div id="middle-pane" class="col-md-6 offset-md-1" style="margin-left: 0px;margin-right: 0px;border: 1px solid  rgba(0, 0, 0, 0);width:650px;">
+  <!-- The Text -->
+  <div class="mx-auto" style="height: 80px;
+    background-color: black;
+    border: 1px solid black;
+    border-radius: 1px;
+    padding: 0px;
+    margin-left: 0px;
+    margin-top:60px;
+    margin-bottom:0px;">
+    <div>
+      <p class="text-center" style="line-height:1.5;margin-bottom:0px;color:rgb(256,256,256);">
+        Thank you for your participation in this study
+      </p>
+      <p class="text-center" id="thanks-word" style="font-size:24px;line-height:1;margin:auto;color:rgb(256,256,256)">
+        As a token of appreciation <br> You may collect this amount at the end of the session
+      </p>
+    </div>
+  </div>
+  <!-- The Submit Button -->
 
 
-            </div>
+            
+  <div id="reporting-box" class="mx-auto" style="height: 100px; width: 300px;
+    background-color: black;
+    border: 1px solid black;
+    border-radius: 1px;
+    padding: 0px;
+    margin-left: 0px;
+    margin-top:0px;
+    margin-bottom:20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;">
+    <button type="text" id="compensation-amt" 
+      name="compensation-amt" style="height: 50px; width: 240px; margin-top:0px;
+      text-align: center;border-radius: 10px;color:white;background:rgb(40, 180, 120);border: none;"> 
+{{ '{:,.0f}'.format ( comp_amt ) }}    
+    </button>
+  </div>
 
-            <div class="row justify-content-center" style="margin-left: 0px;">
-              <div class="col-5 d-flex justify-content-center">
-                
-                <button type="submit" id="buttonToSurvey"
-                  style="margin-left: 0px;
-                  width: 190px;
-                  padding: 10px 30px;
-                  border: none;
-                  border-radius: 4px;
-                  font-size: 16px;
-                  font-weight: bold;
-                  background-color: white;
-                  color: grey;"
-                  onmouseover="this.style.backgroundColor = 'rgb(10,10,10)'"
-                  onmouseout="this.style.backgroundColor = 'white'">
-                  Next
-                </button>     
-                
-                </form>   
-              
-              </div>
-            </div>
-          </div> <!-- End of middle section  -->
+  <div class="row justify-content-center" style="margin: auto;">
+    <div class="col-5 d-flex justify-content-center align-items-center">
+      <form action="/survey">
+        <button type="submit" id="buttonToSurvey"
+          style="margin-left: 0px;
+          width: 240px;
+          margin-top:50px;
+          padding: 10px 30px;
+          border: none;
+          border-radius: 4px;
+          font-size: 16px;
+          font-weight: bold;
+          background-color: white;
+          color: grey;"
+          onmouseover="this.style.backgroundColor = 'rgb(10,10,10)'"
+          onmouseout="this.style.backgroundColor = 'white'">
+          Next
+        </button>     
+      </form>   
+    </div>
+  </div>
+</div>
+ <!-- End of middle section  -->
 
      
           <!-- This is the right section -->
           <div id="right-pane" class="col-md-1 offset-md-1" style="margin-left: 0px;">
             <div class='row'>
-              <div class="col-3" style="margin-top: 120px;margin-left: 0px;">
+              <div class="col-3" style="margin-top: 5px;margin-left: 0px;">
 
                 <div style="height: 50px; width:220px;
                   background-color: black;
                   border: 1px solid black; margin-top:0px;
                   padding: 10px;">
-                  <p style="line-height:0.5;
-                    margin: 0;color: rgb(40, 180, 120);text-align: left;">
-                    <span style="font-size:11px;">Random Picker</span>
-                    <span style="font-size:40px;" id="random_picker">Number</span></p>
+                  <p style="line-height:1;
+                    margin: 0;text-align: left;">
+                    <span style="font-size:11px;color: rgb(130,130,130);">Round Picker</span>
+                    <div id="number-container" style="text-align: left;">                      
+                      <span style="font-size:40px; font-style:"arial"; color: rgb(40,40,40);"
+                      id="number">0</span>
+                     </div>
+                  </p>
 
                 </div>
 
@@ -367,10 +385,73 @@
       </div>
     </div>
 
-  <script>
+<script>
+  $(document).ready(function() {
+    var animationComplete = false; // Flag to track animation status
 
-      
-    </script>
+    function animateNumber() {
+      var numberElement = document.getElementById('number');
+      numberElement.classList.add('number-changing');
+      numberElement.style.fontFamily = 'Arial'; // Set the font family to Arial
+
+      var numbers = shuffleArray(Array.from({ length: 15 }, (_, index) => index + 1)); // Array of shuffled numbers from 1 to 15
+
+      var currentIndex = 0;
+      var duration = 1000; // Duration in milliseconds (adjust as needed)
+      var intervalTime = Math.floor(duration / (numbers.length * 3)); // Interval time based on duration and number of elements
+
+      var interval = setInterval(function() {
+        if (currentIndex >= numbers.length * 2) {
+          clearInterval(interval);
+          numberElement.classList.remove('number-changing');
+        } else {
+          var numberIndex = currentIndex % numbers.length;
+          numberElement.textContent = numbers[numberIndex];
+          currentIndex++;
+        }
+      }, intervalTime);
+
+      // Delay the animation end with a setTimeout
+      setTimeout(function() {
+        clearInterval(interval);
+
+        // Check if the value is provided
+        if (document.getElementById('comp_round')) {
+          numberElement.textContent = document.getElementById('comp_round').textContent;
+        }
+
+        numberElement.classList.remove('number-changing');
+        animationComplete = true; // Set the animation status to complete
+      }, duration);
+    }
+
+    function shuffleArray(array) {
+      var currentIndex = array.length,
+        temporaryValue,
+        randomIndex;
+
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array;
+    }
+
+    animateNumber(); // Start the animation
+
+    // Delay showing the compensation amount
+    setTimeout(function() {
+      var compensationAmtElement = document.getElementById('compensation-amt');
+      compensationAmtElement.style.visibility = 'visible';
+    }, 2000); // Delay of 2 seconds
+  });
+</script>
+
 
   </body>
 </html>

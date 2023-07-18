@@ -495,46 +495,11 @@
         $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">');
  
       
-       
-/*
-          var taxInput = $('#tax-input').val();
-          var rTax = {{ summary_data['r_tax'] }};
-          var taxDiscre = parseInt(taxInput.replace(/,/g, '')) - rTax;
-          var audit = Math.random() < 0.2 ? 1 : 0;
-          var penalty = audit === 1 ? 2 * taxDiscre : 0;
-          var rGain = {{ summary_data['r_gain'] }};
-          var rGainFinal = rGain - (taxDiscre + penalty);
-      
-      
-          summary_data['tax_disclos'] = taxInput;
-          summary_data['tax_discre'] = taxDiscre;
-          summary_data['audit'] = audit;
-          summary_data['penalty'] = penalty;
-          summary_data['r_gain_final'] = rGainFinal;
-*/
-          // Insert the code to send the updated summary_data to the database here
-
-          // Testing - Print the updated summary_data object in the console
-//          console.log(summary_data);
         });
 
 
-//new
-          // Start the countdown timer when the page loads
-
-        //newend
-
-        
         
       });
-      
-//newstart
-
-
-      
-      //newend
-
-
       
     </script>
 

@@ -185,53 +185,101 @@ def tax_reporting():
     return render_template('tax_reporting.html', summary_data=response_data)
 
 #----Sending data from tax reporting page to db, then show them to audit page
-@app.route("/tax_disclosure") #, methods=["POST"]
+@app.route("/tax_disclosure")
 def tax_disclosure():
-  
     data = request.args
-    userid = (data['id'])
-    taxdisclos = (data['tax_disclos']).replace(',', '')
+    userid = data['id']
+    taxdisclos = data['tax_disclos'].replace(',', '')
     audit_value = 0 if random.random() < 0.8 else 1
     print("Reported Data:")
     print(f"UserID: {userid}")
     print(f"Audit: {audit_value}")
     print(f"Tax Disclos: {taxdisclos}")
- 
-    with engine.connect() as conn:
-      update_statement = text("""
-        UPDATE `teg-simulation`.`responses`
-        SET `tax_disclos` = :new_tax_disclos_value, `audit` = :audit_value
-        WHERE `id` = :user_id
-        ORDER BY `ts` DESC
-        LIMIT 1
-        """)
-      conn.execute(update_statement, {"new_tax_disclos_value": taxdisclos, "audit_value": audit_value, "user_id": userid})
-      
-      select_statement = text("""
-        SELECT `round`, `audit`
-        FROM `teg-simulation`.`responses`
-        WHERE `id` = :user_id
-        ORDER BY `ts` DESC
-        LIMIT 1
-        """)
-      result = conn.execute(select_statement, {"user_id": userid})
-      latest_round, latest_audit = result.fetchone()
-        
-    print("Latest Data:")
-    print(f"Round: {latest_round}")
-    print(f"Audit: {latest_audit}")
- 
-    if latest_round < 15:
-        if latest_audit == 1:
-            response = retrieve_data(userid)
-            response_data =  response.json 
-            return render_template("tax_audit_1.html", summary_data=response_data)
-        elif latest_audit == 0:
-            response = retrieve_data(userid)
-            response_data =  response.json 
-            return render_template("tax_audit_0.html", summary_data=response_data)
-    return jsonify(data)
 
+    with engine.connect() as conn:
+        update_statement = text("""
+            UPDATE `teg-simulation`.`responses`
+            SET `tax_disclos` = :new_tax_disclos_value, `audit` = :audit_value
+            WHERE `id` = :user_id
+            ORDER BY `ts` DESC
+            LIMIT 1
+        """)
+        conn.execute(
+            update_statement,
+            {"new_tax_disclos_value": taxdisclos, "audit_value": audit_value, "user_id": userid}
+        )
+
+        select_statement_1 = text("""
+            SELECT `round`, `audit`
+            FROM `teg-simulation`.`responses`
+            WHERE `id` = :user_id
+            ORDER BY `ts` DESC
+            LIMIT 1
+        """)
+        result_1 = conn.execute(select_statement_1, {"user_id": userid})
+        latest_round, latest_audit = result_1.fetchone()
+
+        print("Latest Data:")
+        print(f"Round: {latest_round}")
+        print(f"Audit: {latest_audit}")
+
+        if latest_round < 15:
+            if latest_audit == 1:
+                response = retrieve_data(userid)
+                response_data = response.json
+                return render_template("tax_audit_1.html", summary_data=response_data)
+            elif latest_audit == 0:
+                response = retrieve_data(userid)
+                response_data = response.json
+                return render_template("tax_audit_0.html", summary_data=response_data)
+        else:  # When latest_round is exactly 15
+            random_number = random.randint(1, 15)
+
+            select_statement_2 = text("""
+            SELECT `id`, `round`, CASE WHEN `r_gain_final` < 0 THEN 100000 ELSE `r_gain_final` END AS `r_gain_final`
+            FROM `teg-simulation`.`responses`
+            WHERE `id` = :user_id AND `trx` = 5 AND `round` = :random_number
+            ORDER BY `ts` DESC
+            LIMIT 1
+         """)
+            result_2 = conn.execute(select_statement_2, {"user_id": userid, "random_number": random_number})
+            user_id, comp_round, comp_amt = result_2.fetchone()
+            comp_amt = comp_amt * 0.0002
+
+
+            print("Compensation:")
+            print({user_id}, {comp_round}, {comp_amt})
+            return render_template("the_random_picker.html", 
+                                   user_id=user_id, 
+                                   comp_round=comp_round,
+                                  comp_amt=comp_amt)
+
+#            select_statement_2 = text("""
+#                SELECT `round`, `r_gain_final`
+#                FROM `teg-simulation`.`responses`
+#                WHERE `id` = :user_id AND `trx` = 5
+#                ORDER BY `ts` DESC
+#             """)
+#            result_2 = conn.execute(select_statement_2, {"user_id": userid})
+#            records = result_2.fetchall()
+
+
+#            round_15, r_gain_final = result_2.fetchone()
+
+#            if r_gain_final < 0:
+#                r_gain_final = 100000
+
+#            response_data = {
+#                "round": round_15,
+#                "r_gain_final": r_gain_final
+#            }
+          
+#            response_data = []
+#            for record in records:
+#                round_15, r_gain_final = record
+#                if r_gain_final < 0:
+#                    r_gain_final = 100000
+#                response_data.append({"round": round_15, "r_gain_final": r_gain_final})
 
 #----Sending data from tax audit page to db, initiate new round then go to rounds
 @app.route("/next_round") #, methods=["POST"])
@@ -265,6 +313,19 @@ def next_round():
 #       print("Init Data:", init_data)  # Debug statement
     if init_data:
         return render_template('rounds.html', data=init_data)
+
+
+@app.route('/execute_select_statement', methods=['POST'])
+def execute_select_statement():
+  print('Executing select statement')
+  select_statement = request.form['select_statement']
+  
+  with engine.connect() as conn:
+    result = conn.execute(text(select_statement))
+    compensation = result.fetchone()[0] if result.rowcount > 0 else 0
+  
+  return jsonify(compensation)
+
 
   
 if __name__ == "__main__":
