@@ -340,13 +340,50 @@ def survey():
           insert_statement,
           {"comp_amt": comp_amt, "user_id": user_id, "comp_round": comp_round, "gr": gr}
       )
+    print("Recorded compensation:")
+    print(f"UserID: {user_id}")
+    print(f"Group: {gr}")
+    print(f"CompAmt: {comp_amt}")
+    print(f"CompRound: {comp_round}")
 
-    return jsonify({
-        'comp_amt': comp_amt,
-        'comp_round': comp_round,
-        'user_id': user_id,
-        'gr' : gr
-    })
+    questions = [
+        ' ... because to me it’s obvious that this is what you do.',
+        '... even if tax audits did not exist.',
+        '... without spending a long time thinking how I could reduce them.',
+        'I feel that I am forced to pay my taxes.',        
+        'I pay my taxes because the risk of being checked is too high.',     
+        'I pay taxes for I don`t know how to evade taxes without attracting attention.',  
+        'Tax officers pass information in an understandable way.',        
+        'Tax officers know exactly how a correct tax file should look like.',        
+        'Tax officers inform and advise taxpayers how to pay taxes correctly.',      
+        'Tax officers have the legal right to collect taxes.',       
+        'Tax officers apply severe punishments.',        
+        'Tax officers prosecute taxpayers mainly with audits and fines.',   
+        'Tax officers enforce compliance through audits and fines.',
+        'I trust tax officers without thinking about it.',        
+        'I trust tax officers automatically.',        
+        'I trust tax officers usually without dealing with it deeply.',        
+        'I trust the tax officers because the political and economic situation enables them to work professionally.',
+        'I trust the tax officers because they accomplish their work very well and competently.',
+        'I trust the tax officers because they are benevolent to taxpayers.',        
+        'I trust the tax officers because the tax officers pursue important goals.',        
+        'Most other taxpayers are paying their taxes correctly without thinking about it.',    
+        'Most other taxpayers automatically pay their taxes.',        
+        'Most other taxpayers pay their taxes honestly without dealing with it deeply.',       
+        'Most other taxpayers pay their taxes honestly because of audits and fines.',        
+        'Most other taxpayers pay their taxes honestly because they respect the law.',        
+        'Most other taxpayers pay their taxes honestly because they love their country.',      
+        'Most other taxpayers pay taxes because they get something in exchange.',        
+        ' Most other taxpayers pay taxes because taxes are used for public interests such as education & health.',        
+        'Most other taxpayers pay taxes because its a way to close the gap between rich and poor.',        
+        'How likley will you pay your taxes for the current year correctly and in full extent to the tax authority?'
+        ]
+
+ #   if request.method == 'POST':
+ #       # Process the survey responses here
+      
+
+    return render_template('the_survey.html', id=user_id, gr=gr, questions=questions)
 
 
   
