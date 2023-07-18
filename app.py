@@ -236,7 +236,7 @@ def tax_disclosure():
             random_number = random.randint(1, 15)
 
             select_statement_2 = text("""
-                SELECT `id`, `round`, CASE WHEN `r_gain_final` < 0 THEN 100000 ELSE `r_gain_final` END AS `r_gain_final`
+                SELECT `id`, `gr`,`round`, CASE WHEN `r_gain_final` < 0 THEN 100000 ELSE `r_gain_final` END AS `r_gain_final`
                 FROM `teg-simulation`.`responses`
                 WHERE `id` = :user_id AND `round` = :random_number
                 ORDER BY `trx` DESC
@@ -251,15 +251,16 @@ def tax_disclosure():
                 print("No data found in select_statement_2")
                 return "No data found"
 
-            user_id, comp_round, comp_amt = result
+            user_id, gr, comp_round, comp_amt = result
             comp_amt = comp_amt * 0.0002
 
             print("Compensation:")
             print(f"UserID: {user_id}")
+            print(f"Group: {gr}")
             print(f"Round: {comp_round}")
             print(f"Compensation Amount: {comp_amt}")
 
-            return render_template("the_random_picker.html", user_id=user_id, comp_round=comp_round, comp_amt=comp_amt)
+            return render_template("the_random_picker.html", user_id=user_id, comp_round=comp_round, comp_amt=comp_amt, gr=gr)
 
 #            select_statement_2 = text("""
 #                SELECT `round`, `r_gain_final`
@@ -327,13 +328,24 @@ def survey():
     comp_amt = request.form.get('comp_amt')
     comp_round = request.form.get('comp_round')
     user_id = request.form.get('user_id')
+    gr = request.form.get('gr')
 
     # Process the data as needed
+    with engine.connect() as conn:
+      insert_statement = text("""
+          INSERT INTO compensation (comp_amt, id, comp_round, gr)
+          VALUES (:comp_amt, :user_id, :comp_round, :gr)
+      """)
+      conn.execute(
+          insert_statement,
+          {"comp_amt": comp_amt, "user_id": user_id, "comp_round": comp_round, "gr": gr}
+      )
 
     return jsonify({
         'comp_amt': comp_amt,
         'comp_round': comp_round,
-        'user_id': user_id
+        'user_id': user_id,
+        'gr' : gr
     })
 
 
