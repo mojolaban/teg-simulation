@@ -384,11 +384,70 @@ def survey():
 @app.route('/yes', methods=['GET', 'POST'])
 def yes():
     if request.method == 'POST':
-        form_data = request.form
+        form_data = dict(request.form)
         print(form_data)
-    return "Form data received successfully"
+
+        # Extract the necessary data from the form_data dictionary
+        email = form_data.get('email')
+        gr = form_data.get('gr')
+        id = form_data.get('id')
+
+        # Create a dictionary to map the question numbers to column names
+        question_columns = {
+            'question0': 'question0',
+            'question1': 'question1',
+            'question2': 'question2',
+            'question3': 'question3',
+            'question4': 'question4',
+            'question5': 'question5',
+            'question6': 'question6',
+            'question7': 'question7',
+            'question8': 'question8',
+            'question9': 'question9',
+            'question10' : 'question10',
+            'question11': 'question11',
+            'question12': 'question12',
+            'question13': 'question13',
+            'question14': 'question14',
+            'question15': 'question15',
+            'question16': 'question16',
+            'question17': 'question17',
+            'question18': 'question18',
+            'question19': 'question19',
+            'question20': 'question20',
+            'question21': 'question21',
+            'question22': 'question22',
+            'question23': 'question23',
+            'question24': 'question24',
+            'question25': 'question25',
+            'question26': 'question26',
+            'question27': 'question27',
+            'question28': 'question28',
+            'question29': 'question29'
+         }
+
+        # Prepare the insert statement
+        insert_values = {}
+        for question_num, answer in form_data.items():
+            if question_num in question_columns:
+                column_name = question_columns[question_num]
+                insert_values[column_name] = answer
+
+        insert_values['email'] = email
+        insert_values['gr'] = gr
+        insert_values['id'] = id
+
+        # Execute the insert statement
+        with engine.connect() as conn:
+            insert_statement = text("""
+                INSERT INTO survey (question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10,question11,question12, question13,question14,question15,question16,question17,question18,question19,question20,question21,question22,question23,question24,question25,question26,question27,question28,question29, email, gr, id)
+                VALUES (:question0, :question1, :question2,  :question3, :question4, :question5, :question6, :question7, :question8, :question9, :question10, :question11, :question12, :question13, :question14, :question15, :question16, :question17, :question18, :question19, :question20, :question21, :question22, :question23, :question24, :question25, :question26, :question27, :question28, :question29, :email, :gr, :id)
+            """)
+            conn.execute(insert_statement, insert_values)
+
+        return "Thank you for participating! Have a good day!"
+    return "Invalid request method"
 
 
-  
 if __name__ == "__main__":
   app.run(host="0.0.0.0", debug=True)
