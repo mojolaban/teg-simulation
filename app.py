@@ -243,16 +243,23 @@ def tax_disclosure():
             LIMIT 1
          """)
             result_2 = conn.execute(select_statement_2, {"user_id": userid, "random_number": random_number})
-            user_id, comp_round, comp_amt = result_2.fetchone()
+            result = result_2.fetchone()
+
+            # Check if the result is None
+            if result is None:
+                # Handle the case when no data is found
+                print("No data found in select_statement_2")
+                return "No data found"
+
+            user_id, comp_round, comp_amt = result
             comp_amt = comp_amt * 0.0002
 
-
             print("Compensation:")
-            print({user_id}, {comp_round}, {comp_amt})
-            return render_template("the_random_picker.html", 
-                                   user_id=user_id, 
-                                   comp_round=comp_round,
-                                  comp_amt=comp_amt)
+            print(f"UserID: {user_id}")
+            print(f"Round: {comp_round}")
+            print(f"Compensation Amount: {comp_amt}")
+
+            return render_template("the_random_picker.html", user_id=user_id, comp_round=comp_round, comp_amt=comp_amt)
 
 #            select_statement_2 = text("""
 #                SELECT `round`, `r_gain_final`
