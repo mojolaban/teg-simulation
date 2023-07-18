@@ -236,12 +236,12 @@ def tax_disclosure():
             random_number = random.randint(1, 15)
 
             select_statement_2 = text("""
-            SELECT `id`, `round`, CASE WHEN `r_gain_final` < 0 THEN 100000 ELSE `r_gain_final` END AS `r_gain_final`
-            FROM `teg-simulation`.`responses`
-            WHERE `id` = :user_id AND `trx` = 5 AND `round` = :random_number
-            ORDER BY `ts` DESC
-            LIMIT 1
-         """)
+                SELECT `id`, `round`, CASE WHEN `r_gain_final` < 0 THEN 100000 ELSE `r_gain_final` END AS `r_gain_final`
+                FROM `teg-simulation`.`responses`
+                WHERE `id` = :user_id AND `round` = :random_number
+                ORDER BY `trx` DESC
+                LIMIT 1
+            """)
             result_2 = conn.execute(select_statement_2, {"user_id": userid, "random_number": random_number})
             result = result_2.fetchone()
 
@@ -322,16 +322,19 @@ def next_round():
         return render_template('rounds.html', data=init_data)
 
 
-@app.route('/execute_select_statement', methods=['POST'])
-def execute_select_statement():
-  print('Executing select statement')
-  select_statement = request.form['select_statement']
-  
-  with engine.connect() as conn:
-    result = conn.execute(text(select_statement))
-    compensation = result.fetchone()[0] if result.rowcount > 0 else 0
-  
-  return jsonify(compensation)
+@app.route('/survey', methods=['GET', 'POST'])
+def survey():
+    comp_amt = request.form.get('comp_amt')
+    comp_round = request.form.get('comp_round')
+    user_id = request.form.get('user_id')
+
+    # Process the data as needed
+
+    return jsonify({
+        'comp_amt': comp_amt,
+        'comp_round': comp_round,
+        'user_id': user_id
+    })
 
 
   

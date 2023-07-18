@@ -128,14 +128,14 @@
                 <div style="text-align: center;">
                   <p style="line-height:1;
                     margin: 0;color: black;font-size:12px">
-                    <b>Total Asset</b>
+                    <b></b>
                   </p>
                 </div>
                 <div class="row justify-content-evenly">
                   <div class="col-2">
                     <p style="font-size:12px;line-height:2;
                       margin: 0;color: black;">
-                      Fiat
+                      
                     </p>
                   </div>
                   <div class="col-4">
@@ -175,14 +175,14 @@
                 <div style="text-align: center;">
                   <p style="line-height:2;
                     margin: 0;color: black;font-size:12px">
-                    <b>Total Gain</b>
+                    <b></b>
                   </p>
                 </div>
                 <div class="row justify-content-center">
                   <div class="col-5">
                     <p style="font-size:12px;line-height:1.5;
                       margin-left: 0;color: black;" class="text-center">
-                      <i>f</i>
+                      <i></i>
                     </p>
                   </div>
                   <div class="col">
@@ -207,14 +207,14 @@
                 <div style="text-align: center;">
                   <p style="line-height:2;
                     margin: 0;color: black;font-size:12px">
-                    <b>Total Tax</b>
+                    <b></b>
                   </p>
                 </div>
                 <div class="row justify-content-evenly">
                   <div class="col-5">
                     <p style="font-size:12px;line-height:1.5;
                       margin: 0;color: black;" class="text-center">
-                      <i>f</i>
+                      <i></i>
                     </p>
                   </div>
                   <div class="col">
@@ -240,14 +240,14 @@
                 <div style="text-align: center;">
                   <p style="line-height:2;
                     margin: 0;color: black;font-size:12px">
-                    <b>Total Net Gain</b>
+                    <b></b>
                   </p>
                 </div>
                 <div class="row justify-content-evenly">
                   <div class="col-5">
                     <p style="font-size:12px;line-height:1.5;
                       margin: 0;color: black;" class="text-center">
-                      <i>f</i>
+                      <i></i>
                     </p>
                   </div>
                   <div class="col">
@@ -325,16 +325,18 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;">
-    <button type="text" id="compensation-amt" 
+    <button type="text" 
       name="compensation-amt" style="height: 50px; width: 240px; margin-top:0px;
       text-align: center;border-radius: 10px;color:white;background:rgb(40, 180, 120);border: none;"> 
-{{ '{:,.0f}'.format ( comp_amt ) }}    
+<span  id="compensation-amt"
+  style="visibility: hidden";>AUD {{ '{:,.0f}'.format ( comp_amt ) }}</span>
+      
     </button>
   </div>
 
   <div class="row justify-content-center" style="margin: auto;">
     <div class="col-5 d-flex justify-content-center align-items-center">
-      <form action="/survey">
+      <form action="/survey" method="post">
         <button type="submit" id="buttonToSurvey"
           style="margin-left: 0px;
           width: 240px;
@@ -349,7 +351,10 @@
           onmouseover="this.style.backgroundColor = 'rgb(10,10,10)'"
           onmouseout="this.style.backgroundColor = 'white'">
           Next
-        </button>     
+        </button>   
+                        <input name="comp_amt" value= {{comp_amt}}>
+                        <input type="hidden" name="comp_round" value= {{comp_round}}>
+                        <input type="hidden" name="user_id" value= {{user_id}}> 
       </form>   
     </div>
   </div>
