@@ -379,11 +379,14 @@ def survey():
         'How likley will you pay your taxes for the current year correctly and in full extent to the tax authority?'
         ]
 
- #   if request.method == 'POST':
- #       # Process the survey responses here
-      
-
     return render_template('the_survey.html', id=user_id, gr=gr, questions=questions)
+
+@app.route('/yes', methods=['GET', 'POST'])
+def yes():
+    if request.method == 'POST':
+        form_data = request.form
+        print(form_data)
+    return "Form data received successfully"
 
 
   

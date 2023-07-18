@@ -98,7 +98,7 @@
     
   <div class="fixed-box-2">
     
-<form action="/yes"> <!-- method="post"> -->
+<form action="/yes" method="post"> <!-- method="post"> -->
 
 
   <table>
@@ -119,24 +119,24 @@
       <tr>
         <td style="width: 500px; font-size:12px">{{ question_num + 1 }}. {{ questions[question_num] }}</td>
         <td class="radio-bg">
-          <label><input type="radio" name="question{{ question_num }}" value="1"></label></td>
+          <label><input type="radio" name="question{{ question_num }}" value="1" required></label></td>
         <td class="radio-bg">
-          <label><input type="radio" name="question{{ question_num }}" value="2"></label></td>
+          <label><input type="radio" name="question{{ question_num }}" value="2" required></label></td>
         <td class="radio-bg">
-          <label><input type="radio" name="question{{ question_num }}" value="3"></label></td>
+          <label><input type="radio" name="question{{ question_num }}" value="3" required></label></td>
         <td class="radio-bg">
-          <label><input type="radio" name="question{{ question_num }}" value="4"></label></td>
+          <label><input type="radio" name="question{{ question_num }}" value="4" required></label></td>
         <td class="radio-bg">
-          <label><input type="radio" name="question{{ question_num }}" value="5"></label></td>
+          <label><input type="radio" name="question{{ question_num }}" value="5" required></label></td>
         <td class="radio-bg">        
-          <label><input type="radio" name="question{{ question_num }}" value="6"></label></td>
+          <label><input type="radio" name="question{{ question_num }}" value="6" required></label></td>
         <td style="background-color: rgb(200,200,200);text-align: center">
-          <label><input type="radio" name="question{{ question_num }}" value="7"></label></td>
+          <label><input type="radio" name="question{{ question_num }}" value="7" required></label></td>
         
       </tr>
     {% endfor %}
   </table>
-</form>
+
 
     
       </div>
@@ -148,7 +148,7 @@
   </div>
   
   <div class="col-9 col-sm-4" style="margin-top: 15px;">
-    <input type="email" class="form-control form-control-sm" id="colFormLabelSm" placeholder="email" style="font-size: 12px; text-align: center;">
+    <input type="email" class="form-control form-control-sm" id="colFormLabelSm" placeholder="email" style="font-size: 12px; text-align: center;"  name="email" >
   </div>
           
         </div>
@@ -169,6 +169,8 @@
       color: rgb(80,80,80);">
       I have reviewed and responded to all questions.
     </label>
+    <span  id="id" style="visibility: hidden";>{{id}}</span>
+    <span  id="gr" style="visibility: hidden";>{{gr}}</span>
       <br>
       <br>
     <button style="margin-left: 20px;
