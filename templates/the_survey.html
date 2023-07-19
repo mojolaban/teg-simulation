@@ -101,6 +101,9 @@
 <form action="/yes" method="post"> <!-- method="post"> -->
 
 
+    <input type="hidden" name="gr" value="{{ gr }}">
+    <input type="hidden" name="id" value="{{ id }}">
+
   <table>
     <tr>
       <th colspan="8"></th>
@@ -169,8 +172,9 @@
       color: rgb(80,80,80);">
       I have reviewed and responded to all questions.
     </label>
-    <span  id="id" style="visibility: hidden";>{{id}}</span>
-    <span  id="gr" style="visibility: hidden";>{{gr}}</span>
+    
+
+    
       <br>
       <br>
     <button style="margin-left: 20px;

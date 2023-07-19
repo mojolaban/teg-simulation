@@ -55,6 +55,7 @@
     var newDataCount = 60;
     var updateCount = 0;
     var updateInterval;
+    var round = {{ data['round'] }};
 
     function addData(data) {
       for (var i = 0; i < data.length; i++) {
@@ -85,7 +86,7 @@
     }
 
     function updateData() {
-      var url = "https://raw.githubusercontent.com/mojolaban/simul-numbers/main/simul-asset-price.json";
+      var url = "https://raw.githubusercontent.com/mojolaban/simul-numbers/main/round" + round + ".json";
       $.getJSON(url, function(data) {
         var slicedData = data.slice(xStart - 1, xStart - 1 + newDataCount);
         addData(slicedData);
