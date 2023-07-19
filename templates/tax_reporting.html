@@ -449,10 +449,10 @@
 // Enter Input to "Reporting Taxes" 
       $(document).ready(function () {
         $('input[type=text]').on('input', function () {
-          var maxDigits = 7;
+          var maxDigits = 8;
           var inputValue = $(this).val();
           if (inputValue.length > maxDigits) {
-            $(this).val(inputValue.slice(0, maxDigits));
+            $(this).val(inputValue.slice(0, maxDigits+1));
           }
           updateTextView($(this));
         });
@@ -465,14 +465,14 @@
         if (input === "") {
           expectedFiat.textContent = formatNumber(rGain);
         } else {
-          var inputNumber = parseInt(input.substring(0, 6));
+          var inputNumber = parseInt(input.substring(0, 7));
           expectedFiat.textContent = formatNumber(rGain - inputNumber);
         }
 
         // Validate input
         var inputLength = this.value.trim().replace(/,/g, '').length;
-        if (isNaN(inputNumber) || inputLength > 7) {
-          this.setCustomValidity("Please enter a valid number up to 6 digits.");
+        if (isNaN(inputNumber) || inputLength > 8) {
+          this.setCustomValidity("Please enter a valid number up to 7 digits.");
         } else {
           this.setCustomValidity("");
         }

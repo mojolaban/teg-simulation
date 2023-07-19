@@ -223,44 +223,15 @@ def tax_disclosure():
         print(f"Round: {latest_round}")
         print(f"Audit: {latest_audit}")
 
-        if latest_round < 15:
-            if latest_audit == 1:
-                response = retrieve_data(userid)
-                response_data = response.json
-                return render_template("tax_audit_1.html", summary_data=response_data)
-            elif latest_audit == 0:
-                response = retrieve_data(userid)
-                response_data = response.json
-                return render_template("tax_audit_0.html", summary_data=response_data)
-        else:  # When latest_round is exactly 15
-            random_number = random.randint(1, 15)
-
-            select_statement_2 = text("""
-                SELECT `id`, `gr`,`round`, CASE WHEN `r_gain_final` < 0 THEN 100000 ELSE `r_gain_final` END AS `r_gain_final`
-                FROM `teg-simulation`.`responses`
-                WHERE `id` = :user_id AND `round` = :random_number
-                ORDER BY `trx` DESC
-                LIMIT 1
-            """)
-            result_2 = conn.execute(select_statement_2, {"user_id": userid, "random_number": random_number})
-            result = result_2.fetchone()
-
-            # Check if the result is None
-            if result is None:
-                # Handle the case when no data is found
-                print("No data found in select_statement_2")
-                return "No data found"
-
-            user_id, gr, comp_round, comp_amt = result
-            comp_amt = comp_amt * 0.0002
-
-            print("Compensation:")
-            print(f"UserID: {user_id}")
-            print(f"Group: {gr}")
-            print(f"Round: {comp_round}")
-            print(f"Compensation Amount: {comp_amt}")
-
-            return render_template("the_random_picker.html", user_id=user_id, comp_round=comp_round, comp_amt=comp_amt, gr=gr)
+        if latest_audit == 1:
+            response = retrieve_data(userid)
+            response_data = response.json
+            return render_template("tax_audit_1.html", summary_data=response_data)
+        elif latest_audit == 0:
+            response = retrieve_data(userid)
+            response_data = response.json
+            return render_template("tax_audit_0.html", summary_data=response_data)
+ 
 
 #            select_statement_2 = text("""
 #                SELECT `round`, `r_gain_final`
@@ -308,19 +279,47 @@ def next_round():
         result = conn.execute(select_statement, {"user_id": userid})
         latest_round, gr = result.fetchone()
 
-        if latest_round is not None:
+        if latest_round < 15:
             next_round = latest_round + 1
+            conn.execute(
+                text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`, `r_gain`, `t_tax`, `tax_disclos`, `audit`, `t_gain_net`, `r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`, `buy_prev`, `r_gain_prev`,`r_tax_prev`)VALUES (:round, :gr, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"),
+                {"round": next_round, "gr": gr, "id": userid}
+            )
+            init_data = fetch_init_data({userid})
+        #       print("Init Data:", init_data)  # Debug statement
+            if init_data:
+                return render_template('rounds.html', data=init_data)      
         else:
-            next_round = 1
+            random_number = random.randint(1, 15)
+            select_statement_2 = text("""
+                SELECT `id`, `gr`,`round`, CASE WHEN `r_gain_final` < 0 THEN 100000 ELSE `r_gain_final` END AS `r_gain_final`
+                FROM `teg-simulation`.`responses`
+                WHERE `id` = :user_id AND `round` = :random_number
+                ORDER BY `trx` DESC
+                LIMIT 1
+            """)
+            result_2 = conn.execute(select_statement_2, {"user_id": userid, "random_number": random_number})
+            result = result_2.fetchone()
 
-        conn.execute(
-            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`, `r_gain`, `t_tax`, `tax_disclos`, `audit`, `t_gain_net`, `r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`, `buy_prev`, `r_gain_prev`,`r_tax_prev`)VALUES (:round, :gr, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"),
-            {"round": next_round, "gr": gr, "id": userid}
-        )
-    init_data = fetch_init_data({userid})
-#       print("Init Data:", init_data)  # Debug statement
-    if init_data:
-        return render_template('rounds.html', data=init_data)
+            # Check if the result is None
+            if result is None:
+                # Handle the case when no data is found
+                print("No data found in select_statement_2")
+                return "No data found"
+
+            user_id, gr, comp_round, comp_amt = result
+            comp_amt = comp_amt * 0.0002
+
+            print("Compensation:")
+            print(f"UserID: {user_id}")
+            print(f"Group: {gr}")
+            print(f"Round: {comp_round}")
+            print(f"Compensation Amount: {comp_amt}")
+
+            return render_template("the_random_picker.html", user_id=user_id, comp_round=comp_round, comp_amt=comp_amt, gr=gr)
+
+
+
 
 
 @app.route('/survey', methods=['GET', 'POST'])
@@ -445,9 +444,10 @@ def yes():
             """)
             conn.execute(insert_statement, insert_values)
 
-        return "Thank you for participating! Have a good day!"
+        return "Thank you for participating!"
     return "Invalid request method"
 
 
 if __name__ == "__main__":
+  
   app.run(host="0.0.0.0", debug=True)
