@@ -137,10 +137,13 @@ def send_games_data():
             elif gr_value == '1':
                 asset_type = "Crypto"
               
-            if pos_value == "s":
-                pos_value = "SELL"
-            elif pos_value == "b":
-                pos_value = "BUY"
+            if trx_value < 5:
+                if pos_value == "s":
+                    pos_value = "SELL"
+                elif pos_value == "b":
+                    pos_value = "BUY"
+            else:
+                pos_value = "STOP"
 
             updated_data = {
                 "round": round_value,
@@ -291,8 +294,9 @@ def next_round():
                 return render_template('rounds.html', data=init_data)      
         else:
             random_number = random.randint(1, 15)
+
             select_statement_2 = text("""
-                SELECT `id`, `gr`,`round`, CASE WHEN `r_gain_final` < 0 THEN 100000 ELSE `r_gain_final` END AS `r_gain_final`
+                SELECT `id`, `gr`,`round`, CASE WHEN `r_gain_final` <= 0 THEN 100000 ELSE `r_gain_final` END AS `r_gain_final`
                 FROM `teg-simulation`.`responses`
                 WHERE `id` = :user_id AND `round` = :random_number
                 ORDER BY `trx` DESC

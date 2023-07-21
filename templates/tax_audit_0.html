@@ -331,7 +331,7 @@
                                     <span><i>f </i>{{'{:,.0f}'.format(summary_data.tax_discre) }} </span><br>
                                     <span><i>f </i>{{'{:,.0f}'.format(summary_data.penalty) }} </span><br>
                                       <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain_final) }} </span><br>
-                                    0.02% x <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain_final if summary_data.r_gain_final >= 0 else 100000)  }}</span>
+                                    0.02% x <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain_final if summary_data.r_gain_final > 0 else 100000)  }}</span>
                                     </div>
                               </div>
                             </div>
@@ -356,7 +356,7 @@
             align-items: center;">
 
               
-              <button type="button" id="compensation" name="compensation" placeholder="compensation" style="height: 50px; width: 225px; text-align: center;border-radius: 10px; background:rgb(40, 180, 120);">  AUD {{  '{:,.0f}'.format( (summary_data.r_gain_final * 0.0002) if summary_data.r_gain_final >= 0 else 100000 * 0.0002)  }} </button>
+              <button type="button" id="compensation" name="compensation" placeholder="compensation" style="height: 50px; width: 225px; text-align: center;border-radius: 10px; background:rgb(40, 180, 120);">  AUD {{  '{:,.0f}'.format( (summary_data.r_gain_final * 0.0002) if summary_data.r_gain_final > 0 else 100000 * 0.0002)  }} </button>
 
 
             </div>
