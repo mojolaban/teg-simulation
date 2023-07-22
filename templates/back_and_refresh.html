@@ -1,0 +1,24 @@
+       <script>
+        // Disable page refresh and navigation on load
+        window.onload = function () {
+          disableBackButton();
+          disableRefresh();
+        };
+    
+        // Prevent going back to the previous page
+        function disableBackButton() {
+          history.pushState(null, document.title, location.href);
+          window.addEventListener('popstate', function (event) {
+            history.pushState(null, document.title, location.href);
+          });
+        }
+    
+        // Prevent page refresh
+        function disableRefresh() {
+          document.onkeydown = function (e) {
+            if (e.key === 'F5' || e.key === 'Enter') {
+              e.preventDefault();
+            }
+          };
+        }
+      </script>
