@@ -1,6 +1,7 @@
 <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
 <script src="https://cdn.canvasjs.com/jquery.canvasjs.min.js"></script>
-<div id="chartContainer" style="height: 300px; width: 550px;"></div>
+<div id="chartContainer">
+</div>
 
 <script>
 
@@ -27,6 +28,10 @@
     initializeChart();
     disableRefresh();
     disableBackButton();
+      // Move the overlay div to the bottom after the chart has been initialized
+  const chartContainer = document.getElementById("chartContainer");
+  const overlay = document.getElementById("overlay");
+  chartContainer.appendChild(overlay);
   };
 
   function initializeChart() {
@@ -61,9 +66,9 @@
       },
       data: [{
         type: "line",
-        lineThickness: 1.5,
+        lineThickness: 2,
         lineColor: "rgb(230, 120, 40)",
-        markerSize: 6,
+        markerSize: 8,
         markerColor: "rgb(180, 120, 70)",
         markerType: "circle",
         markerBorderColor: "rgb(180, 120, 70)",

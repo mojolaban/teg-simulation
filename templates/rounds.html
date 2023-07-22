@@ -122,12 +122,12 @@
   <div class="fixed-box-1">
      <div class='row'>
 
-<!-- This is the transaction stats -->
+<!-- This is the transaction stats / Start of Left Pane-->
 <!-- Crypto/Stock Price -->
        <div class="col-3"  
         style="margin-left: 0px;"> 
             
-            <div style="height: 80px; font-size:25px
+            <div style="height: 80px; font-size:25px; margin-left:20px;
               background-color: black; 
               border: 0px solid black; 
               padding: 3px;">
@@ -151,12 +151,12 @@
             </div>
 
 <!-- Your Total Asset -->
-            <div style="height: 50px; width: 197px;
+            <div style="height: 50px; width: 197px; margin-left:40px;  margin-top:15px;
               background-color: black; 
               border: 1px solid #222222; 
               border-radius: 10px;
               padding: 10px;
-              margin-bottom: 20px;">
+              margin-bottom: 10px;">
 
                 <div>
                   <div style="text-align: center;">
@@ -191,13 +191,12 @@
             </div>
 
 <!-- Current Crypto Transaction -->
-            <div style="height: 90px; width: 200px;
+            <div style="height: 90px; width: 200px; margin-left:40px;
               background-color: black; 
               border: 1px solid #111111; 
               border-radius: 10px;
               padding: 10px;
-              margin-left: 0px;
-              margin-top:20px;
+              margin-top:0px;
               margin-bottom:10px;">
 
               <div>
@@ -266,12 +265,11 @@
             </div>
 <!-- Tax and Net Gain -->
     <!-- Tax  -->
-              <div style="height: 90px; width: 200px;
+              <div style="height: 90px; width: 200px; margin-left:40px;
               background-color: black; 
               border: 1px solid #111111; 
               border-radius: 10px;
               padding: 10px;
-              margin-left: 0px;
               margin-top:0px;
               margin-bottom:0px;">
                 
@@ -321,12 +319,11 @@
 <!-- Position  -->       
             
          
-                     <div style="height: 40px; width: 210px;
+                     <div style="height: 40px; width: 200px; margin-left:40px;
               background-color: black;
               border: 1px solid #111111;
               border-radius: 10px;
               padding: 0px;
-              margin-left: 0px;
               margin-top:20px;              display: flex;               align-items: center;
               justify-content: center;
               align-items: center; /* Vertically align items to the center */
@@ -351,18 +348,20 @@
        <div class="col-md-6 offset-md-1" 
         style="margin-left: 0px;">
 <!-- Price chart -->
-          <div style="height: 300px; width: 550px;
+          <div style="height: 320px; width: 600px;
           background-color: black; 
           border: 10px solid black; 
           border-radius: 20px;
           padding: 0px;
           margin-left: 0px;
-          margin-top:30px;
-          margin-bottom:20px;">
-            <div id="chartContainer"></div>
+          margin-top:0px;
+          margin-bottom:20px; overflow: hidden;">
+            <div id="chartContainer" style="height: 120%;position: relative;">
+    <div id="overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 5%; background-color: black; z-index: 1;"></div>
+            </div>
           </div>
 <!-- Buy and Sell Button -->
-          <div class="row justify-content-evenly" style="margin-left: 0px;">
+          <div class="row justify-content-evenly" style="margin-left: 0px;margin-top: 20px;">
              <div class="col-6">
                  <button type="button" id="buyButton"  class="custom-button"
                   style="margin-left: 20px;
@@ -400,7 +399,7 @@
 
 <!-- This is the accumulative stats -->
          <div class="col-md-1 offset-md-11"
-           style="margin-left: 15px;">
+           style="margin-left: 5px;">
               <div class='row'>
                 <div class="col-3" style="margin-left: 30px;margin-top: 30px"> 
                   <div style="height: 50px; width:150px;
