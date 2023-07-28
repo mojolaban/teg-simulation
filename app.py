@@ -312,15 +312,17 @@ def next_round():
                 return "No data found"
 
             user_id, gr, comp_round, comp_amt = result
+            comp_rgainfinal = comp_amt
             comp_amt = comp_amt * 0.0002
 
             print("Compensation:")
             print(f"UserID: {user_id}")
             print(f"Group: {gr}")
             print(f"Round: {comp_round}")
+            print(f"Round Gain Amount: {comp_rgainfinal}")
             print(f"Compensation Amount: {comp_amt}")
 
-            return render_template("the_random_picker.html", user_id=user_id, comp_round=comp_round, comp_amt=comp_amt, gr=gr)
+            return render_template("the_random_picker.html", user_id=user_id, comp_round=comp_round, comp_amt=comp_amt, comp_rgainfinal=comp_rgainfinal, gr=gr)
 
 
 
@@ -330,24 +332,28 @@ def next_round():
 def survey():
     comp_amt = request.form.get('comp_amt')
     comp_round = request.form.get('comp_round')
+    comp_rgainfinal = request.form.get('comp_rgainfinal')
     user_id = request.form.get('user_id')
-    gr = request.form.get('gr')
+    gr = str(request.form.get('gr')).replace('\n', '').strip()[:1]
+
 
     # Process the data as needed
     with engine.connect() as conn:
       insert_statement = text("""
-          INSERT INTO compensation (comp_amt, id, comp_round, gr)
-          VALUES (:comp_amt, :user_id, :comp_round, :gr)
+          INSERT INTO compensation (comp_amt, id, comp_round, comp_rgainfinal, gr)
+          VALUES (:comp_amt, :user_id, :comp_round,  :comp_rgainfinal, :gr)
       """)
       conn.execute(
           insert_statement,
-          {"comp_amt": comp_amt, "user_id": user_id, "comp_round": comp_round, "gr": gr}
+          {"comp_amt": comp_amt, "user_id": user_id, "comp_round": comp_round,  "comp_rgainfinal": comp_rgainfinal, "gr": gr}
       )
+
     print("Recorded compensation:")
     print(f"UserID: {user_id}")
     print(f"Group: {gr}")
     print(f"CompAmt: {comp_amt}")
     print(f"CompRound: {comp_round}")
+    print(f"CompRoundGain: {comp_rgainfinal}")
 
     questions = [
         ' ... because to me it’s obvious that this is what you do.',

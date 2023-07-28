@@ -356,6 +356,7 @@
                         <input type="hidden" name="comp_round" value= {{comp_round}}>
                         <input type="hidden" name="user_id" value= {{user_id}}> 
                         <input type="hidden" name="gr" value= {{gr}}> 
+                        <input type="hidden" name="comp_rgainfinal" value= {{comp_rgainfinal}}> 
       </form>   
     </div>
   </div>
@@ -403,7 +404,7 @@
       var numbers = shuffleArray(Array.from({ length: 15 }, (_, index) => index + 1)); // Array of shuffled numbers from 1 to 15
 
       var currentIndex = 0;
-      var duration = 5000; // Duration in milliseconds (adjust as needed)
+      var duration = 4750; // Duration of shuffling number in milliseconds (adjust as needed)
       var intervalTime = Math.floor(duration / (numbers.length * 2)); // Interval time based on duration and number of elements
 
       var interval = setInterval(function() {
@@ -454,7 +455,7 @@
     setTimeout(function() {
       var compensationAmtElement = document.getElementById('compensation-amt');
       compensationAmtElement.style.visibility = 'visible';
-    }, 4000); // Delay of 2 seconds
+    }, 5000); // Delay of 5 seconds
   });
 </script>
 
