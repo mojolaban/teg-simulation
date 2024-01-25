@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    {% include 'bootstrap.html' %}
+    <title>TEG</title>
+    
+    <style>
+      p {
+        font-family: Arial;
+        color: rgb(80,80,80);
+        margin-bottom: 20px;
+        }
+      h1{
+        font-size: 40px;
+        font-family: Arial;
+        color: rgb(80,80,80);
+      }
+      #container {
+        max-width: 85%;
+        margin: 10px auto;
+        justify-content: center;
+        align-items: center;
+        background-color: black;
+        border: 1px solid white;
+      }
+      .fixed-box-0 {
+      height: 85px; 
+      max-width:95%;
+      border: 1px solid #ccc; 
+      padding: 10px; 
+      position: relative;
+      margin-left:20px;
+      margin-right:20px;
+      margin-top:20px;
+      background-color: white;
+        
+    }
+      .fixed-box-1 {
+      font-family: Arial;
+      color: rgb(80,80,80);
+      height: 450px; 
+      overflow: auto; 
+      border: 1px solid black; 
+      padding: 10px; 
+      position: relative;
+      margin-left:20px;
+      margin-right:20px;
+      margin-top:20px;
+    }
+      .fixed-box-2 {
+      font-family: Arial;
+      font-size: 25px;
+      color: rgb(80,80,80);
+      height: 60px; 
+      overflow: auto; 
+      border: 1px solid red;
+      padding: 10px; 
+      border-radius: 10px;
+      margin-left:40px;
+      margin-right:0px;
+      display: flex;
+      justify-content: center;
+      
+    }
+
+    .fixed-box-2 span {
+      margin-left: 5px; 
+    }
+      .custom-button {
+      margin-left: 20px;
+      width: 225px;
+      padding: 10px 30px; 
+      border: none; 
+      border-radius: 4px; 
+      font-size: 16px; 
+      font-weight: bold;
+    }
+    
+    /* Pressed state */
+    .custom-button:active {
+      background-color: rgb(20, 140, 80);
+      /* Add any additional styles you want for the pressed state */
+      /* For example, you can change the color or add a box shadow */
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    </style>
+  
+
+  </head>
+  
+<body>
+  
+  <div id="container">
+
+<!-- Round and Timer -->
+
+  <div class="fixed-box-0">
+    
+    
+    
+    <div class='row'>
+
+<!-- Round -->
+      <div class="col-md-7" 
+        style="margin-left: 20px;"><h1>
+      Round <span id="round">{{ data['round'] }}</span> </h1>
+      </div>
+
+<!-- Timer -->
+      <div class="col-md-4">
+         <div class="fixed-box-2">
+          Time:
+           <span id="countdown">60</span>s
+        </div class="fixed-box-2">
+      </div>
+    </div>
+    </h1>
+  </div>
+  
+  <div class="fixed-box-1">
+     <div class='row'>
+
+<!-- This is the transaction stats / Start of Left Pane-->
+<!-- Crypto/Stock Price -->
+       <div class="col-3"  
+        style="margin-left: 0px;"> 
+            
+            <div style="height: 80px; font-size:25px; margin-left:20px;
+              background-color: black; 
+              border: 0px solid black; 
+              padding: 3px;">
+              <p id="asset_type" style="line-height:1.5;
+                margin: 0;color: white;">
+                {{ data['asset_type'] }} 
+                Price</p>
+              <p style="font-size:28px;line-height:1;
+                margin: 0;color: white;">
+                <i>f </i>
+              <span id="pricePoint" 
+                style="font-size:30px;line-height:1;
+                margin: 0;color: white;">
+                </span>
+                <span id="percPoint"
+                  style="font-size:12px; 
+                  color: rgb(40, 180, 120);" class="blink">  
+                  </span>
+              </p>
+              
+            </div>
+
+<!-- Your Total Asset -->
+            <div style="height: 50px; width: 197px; margin-left:40px;  margin-top:15px;
+              background-color: black; 
+              border: 1px solid #222222; 
+              border-radius: 10px;
+              padding: 10px;
+              margin-bottom: 10px;">
+
+                <div>
+                  <div style="text-align: center;">
+                    <p style="line-height:1;
+                      margin: 0;color: rgb(130,130,130);font-size:11px">
+                      <b>Total Asset</b>
+                    </p>
+                  </div>
+                  <div class="row justify-content-evenly">
+                      <div class="col-2">
+                      <p style="font-size:11px;line-height:2;
+                        margin: 0;color: rgb(80,80,80);">
+                        Fiat</p>
+                      </div>
+                      <div class="col-4">
+                      <p id="fiat" style="font-size:11px;line-height:2;
+                        margin: 0;color: rgb(80,80,80);">
+                        {{data['fiat']}}</p>
+                      </div>
+                      <div class="col-3">
+                       <p style="font-size:11px;line-height:2;
+                        margin: 0;color: rgb(80,80,80);">
+                         {{ data['asset_type'] }} </p>
+                      </div>
+                      <div class="col-3">
+                       <p id="crypto" style="font-size:11px;line-height:2;
+                        margin: 0;color: rgb(80,80,80);">
+                         {{ data['crypto']}}</p>
+                      </div>
+                  </div>
+                </div>
+            </div>
+
+<!-- Current Crypto Transaction -->
+            <div style="height: 90px; width: 200px; margin-left:40px;
+              background-color: black; 
+              border: 1px solid #111111; 
+              border-radius: 10px;
+              padding: 10px;
+              margin-top:0px;
+              margin-bottom:10px;">
+
+              <div>
+                  <div style="text-align: center;">
+                    <p style="line-height:2;
+                      margin: 0;color: rgb(130,130,130);font-size:11px">
+                      <b>Current {{ data['asset_type'] }} Transaction</b>
+                    </p>
+                  </div>
+                  <div class="row justify-content-evenly">
+                    <div class="col">
+                        <p style="font-size:11px;line-height:1.5;
+                        margin: 0;color: rgb(80,80,80);" class="text-center">
+                        Sell Price</p>
+                    </div>
+                    <div class="col">
+                        <p style="font-size:11px;line-height:1.5;
+                          margin: 0;color: rgb(80,80,80);" class="text-center">
+                          Buy Price</p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-evenly">
+                    <div class="col-1">
+                        <p style="font-size:11px;line-height:1;
+                          margin: 0;color: rgb(80,80,80);" class="text-center">
+                          <i>f</i></p>
+                    </div>
+                    <div class="col-4">
+                        <p id="sell" style="font-size:11px;line-height:1;
+                        margin: 0;color: rgb(80,80,80);"class="text-center">
+                        {{ data.sell }}</p>
+                    </div>
+                    <div class="col-1">
+                        <p style="font-size:11px;line-height:1;
+                        margin: 0;color: rgb(80,80,80);"class="text-center">
+                        <i>f</i></p>
+                    </div>  
+                    <div class="col-4">
+                        <p id="buy" style="font-size:11px;line-height:1;
+                          margin: 0;color: rgb(80,80,80);"class="text-center">
+                          {{ data.buy }}</p>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center">
+                    <div class="col-4">
+                        <p style="font-size:11px;line-height:3;
+                          margin: 0;color: rgb(130,130,130);">
+                          Gain</p>
+                    </div>
+                    <div class="col-2 d-flex align-items-center">
+                        <p style="font-size:11px;line-height:2;
+                          margin: 0;color: rgb(130,130,130);">
+                          <i>f</i></p>
+                    </div>
+                    <div class="col-3 d-flex align-items-center">
+                        <p id="t_gain" style="font-size:11px;line-height:2;
+                          margin: 0;color: rgb(130,130,130);">
+                          {{ data.t_gain }}</p>
+                    </div>
+
+                    
+
+                    
+                  </div>
+              </div>
+            </div>
+<!-- Tax and Net Gain -->
+    <!-- Tax  -->
+              <div style="height: 90px; width: 200px; margin-left:40px;
+              background-color: black; 
+              border: 1px solid #111111; 
+              border-radius: 10px;
+              padding: 10px;
+              margin-top:0px;
+              margin-bottom:0px;">
+                
+                <div class="row align-items-center">
+                  <div class="col-5">
+                     <p style="font-size:12px;line-height:3;
+                      margin: 0;color: rgb(200,50,20);">
+                       Tax (20%)</p>
+                  </div>
+                  <div class="col-2 d-flex align-items-center">
+                     <p style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(200,50,20);">
+                      <i>f</i></p>
+                  </div>
+                  <div class="col-2">
+                     <p id="t_tax" style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(200,50,20);" class="text-center">
+                       {{data.t_tax }}
+                       </p>
+                  </div>
+                </div>
+    <!-- Net Gain  -->
+
+                
+                <div class="row align-items-center">
+                  <div class="col-5">
+                     <p style="font-size:12px;line-height:3;
+                      margin: 0;color: rgb(40, 180, 120);">
+                       Net Gain</p>
+                  </div>
+                  <div class="col-2 d-flex align-items-center">
+                     <p style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(40, 180, 120);">
+                      <i>f</i></p>
+                  </div>
+                  <div class="col-2">
+                     <p id="t_gain_net" style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(40, 180, 120);" >
+                       {{data.t_gain_net}}
+                       </p>
+                  </div>
+                </div>
+                
+ 
+                
+              </div>
+<!-- Position  -->       
+            
+         
+                     <div style="height: 40px; width: 200px; margin-left:40px;
+              background-color: black;
+              border: 1px solid #111111;
+              border-radius: 10px;
+              padding: 0px;
+              margin-top:10px;              display: flex;               align-items: center;
+              justify-content: center;
+              align-items: center; /* Vertically align items to the center */
+              text-align: right;">
+              <div class="row">
+                <div id="img-star" class="col-12 d-flex justify-content-center align-items-center">
+                  <img src="{{ url_for('static', filename='star.png') }}" alt="Small Image"
+                    style="width: 12px; height: 12px;margin-right: 15px;">  <span style="line-height:2;
+                      margin: 0;color: rgb(130,130,130);font-size:12px; text-align: center;">
+                    <b>POSITION :       </b>
+                      <b> <span id="pos" style="color:white;"> {{ data.pos }} </span> </b> </span>
+                </div>
+              </div>
+            </div><!-- End of Position  --> 
+              
+        </div> 
+       
+       
+       <!-- End of left pane  --> 
+         
+<!-- This is the price chart area -->
+       <div class="col-md-6 offset-md-1" 
+        style="margin-left: 0px;">
+<!-- Price chart -->
+          <div style="height: 310px; width: 600px;
+          background-color: black; 
+          border: 10px solid black; 
+          border-radius: 20px;
+          padding: 0px;
+          margin-left: 0px;
+          margin-top:10px;
+          margin-bottom:20px; overflow: hidden;">
+            <div id="chartContainer" style="height: 120%;position: relative;">
+    <div id="overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 10%; background-color: black; z-index: 1;"></div>
+            </div>
+          </div>
+<!-- Buy and Sell Button -->
+          <div class="row justify-content-evenly" style="margin-left: 0px;margin-top: 20px;">
+             <div class="col-6">
+                 <button type="button" id="buyButton"  class="custom-button"
+                  style="margin-left: 20px;
+                  width: 225px;
+                  padding: 10px 30px; 
+                  border: none; 
+                  border-radius: 4px; 
+                  font-size: 16px; 
+                  font-weight: bold;" >
+                  Buy
+                </button>
+             </div>
+             <div class="col-6">
+               <button type="button" id="sellButton"  class="custom-button"
+                  style="margin-left: 20px;
+                  width: 225px; 
+                  padding: 10px 30px; 
+                  border: none; 
+                  border-radius: 4px; 
+                  font-size: 16px; 
+                  font-weight: bold;
+                  color: white;
+                  background-color: rgb(40, 180, 120);">
+                  Sell
+                </button>
+
+
+
+
+               
+             </div>
+          </div>
+       </div> <!-- End of middle pane  --> 
+
+
+<!-- This is the accumulative stats -->
+         <div class="col-md-1 offset-md-11"
+           style="margin-left: 5px;">
+              <div class='row'>
+                <div class="col-3" style="margin-left: 30px;margin-top: 30px"> 
+                  <div style="height: 50px; width:150px;
+                    background-color: black; 
+                    border: 1px solid black; 
+                    padding: 10px;">
+                    <p style="line-height:1;
+                      margin: 0;color: white;text-align: center;">
+                      Transaction</p>
+                    <p style="font-size:18px;line-height:1;
+                      margin: 0;color: white;text-align: center;">
+                      <span id="trx">{{ data['trx'] }} </span> of 5</p>
+                  </div>
+                </div>
+                <div class="col-3" style="margin-left: 30px;margin-top: 30px"> 
+                  <div style="height: 50px; width:150px;
+                    background-color: black; 
+                    border: 1px solid black; 
+                    padding: 10px;">
+                    <p style="line-height:1;
+                      margin: 0;color: rgb(40, 180, 120);text-align: center;font-size:14px;">
+                      Total Gain</p>
+                      <div class="row justify-content-center">
+                          <div class="col-2">
+                            <p style="font-size:14px;line-height:2;
+                              margin: 0;color: rgb(40, 180, 120);text-align: center;">
+                              <i>f</i></p>
+                          </div>
+                          <div class="col-5">
+                              <p id="r_gain" style="font-size:14px;line-height:2;
+                              margin: 0;color: rgb(40, 180, 120);text-align: right;">
+                              {{ data.r_gain }}</p>
+                          </div>
+                      </div>
+                     </div>
+                  </div>
+                
+                  <div class="col-3" style="margin-left: 30px;margin-top: 30px"> 
+                    <div style="height: 50px; width:150px;
+                      background-color: black; 
+                      border: 1px solid black; 
+                      padding: 10px;">
+                      <p style="line-height:1;
+                        margin: 0;color: rgb(200,50,20);text-align: center;font-size:14px;">
+                        Total Tax</p>
+                        <div class="row justify-content-center">
+                          <div class="col-2">
+                            <p style="font-size:14px;line-height:2;
+                              margin: 0;color: rgb(200,50,20);text-align: center;">
+                              <i>f</i></p>
+                          </div>
+                          <div class="col-5">
+                              <p id="r_tax" style="font-size:14px;line-height:2;
+                              margin: 0;color: rgb(200,50,20);text-align: right;">
+                              {{ data.r_tax }}</p>
+                          </div>
+                      </div>
+                     </div>
+                  </div>
+
+                  <div class="col-3" style="margin-left: 30px;margin-top: 30px"> 
+                    <div style="height: 50px; width:150px;
+                      background-color: black; 
+                      border: 1px solid black; 
+                      padding: 10px;">
+                      <p style="line-height:1;
+                        margin: 0;color: rgb(40, 180, 120);text-align: center;font-size:14px;">
+                        Total Net Gain</p>
+                        <div class="row justify-content-center">
+                          <div class="col-2">
+                            <p style="font-size:14px;line-height:2;
+                              margin: 0;color: rgb(40, 180, 120);text-align: center;">
+                              <i>f</i></p>
+                          </div>
+                          <div class="col-5">
+                              <p id="r_gain_net" style="font-size:14px;line-height:2;
+                              margin: 0;color: rgb(40, 180, 120);text-align: right;">
+                              {{ data.r_gain_net }}</p>
+                          </div>
+                      </div>
+                     </div>
+                  </div>
+
+                
+              </div>
+
+
+         
+       </div> <!-- End of right pane   -->
+       
+        <div >
+         <span id="gr"  style="color:rgb(0,0,0);font-size:2px;"> 
+           {{ data.gr }}
+         </span>
+          <span id="id" style="color:rgb(10,10,10);font-size:2px;"> 
+           {{ data.id }}</span>
+          <span id="crypto_prev" style="color:rgb(0,0,0);
+            font-size:2px;">{{ data.crypto_prev }}</span>
+          <span id="fiat_prev"  style="color:rgb(0,0,0);
+            font-size:2px;">{{ data.fiat_prev }}</span>
+          <span id="buy_prev"  style="color:rgb(0,0,0);
+            font-size:2px;">{{ data.buy_prev }}</span>
+          <span id="r_gain_prev"  style="color:rgb(0,0,0);
+            font-size:2px;">{{ data.r_gain_prev }}</span>
+          <span id="r_tax_prev"  style="color:rgb(0,0,0);
+            font-size:2px;">{{ data.r_tax_prev }}</span>
+          <span id="r_gain_net_prev"  style="color:rgb(0,0,0);
+            font-size:2px;">{{ data.r_gain_net_prev }}</span>
+                    <span id="tax_disclos"  style="color:rgb(0,0,0);
+            font-size:2px;">{{ data.tax_disclos }}</span>
+                    <span id="tax_discre"  style="color:rgb(0,0,0);
+            font-size:2px;">{{ data.tax_discre }}</span>
+                    <span id="audit"  style="color:rgb(0,0,0);
+            font-size:2px;">{{ data.audit }}</span>
+                    <span id="penalty"  style="color:rgb(0,0,0);
+            font-size:2px;">{{ data.penalty }}</span>
+                    <span id="r_gain_final"  style="color:rgb(0,0,0);
+            font-size:2px;">{{ data.r_gain_final }}</span>
+
+        </div>  
+       
+      {% include 'chartscript.html' %}      
+      {% include 'capture-timer.html' %}
+     </div class='row'>  
+    
+  </div class="fixed-box-0">
+
+
+
+    
+</body>
+  
+</html>

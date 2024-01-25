@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify, session
+from flask import Flask, redirect, render_template, request, jsonify, session, url_for
 from database import engine, insert_group_treatment, fetch_init_data, retrieve_data
 from sqlalchemy import text
 from datetime import datetime
@@ -7,9 +7,26 @@ import random
 
 app = Flask(__name__)
 
-@app.route("/")
-def hello_world():
-  return render_template('home.html')
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/validate_passcode', methods=['POST'])
+def validate_passcode():
+    passcode = request.form.get('passcode')
+    if len(passcode) == 6:
+        with engine.connect() as conn:
+            result = conn.execute(text("SELECT passcode FROM passcodes WHERE passcode = :passcode;"), {"passcode": passcode})
+            if result.fetchone():
+                # Passcode exists, redirect to home.html
+                return redirect(url_for('home'))
+    # Passcode is invalid, show warning
+    return render_template('index.html', warning=True)
+
+@app.route('/home')
+def home():
+    return render_template('home.html')
+  
 
 #-----After Instruction page, assign group and insert init data
 @app.route("/instructions")
@@ -23,6 +40,13 @@ def after_instructions():
     else:
         return Error
 
+#----Insert initial game data from db to try out instruction
+@app.route("/tryout", methods=['POST'])
+def tryout():
+  id = request.form['id']
+  print("ID:", id)  # Debug statement
+  return render_template('instruction-tryout.html', id=id)
+  
 #----Insert initial game data from db to html
 @app.route("/start", methods=['POST'])
 def starting_game():

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    {% include 'bootstrap.html' %}
+    <title>TEG</title>
+  
+    <style>
+      p {
+        font-family: Arial;
+        color: rgb(80,80,80);
+        margin-bottom: 20px;
+        }
+      h1{
+        font-size: 40px;
+        font-family: Arial;
+        color: rgb(80,80,80);
+      }
+      #container {
+        max-width: 70%;
+        margin: 10px auto;
+        justify-content: center;
+        align-items: center;
+      }
+      .fixed-box-0 {
+      height: 700px; 
+      overflow: auto; 
+      border: 1px solid #ccc; 
+      padding: 10px; 
+      position: relative;
+    }
+      .fixed-box-1 {
+      font-family: Arial;
+      color: rgb(80,80,80);
+      height: 450px; 
+      overflow: auto; 
+      border: 1px solid #ccc; 
+      padding: 10px; 
+      position: relative;
+      margin-left:20px;
+    }
+      .fixed-box-2 {
+      font-family: Arial;
+      color: rgb(80,80,80);
+      height: 600px; 
+      max-width: 100%;
+      overflow: auto; 
+      border: 0px solid #ccc; 
+      padding: 10px; 
+      position: relative;
+      margin-left:20px;
+      background-color: white;
+      }
+  
+    </style>
+    
+  </head>
+  
+<body>
+  <div id="container">
+  <div class="fixed-box-0">
+    
+  <h1></h1>
+ 
+  <p>
+    
+  </p>
+  
+  <div class="fixed-box-1">
+    Before starting the experiment, you have the chance to take part in a single trial round (Round 0). Please take a moment to familiarise yourself with the information displayed on the screenshot pages below. Following the trial round, you will proceed directly to the main experiment (Round 1 - Round 15)
+    <span id="id" style="color:rgb(256,256,256);font-size:2px;"> 
+       {{ id }}</span>
+<hr>
+
+  <div class="fixed-box-2">
+
+     <img src="{{ url_for('static', filename='gif-rounds.gif') }}" style="max-width:800px;">
+
+     <img src="{{ url_for('static', filename='gif-taxreport.gif') }}"style="max-width:800px;"> 
+
+     <img src="{{ url_for('static', filename='gif-taxaudit.gif') }}"style="max-width:700px;margin-top:50px;margin-left:100px;">
+
+    
+  </div>
+
+
+
+  </div>
+
+  <h4 style="margin-left: 20px; 
+  margin-bottom: 5px;
+  font-family: Arial;
+  color: rgb(80,80,80);">
+  <b>
+  </b>
+  </h4>
+
+ 
+  <br>
+  <br>
+  <form action="/start" method="POST" >
+  <input type="hidden" name="id" value="{{ id }}">
+  <button id="nextButton" style="margin-left: 20px;
+  background-color: rgb(10, 103, 173, 0.9); 
+  color: white; 
+  padding: 10px 30px; 
+  border: none; 
+  border-radius: 4px; 
+  font-size: 16px; 
+  font-weight: bold;"
+  type="submit"
+  onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
+  onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'"
+  
+  >
+  Next
+  </button>
+
+  </form>
+
+  </div>
+
+
+  </div>
+
+
+
+
+</body>
+  
+</html>
