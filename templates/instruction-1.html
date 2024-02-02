@@ -165,10 +165,10 @@
               <p id="q8-warning" style="color: red;"></p></p>
 
                 <p>9. In one round, you have an undisclosed taxes of <i>f</i> 300. The authority audits you and imposes a penalty. How much taxes do you still have to pay?<br>
-                <input type="radio" name="q9" value="A questionnaire"> 900<br>
-                <input type="radio" name="q9" value="An online game"> 300<br>
-                <input type="radio" name="q9" value="A captcha"> 600<br>
-                <input type="radio" name="q9" value="A tax calculation"> 1,200<br>
+                <input type="radio" name="q9" value="A questionnaire"><i>f</i> 900<br>
+                <input type="radio" name="q9" value="An online game"><i>f</i> 300<br>
+                <input type="radio" name="q9" value="A captcha"><i>f</i> 600<br>
+                <input type="radio" name="q9" value="A tax calculation"><i>f</i> 1,200<br>
               <p id="q9-warning" style="color: red;"></p></p>
 
               <p>10. The amount of your gains and taxes in one round in a tax reporting page are...<br>
@@ -281,7 +281,7 @@
       if (!q3Answer) {
           q3Warning.textContent = "Please answer this question.";
       } else {
-          if (q3Answer.value !== "A crypto user") {
+          if (q3Answer.value !== "A stock user") {
               q3Warning.textContent = "Answer for Question 3 is incorrect.";
           } else {
               q3Warning.textContent = "";
