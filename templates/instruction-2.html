@@ -22,65 +22,85 @@
         justify-content: center;
         align-items: center;
       }
-      .fixed-box-0 {
-      height: 700px; 
-      overflow: auto; 
-      border: 1px solid #ccc; 
-      padding: 10px; 
-      position: relative;
+    .fixed-box-0 {
+    height: 700px; 
+    overflow: auto; 
+    border: 3px grooved solid #ccc; 
+    padding: 10px; 
+    position: relative;
     }
-      .fixed-box-1 {
-      font-family: Arial;
-      color: rgb(80,80,80);
-      height: 450px; 
-      overflow: auto; 
-      border: 1px solid #ccc; 
-      padding: 10px; 
-      position: relative;
-      margin-left:20px;
+    .fixed-box-1 {
+    font-family: Arial;
+    color: rgb(80,80,80);
+    height: 450px; 
+    overflow: auto; 
+    border: 3px grooved solid #ccc; 
+    padding: 10px; 
+    position: relative;
+    margin-left:20px;
+    box-shadow: inset 0 0 4px #555;
+    border-radius: 10px;
     }
-      .fixed-box-2 {
-      font-family: Arial;
-      color: rgb(80,80,80);
-      height: 250px; 
-      overflow: auto; 
-      border: 0px solid #ccc; 
-      padding: 10px; 
-      position: relative;
-      margin-left:20px;
-      background-color: lightgray;
-      }
-      
+    .fixed-box-2 {
+    font-family: Arial;
+    color: rgb(80,80,80);
+    height: 250px; 
+    overflow: auto; 
+    border: 3px grooved solid #ccc; 
+    padding: 10px; 
+    position: relative;
+    margin-left:20px;
+    border-radius: 10px;
+    background-color: lightgray;
+    }
+
     </style>
-    
-  </head>
-  
-<body>
-  <div id="container">
-  <div class="fixed-box-0">
-    
-  <h1>Instructions</h1>
- 
-  <p>
-    
-  </p>
-  
-  <div class="fixed-box-1">
+
+    </head>
+
+    <body>
+    <div id="container">
+    <div class="fixed-box-0">
+
+    <h1>Instructions</h1>
+
+    <p>
+
+    </p>
+
+    <div class="fixed-box-1">
+    <p><b>Overview</b></p>
+    <p>In this experiment, you will act as a {{asset_type}} trader with two types of assets at your disposal: fiat currency and {{asset_type}} in a decentralised exchange. You will begin the simulation with 1 {{asset_type}} and no fiat currency.</p>
+    <p><b>Trading Simulation</b></p>
     <ul>
-      <li>You will play a role as a <b>stock user</b>. You only have two kinds of assets: share of stocks and crypto. You will have <b>1 unit of share</b> and <b>0 unit of fiat</b> currency (<i>f</i>) at the beginning. </li>
-      <li>You will play in a <b>15 rounds</b> of trading simulation. In each round, you will engage in alternating transactions of <b>buying and selling</b> entire amounts of assets between your two kinds of assets. </li>
-      <li>There will be <b>5 (five) chances</b> to commit the transactions in one round. The duration of trading transactions of each round is <b>30 seconds</b>.</li>
-      <li>To commit a transaction, you only need to <b>click</b> a button ("Buy" or "Sell").</li>
-      <li>At the end of each round, there will be a <b>tax reporting</b> page where you should pay <b>20%</b> tax of your <b>gain</b>. However you can put <b>any</b> number on the tax reporting page. </li>
-      <li>An example of the tax calculation:
-      <ul><li>Let's say you purchased 1 stock for <i>f</i> 10,000. Later, you sold it for <i>f</i> 15,000. To calculate the gain, subtract the purchase price from the selling price: <i>f</i> 15,000 - <i>f</i> 10,000 = <i>f</i> 5,000. You would owe taxes on your gain. The tax rate in this experiment is 20%. Multiply the gain by the tax rate: <i>f</i> 5,000 x 0.20 = <i>f</i> 1,000. This calculation is <b>automatic</b>, and the figures will be displayed on your page when your <b>hover</b> your mouse over a "show totals" button at a tax reporting page.</li></ul>
-      </li>
-      <li>You need to maximise your gain in order to receive higher potential compensation from this study. If you choose to enter <b>a raffle</b> at the end of the experiment, you will receive a percentage dollar of real money from the <b>undisclosed taxes</b> of one random round. However, if this is the round where the authority <b>audits</b> you, your compensation will be AUD 20.</li>
-      <li>In the case where the authority conducts an audit and you have undisclosed taxes, there will be a penalty of <b>200%</b> of the amount of your undisclosed taxes. So, you should pay <b>both</b> of the undisclosed taxes and the penalty.</li>
-      <li>The probability of the authority to attain the data and conduct an audit on you is <b>20%</b>. However, because you are operating in a <b>decentralised exchange</b>, where the authority may not fully receive third party information on your activities, the percentage may be <b>reduced</b> to half or even lower.</li>
-      <li>You may transact <b>fewer</b> than 5 (five) times in each round, and take your time to think and calculate your expected gain <b>before</b> reporting taxes.</li>
-      <li>There will be a <b>questionnaire</b> at the end of the study for you to complete.</li>
+    <li>Rounds: The simulation includes 15 trading rounds.</li>
+    <li>Trading Mechanics: Within each round, you will alternate between buying and selling your assets, with the opportunity to perform up to 5 transactions per round. Each transaction must be completed within a 30-second limit.</li>
+    <li>How to Trade: To execute a trade, simply click either the "Buy" or "Sell" button.</li>      
     </ul>
+    <p><b>Tax Reporting</b></p>
+    <ul>
+    <li>At the conclusion of each round, you'll enter the tax reporting phase, where you're expected to pay a 20% tax on any trading gains.</li>
+    <li>Tax Calculation Example: If you purchase a {{asset_type}} or <i>f</i> 10,000 and later sell it for <i>f</i> 15,000, your gain is <i>f</i> 5,000. The tax owed on this gain would be <i>f</i> 1,000 (20% of <i>f</i> 5,000).</li>
+    <li>Tax calculations are automated. You can view your tax obligations by hovering over the "show totals" button on the tax reporting page. While you can report any amount, accuracy is crucial to avoid penalties during audits.</li>    
+    </ul>
+    <p><b>Compensation, Raffles, and Audits</b></p>
+    <ul>
+    <li>Maximising your gains is crucial as your compensation from this study is performance-based.</li>
+    <li>Raffle Participation: Engaging in the raffle offers the chance to win monetary compensation based on undeclared taxes from a randomly chosen round. This compensation will be transferred to you once you provide the necessary payment details</li>
+    <li>If selected for an audit in the round associated with the raffle and found with undisclosed taxes, your compensation will revert to AUD 0</li>    
+    <li>An audit may result in a 200% penalty on any undisclosed taxes, in addition to the owed amount</li>
+    <li>The initial likelihood for tax audit is 20%, but trading on a decentralised exchange could halve this or more due to limited authority access to information.</li>
+    </ul>
+    <p><b>Strategy and Feedback</b></p>
+    <ul>
+    <li>You are not obligated to use all 5 transaction opportunities each round, allowing time for strategic planning.</li>
+    <li>Upon completing the simulation, a questionnaire will be provided for feedback.</li>
+    </ul>
+    <p><b>Optional Follow-Up Interview</b></p>
+    <ul>
+    <li>After the questionnaire, you may opt for a follow-up interview to provide more in-depth feedback. An email with details regarding this interview will be sent to interested participants.</li>
+    </ul>
+
 
     <hr>
     

@@ -28,15 +28,17 @@ def home():
     return render_template('home.html')
   
 
-#-----After Instruction page, assign group and insert init data
+#-----After home page, assign group and insert init data
 @app.route("/instructions")
 def after_instructions():
     result = insert_group_treatment()
     treatment_value = result['treatment']
     if treatment_value == 1:
-        return render_template('instruction-1.html', id=result["id"])
+        asset_type = 'stock'
+        return render_template('instruction-1.html', id=result["id"], asset_type=asset_type)
     elif treatment_value == 2:
-        return render_template('instruction-2.html', id=result["id"])
+        asset_type = 'crypto'  
+        return render_template('instruction-2.html', id=result["id"], asset_type=asset_type)
     else:
         return Error
 
