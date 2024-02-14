@@ -43,23 +43,40 @@ def after_instructions():
         return Error
 
 #----Insert initial game data from db to try out instruction
-@app.route("/tryout", methods=['POST'])
+@app.route("/tryout", methods=['GET', 'POST'])
 def tryout():
-  id = request.form['id']
-  print("ID:", id)  # Debug statement
-  return render_template('instruction-tryout.html', id=id)
+    if request.method == 'POST':
+        id = request.form['id']
+        print("ID:", id)  # Debug statement
+        return render_template('instruction-tryout.html', id=id)
+    elif request.method == 'GET':
+        # Handle GET requests (if needed)
+        return render_template('instruction-tryout.html')
+
   
 #----Insert initial game data from db to html
-@app.route("/start", methods=['POST'])
+@app.route("/start", methods=['GET', 'POST'])
 def starting_game():
-    id = request.form.get('id')
-    print("ID:", id)  # Debug statement
-    if id:
-        init_data = fetch_init_data(id)
-        print("Init Data:", init_data)  # Debug statement
-        if init_data:
-            return render_template('rounds.html', data=init_data)
-    return "Error: Invalid ID"
+    if request.method == 'POST':
+        id = request.form.get('id')
+        print("ID:", id)  # Debug statement
+        if id:
+            init_data = fetch_init_data(id)
+            print("Init Data:", init_data)  # Debug statement
+            if init_data:
+                return render_template('round0.html', data=init_data)
+        return "Error: Invalid ID"
+    elif request.method == 'GET':
+        # Handle GET requests (if needed)
+        id = request.form.get('id')
+        print("ID:", id)  # Debug statement
+        if id:
+            init_data = fetch_init_data(id)
+            print("Init Data:", init_data)  # Debug statement
+            if init_data:
+              return render_template('round0.html')  # Example template to render for GET requests
+      
+
        
 #-----Start interacting with the data inside the game
 #-----Send data to the database

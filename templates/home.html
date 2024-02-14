@@ -50,17 +50,21 @@
       padding: 10px; 
       position: relative;
       margin-left:20px;
+      margin-bottom:20px;
       border-radius: 10px;
       background-color: #f0f0f0;
     }
-      .fixed-box-1 img {
-      position: absolute; 
-      top: 3px; 
-      right: 20px; 
-      width: 200px; 
-      height: 110px; 
-    }
-     
+
+      .container {
+        display: flex;
+        justify-content: space-between; /* Adjusts the space between the two columns */
+      }
+
+      .column {
+        flex: 1; /* Each column takes up equal width */
+        padding: 10px; /* Optional: adds some padding inside each column */
+        /* Add any additional styling here */
+      }
     </style>
   </head>
   
@@ -71,12 +75,112 @@
   <h1 >Welcome</h1>
  
   <p style="margin-left:20px;">
-    Thank you for your participation in this study. Before proceeding to the online experiment please read carefully the plain language statement provided to you in the invitation e-mail. In case you need more information or assistance regarding this study, you can reach out to the principal investigator at yayan.riyanto@monash.edu (Yayan Riyanto). Below is the consent form available for your review. You can indicate your consent by ticking the "Accept Consent" box to continue.
+    Thank you for your interest in our study. Please read the explanatory statement below carefully before starting the online experiment. If you need more information or assistance, contact the student investigator, Yayan Riyanto, at yayan.riyanto@monash.edu. To participate, review the consent form and indicate your agreement by checking the "Accept Consent" box. You can withdraw at any time. The experiment will take about 30 minutes; we appreciate your full attention.
   </p>
   
   <div class="fixed-box-1">
-    <img src="{{ url_for('static', filename='monashuni.png') }}">
+    <img src="{{ url_for('static', filename='monashuni.png') }}"style="position: absolute; top: 3px; right: 20px; width: 220px; height: 130px;"">
     
+    <h2 style= "margin-bottom: 3px;
+      color: rgb(80,80,80);">
+      Explanatory Statement</h2>
+    <h3 style="margin-top: 0; color: rgb(80,80,80);">
+      Department of Business Law and Taxation</h3>
+
+    <p>
+     Investigating Tax Compliance Behaviour in Crypto-Asset Environment: <br>Evidence from Indonesia and Australia (Project No. 39727, MUHREC Approval ID XXXX)
+    </p>
+    
+  <div class="fixed-box-2">
+    <div style="color: rgb(80,80,80);">
+      <p><b>Introduction</b></p>
+    <ol>
+      You are invited to take part in this study.  Please read this Explanatory Statement in full before deciding whether or not to participate in this research. If you would like further information regarding any aspect of this project, you are encouraged to contact the researchers via the phone numbers or email addresses listed below.
+
+
+      <div class="container">
+        <div class="column">
+          <p><strong>Dr. John Bevacqua</strong><br>
+          Department of Business Law and Taxation<br>
+          Monash University<br>
+          Phone: +61 3 9903 4191<br>
+          Email: <a href="mailto:john.bevacqua@monash.edu">john.bevacqua@monash.edu</a></p>
+
+          <p><strong>Yayan P. Riyanto</strong><br>
+          Department of Business Law and Taxation<br>
+          Monash University<br>
+          Phone: +61 3 9903 2160<br>
+          Email: <a href="mailto:yayan.riyanto@monash.edu">yayan.riyanto@monash.edu</a></p>
+        </div>
+
+        <div class="column">
+          <p><strong>Dr. Catrina Denvir</strong><br>
+          Department of Business Law and Taxation<br>
+          Monash University<br>
+          Phone: +61 3 9905 3009<br>
+          Email: <a href="mailto:catrina.denvir@monash.edu">catrina.denvir@monash.edu</a></p>
+        </div>
+      </div>
+
+      
+    </ol>
+      <p><b>What does the research involve?</b></p>
+      <ol>
+        This study aims to improve and explore the understanding of tax compliance behaviours in the crypto-asset environment. In doing this, this study focuses on how stakeholders–specifically the tax authority, the intermediary, and the taxpayers–perceive and expect the risks and levels of tax compliance in crypto-asset setting and how the interactions between them affect the relationships. This study is being conducted for academic purposes and it will be conducted in Indonesia and Australia It will include interviews with all stakeholders and online experiments specifically designed for the taxpayer group. Interviews will be conducted via Zoom meetings, while online experiments will take place at participants’ own devices. Each interview is expected to last up to one hour. In some cases, we may need to ask follow-up questions, which could lead to additional interviews lasting up to one hour. In the online experiment, we will conduct a tax compliance simulation that will last for about thirty minutes. As a token of appreciation, you can choose to enter a raffle for a chance to receive financial compensation. With permission, interviews and online experiments will be digitally recorded and later processed for analysis. You were chosen for this research because you are among the stakeholders identified in this study. 
+      </ol>
+      <p><b>Consenting to participate in the project and withdrawing from the research</b></p>
+      <ol>
+        To participate in the study, we will ask you to indicate your consent through a form at the start of the interview and/or online experiment session. You can withdraw from further participation in the study at any stage. 
+      </ol>
+      <p><b>Possible benefits and risks to participants</b></p>
+        <ol>
+          As crypto assets are a new phenomenon in the financial and fiscal landscape, the results of this research will provide benefits to the industry and the authorities in Indonesia, Australia, and internationally by providing an initial exploration of the taxation, governance, and compliance issues. There are no identified risks associated with participating in this project.
+        </ol>
+      <p><b>Confidentiality</b></p>
+        <ol>
+          All information obtained in the interview and/or online experiment will be strictly used for the purpose of this research only. Any quotes from interviews, references to interview data, and/or online experiment responses reported in publications such as a thesis or journal article will be anonymised and will not be linked in any way to your identity. Once de-identified, the audio file will be transcribed using a reputable external transcription service.  
+        </ol>
+      <p><b>Storage of data</b></p>
+      <ol>
+        The digital files of your interview and transcript, any printed transcript, the consent form and the online experiment data will be securely stored at Monash University in accordance with Monash University regulations and the Indonesian Law. All digital files will be stored in a password-protected folder. All hard copy documents will be stored in a locked filing cabinet in the office of one of the researchers. Only the researchers will have access to the data, with all data being destroyed 5 years after the final publication. The primary data from Indonesia will be stored for at least 20 years.   
+      </ol>
+      <p><b>Funding</b></p>
+        <ol>
+          This study is funded by Monash University and LPDP (Lembaga Pengelola Dana Pendidikan/The Indonesia Endowment Fund for Education).   
+        </ol>
+      <p><b>Results</b></p>
+        <ol>
+          If you would like a summary of the results, please contact Yayan P. Riyanto (yayan.riyanto@monash.edu). It may be several months after the interviews and online experiments before a summary is available.   
+        </ol>
+      <p><b>Complaints</b></p>
+        <ol>
+          Should you have any concerns or complaints about the conduct of the project, you are welcome to contact the Executive Officer, Monash University Human Research Ethics (MUHREC):<br><br><i>
+          Executive Officer<br>
+          Monash University Human Research Ethics Committee (MUHREC) <br>
+          Room 111, Chancellery Building E,<br>
+          24 Sports Walk, Clayton Campus<br>
+          Research Office<br>
+          Monash University VIC 3800<br>
+
+          Tel: +61 3 9905 2052	   Email: muhrec@monash.edu        Fax: +61 3 9905 3831 </i>
+
+        </ol>
+      <p>Thank you,<br>
+
+ Prof. John Bevacqua</p>
+
+
+   
+
+    </div>
+
+    
+  </div>
+
+    <hr>
+
+    <img src="{{ url_for('static', filename='monashuni.png') }}"style="position: absolute; top: 300px; right: 20px; width: 220px; height: 130px;"">
+
     <h2 style= "margin-bottom: 3px;
       color: rgb(80,80,80);">
       Consent Form</h2>
@@ -84,12 +188,12 @@
       Department of Business Law and Taxation</h3>
 
     <p>
-      Project: Perceiving Tax Compliance Behaviour of Stock and Crypto User
+     Investigating Tax Compliance Behaviour in Crypto-Asset Environment: <br>Evidence from Indonesia and Australia (Project No. 39727, MUHREC Approval ID XXXX)
     </p>
-    
-  <div class="fixed-box-2">
+
+    <div class="fixed-box-2">
     <ol style="color: rgb(80,80,80);">
-      <li>I consent to participate in this project, the details of which have been explained to me, and I have been provided with a written plain language statement to keep</li>
+      <li>I consent to participate in this project, the details of which have been explained to me, and I have been provided with an explanatory statement to read.</li>
       <li>I understand that the purpose of this research is to investigate tax compliance behaviour of stock and crypto users.</li>
       <li>I understand that my participation in this project is for research purposes only.</li> 
       <li>I acknowledge that the possible effects of participating in this research project have been explained to my satisfaction.</li>
@@ -101,8 +205,13 @@
       <li>I have been informed that the confidentiality of the information I provide will be safeguarded subject to any legal requirements; my data will be password protected and accessible only by the named researchers.</li>
       <li>I understand that after I agree to this consent form, the data will be retained by the researcher.</li>
     </ol>
-  </div>
+    </div>
+    
+    
 
+
+
+    
   </div>
     
   <h4 style="margin-left: 20px; 

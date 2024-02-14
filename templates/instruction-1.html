@@ -51,7 +51,6 @@
       position: relative;
       margin-left:20px;
       border-radius: 10px;
-      background-color: lightgray;
       }
   
     </style>
@@ -69,6 +68,7 @@
   </p>
   
   <div class="fixed-box-1">
+    <div class="fixed-box-2" >
     <p><b>Overview</b></p>
     <p>In this experiment, you will act as a {{asset_type}} trader with two types of assets at your disposal: fiat currency and {{asset_type}} in a decentralised exchange. You will begin the simulation with 1 {{asset_type}} and no fiat currency.</p>
     <p><b>Trading Simulation</b></p>
@@ -100,11 +100,12 @@
     <ul>
       <li>After the questionnaire, you may opt for a follow-up interview to provide more in-depth feedback. An email with details regarding this interview will be sent to interested participants.</li>
      </ul>
-    
+    </div class="fixed-box-2" style="background-color: lightgray;">
 
 <hr>
 
-  <div class="fixed-box-2">
+    <div class="fixed-box-2" style="background-color: lightgray;">
+      
     <p>To ensure your comprehension of the instructions, please answer the following questions correctly:</p>
       <div style="margin-left: 20px;">
           <form id="simulationForm">
@@ -281,7 +282,7 @@
       if (!q3Answer) {
           q3Warning.textContent = "Please answer this question.";
       } else {
-          if (q3Answer.value !== "A stock user") {
+          if (q3Answer.value !== "A {{asset_type}} user") {
               q3Warning.textContent = "Answer for Question 3 is incorrect.";
           } else {
               q3Warning.textContent = "";
