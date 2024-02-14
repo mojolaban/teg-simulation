@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, request, jsonify, session, url_for
-from database import engine, insert_group_treatment, fetch_init_data, retrieve_data
+from database import engine, insert_group_treatment, fetch_init_data, retrieve_data, insert_demog
 from sqlalchemy import text
 from datetime import datetime
 import json
@@ -11,17 +11,15 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
-@app.route('/validate_passcode', methods=['POST'])
-def validate_passcode():
-    passcode = request.form.get('passcode')
-    if len(passcode) == 6:
-        with engine.connect() as conn:
-            result = conn.execute(text("SELECT passcode FROM passcodes WHERE passcode = :passcode;"), {"passcode": passcode})
-            if result.fetchone():
-                # Passcode exists, redirect to home.html
-                return redirect(url_for('home'))
-    # Passcode is invalid, show warning
-    return render_template('index.html', warning=True)
+@app.route('/select_language', methods=['POST'])
+def select_language():
+    language = request.form.get('language')
+    if language in ['English', 'Indonesian']:
+        # Redirect to home if a valid language is selected
+        return redirect(url_for('home'))
+    # If somehow an invalid option is submitted, reload the page
+    return render_template('index.html')
+
 
 @app.route('/home')
 def home():
@@ -29,18 +27,77 @@ def home():
   
 
 #-----After home page, assign group and insert init data
-@app.route("/instructions")
-def after_instructions():
+@app.route("/form_demog")
+def form_demog():
     result = insert_group_treatment()
     treatment_value = result['treatment']
     if treatment_value == 1:
         asset_type = 'stock'
-        return render_template('instruction-1.html', id=result["id"], asset_type=asset_type)
+        return render_template('form_demog.html', id=result["id"], asset_type=asset_type)
     elif treatment_value == 2:
         asset_type = 'crypto'  
-        return render_template('instruction-2.html', id=result["id"], asset_type=asset_type)
+        return render_template('form_demog.html', id=result["id"], asset_type=asset_type)
     else:
         return Error
+
+#----Insert into instructions page
+@app.route("/instructions", methods=['GET', 'POST'])
+def instructions():
+    if request.method == 'POST':
+        gender = request.form['gender']
+        age = request.form['age']
+        education_level = request.form['education_level']
+        current_education = request.form['current_education']
+        country_residence = request.form['country_residence']
+        citizenship = request.form['citizenship']
+        asset_experience = ','.join(request.form.getlist('asset_experience[]'))
+        tax_experience = request.form['tax_experience']
+        description = request.form['description']
+        id = request.form['id']
+        asset_type = request.form['asset_type']
+
+        insert_demog(gender, age, education_level, current_education, country_residence, citizenship, asset_experience, tax_experience, description, id)
+
+        if 'stock' in asset_type:
+            asset_type = 'stock'
+            return render_template('instruction-2.html', id=id, asset_type=asset_type)
+        elif 'crypto' in asset_type:
+            asset_type = 'crypto'
+            return render_template('instruction-1.html', id=id, asset_type=asset_type)
+        else:
+            # Handle other cases if needed
+            pass
+
+    elif request.method == 'GET':
+        gender = request.args.get('gender')
+        age = request.args.get('age')
+        education_level = request.args.get('education_level')
+        current_education = request.args.get('current_education')
+        country_residence = request.args.get('country_residence')
+        citizenship = request.args.get('citizenship')
+        asset_experience = request.args.get('asset_experience[]')
+        tax_experience = request.args.get('tax_experience')
+        description = request.args.get('description')
+        id = request.args.get('id')
+        asset_type = request.args.get('asset_type')
+
+        if gender and age and education_level and current_education and country_residence and citizenship and asset_experience and tax_experience and description and id and asset_type:
+            insert_demog(gender, age, education_level, current_education, country_residence, citizenship, asset_experience, tax_experience, description, id)
+
+            if 'stock' in asset_type:
+                asset_type = 'stock'
+                return render_template('instruction-2.html', id=id, asset_type=asset_type)
+            elif 'crypto' in asset_type:
+                asset_type = 'crypto'
+                return render_template('instruction-1.html', id=id, asset_type=asset_type)
+            else:
+                # Handle other cases if needed
+                pass
+        else:
+            # Handle case where not all data is provided
+            return render_template('form_demog.html')
+
+
 
 #----Insert initial game data from db to try out instruction
 @app.route("/tryout", methods=['GET', 'POST'])

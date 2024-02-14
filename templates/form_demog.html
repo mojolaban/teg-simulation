@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html>
+<head>
+    {% include 'bootstrap.html' %}
+    <title>TEG</title>
+    <style>
+      p, h1, form, label {
+        font-family: Arial;
+        color: rgb(80,80,80);
+      }
+      h1 {
+        font-size: 40px;
+        margin-bottom: 20px;
+      }
+      #container {
+        max-width: 70%;
+        margin: 10px auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .fixed-box-0, .fixed-box-1, .fixed-box-2 {
+        overflow: auto; 
+        border: 3px grooved solid #ccc; 
+        padding: 10px; 
+        position: relative;
+        margin-top: 20px;
+        border-radius: 10px;
+      }
+      .fixed-box-0 {
+        height: 600px;
+      }
+      .fixed-box-1 {
+        height: 440px; 
+        margin-left: 20px;
+      }
+      .fixed-box-2 {
+        height: auto;
+        background-color: #f0f0f0;
+      }
+      form {
+        display: flex;
+        flex-direction: column;
+      }
+      input, select {
+        margin-bottom: 10px;
+        padding: 8px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+      }
+      button {
+        margin-top: 20px; /* Updated to move the button to the top */
+        background-color: rgb(10, 103, 173, 0.9);
+        color: white;
+        padding: 10px 30px;
+        border: none;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        align-self: flex-start; /* Added to align button to the left */
+      }
+      button:hover {
+        background-color: rgb(10, 103, 173, 0.7);
+      }
+      .error {
+        color: red;
+        margin-top: 0px; /* Reduced space between error message and question */
+        margin-bottom: 10px; /* Reduced space between error message and next question */
+      }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div class="fixed-box-0">
+        <h1>Participant Profile</h1>
+        <div class="fixed-box-1" 
+          style="box-shadow: inset 0 0 4px #555;">
+            <p style="margin-top:10px;">Complete the brief background questions below before starting the online experiment. <br>Your confidentiality is assured as outlined in the explanatory statement.</p>
+            <div class="fixed-box-2">
+                <form action="/instructions" method="post" onsubmit="return validateForm()">
+                    <div id="error-message" class="error" style="display:none;"></div> <!-- General error message -->
+                    
+                    <label>1. Gender</label>
+                    <select name="gender" id="gender">
+                        <option value="">Select</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="prefer_not_to_answer">Prefer Not To Answer</option>
+                    </select>
+                    <div id="gender-error" class="error" style="display:none;">Please select a gender.</div>
+
+                    <label>2. Age (Years)</label>
+                    <input type="number" name="age" id="age" min="18" max="100" value="">
+                    <div id="age-error" class="error" style="display:none;">Please enter your age.</div>
+
+                    <label>3. Highest level of formal education</label>
+                    <select name="education_level" id="education_level">
+                        <option value="">Select</option>
+                        <option value="high_school">High School Graduate</option>
+                        <option value="bachelor">Bachelor's Degree</option>
+                        <option value="master">Master's Degree</option>
+                        <option value="doctoral">Doctoral Degree</option>
+                    </select>
+                    <div id="education_level-error" class="error" style="display:none;">Please select your education level.</div>
+
+                    <label>4. Current enrollment in formal education</label>
+                    <select name="current_education" id="current_education">
+                        <option value="">Select</option>
+                        <option value="not_enrolled">Not currently enrolled</option>
+                        <option value="high_school">High School</option>
+                        <option value="bachelor">Bachelor's Degree</option>
+                        <option value="master">Master's Degree</option>
+                        <option value="doctoral">Doctoral Degree</option>
+                    </select>
+                    <div id="current_education-error" class="error" style="display:none;">Please select your current enrollment status.</div>
+
+                    <label>5. Country of residence</label>
+                    <select name="country_residence" id="country_residence">
+                        <option value="">Select</option>
+                        <option value="australia">Australia</option>
+                        <option value="indonesia">Indonesia</option>
+                    </select>
+                    <div id="country_residence-error" class="error" style="display:none;">Please select your country of residence.</div>
+
+                    <label>6. Citizenship</label>
+                    <select name="citizenship" id="citizenship">
+                        <option value="">Select</option>
+                        <option value="australia">Australia</option>
+                        <option value="indonesia">Indonesia</option>
+                    </select>
+                    <div id="citizenship-error" class="error" style="display:none;">Please select your citizenship.</div>
+
+                    <!-- Additional questions -->
+                    <label>7. Your experience with asset investment? (select all that apply)</label>
+                    <label style="margin-left:25px;"><input type="checkbox" name="asset_experience[]" value="crypto"> I invest in crypto-assets</label>
+                    <label style="margin-left:25px;"><input type="checkbox" name="asset_experience[]" value="securities"> I invest in stocks, bonds, or other securities</label>
+                    <label style="margin-left:25px;"><input type="checkbox" name="asset_experience[]" value="commodities"> I invest in commodities, real estates, or precious metals</label>
+                    <div id="asset_experience-error" class="error" style="display:none;">Please select your experience with asset investment.</div>
+
+                    <label>8. Your experience with taxation?</label>
+                    <label style="margin-left:25px;"><input type="radio" name="tax_experience" id="tax_self" value="self"> I fulfill my tax obligations by myself</label>
+                    <label style="margin-left:25px;"><input type="radio" name="tax_experience" id="tax_intermediaries" value="intermediaries"> I fulfill my tax obligations through intermediaries (i.e. tax consultants or accountants)</label>
+                    <div id="tax_experience-error" class="error" style="display:none;">Please select your experience with taxation.</div>
+
+                    <label>9. Which description best suits you?</label>
+                    <label style="margin-left:25px;"><input type="radio" name="description" id="desc_one_off" value="one-off"> A one-off crypto investor</label>
+                    <label style="margin-left:25px;"><input type="radio" name="description" id="desc_favourable" value="favourable"> I trade crypto only when the situation seems favorable</label>
+                    <label style="margin-left:25px;"><input type="radio" name="description" id="desc_frequent" value="frequent"> A frequent and active crypto-asset trader</label>
+                    <div id="description-error" class="error" style="display:none;">Please select the description that best suits you.</div>
+ 
+<input type="hidden" name="id" id="id" value={{id}}>
+<input type="hidden" name="asset_type" asset_type="asset_type" value={{asset_type}}>
+
+                    <button type="submit">Next</button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function validateForm() {
+        var gender = document.getElementById("gender").value;
+        var age = document.getElementById("age").value;
+        var educationLevel = document.getElementById("education_level").value;
+        var currentEducation = document.getElementById("current_education").value;
+        var countryResidence = document.getElementById("country_residence").value;
+        var citizenship = document.getElementById("citizenship").value;
+        var assetExperience = document.querySelectorAll('input[name="asset_experience[]"]:checked').length;
+        var taxSelf = document.getElementById("tax_self").checked;
+        var taxIntermediaries = document.getElementById("tax_intermediaries").checked;
+        var description = document.querySelectorAll('input[name="description"]:checked').length;
+
+        // Check if any of the required fields are empty or unchecked
+        var isValid = true;
+        if (gender === "") {
+            document.getElementById("gender-error").style.display = "block";
+            isValid = false;
+        } else {
+            document.getElementById("gender-error").style.display = "none";
+        }
+        if (age === "" || age < 18) {
+            document.getElementById("age-error").style.display = "block";
+            isValid = false;
+        } else {
+            document.getElementById("age-error").style.display = "none";
+        }
+        if (educationLevel === "") {
+            document.getElementById("education_level-error").style.display = "block";
+            isValid = false;
+        } else {
+            document.getElementById("education_level-error").style.display = "none";
+        }
+        if (currentEducation === "") {
+            document.getElementById("current_education-error").style.display = "block";
+            isValid = false;
+        } else {
+            document.getElementById("current_education-error").style.display = "none";
+        }
+        if (countryResidence === "") {
+            document.getElementById("country_residence-error").style.display = "block";
+            isValid = false;
+        } else {
+            document.getElementById("country_residence-error").style.display = "none";
+        }
+        if (citizenship === "") {
+            document.getElementById("citizenship-error").style.display = "block";
+            isValid = false;
+        } else {
+            document.getElementById("citizenship-error").style.display = "none";
+        }
+        if (assetExperience === 0) {
+            document.getElementById("asset_experience-error").style.display = "block";
+            isValid = false;
+        } else {
+            document.getElementById("asset_experience-error").style.display = "none";
+        }
+        if (!taxSelf && !taxIntermediaries) {
+            document.getElementById("tax_experience-error").style.display = "block";
+            isValid = false;
+        } else {
+            document.getElementById("tax_experience-error").style.display = "none";
+        }
+        if (description === 0) {
+            document.getElementById("description-error").style.display = "block";
+            isValid = false;
+        } else {
+            document.getElementById("description-error").style.display = "none";
+        }
+
+        // Check if the form is valid
+        if (!isValid) {
+            document.getElementById("error-message").style.display = "block";
+            return false;
+        } else {
+            document.getElementById("error-message").style.display = "none";
+            return true;
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -33,6 +33,14 @@ def insert_group_treatment():
         treatment = {"treatment": treatment, "id": random_id}
         return treatment
 
+#----1a. Insert participant profile
+def insert_demog(gender, age, education_level, current_education, country_residence, citizenship, asset_experience, tax_experience, description,id):
+  with engine.connect() as conn:
+      conn.execute(
+          text("INSERT INTO `teg-simulation`.`demog`(`gender`, `age`, `education_level`, `current_education`, `country_residence`, `citizenship`, `asset_experience`, `tax_experience`, `description`, `id`) VALUES (:gender, :age, :education_level, :current_education, :country_residence, :citizenship, :asset_experience, :tax_experience, :description, :id);"), 
+          {"gender": gender, "age": age, "education_level": education_level, "current_education": current_education, "country_residence": country_residence, "citizenship": citizenship, "asset_experience": asset_experience, "tax_experience": tax_experience, "description": description, "id": id}
+      )
+
 
 #----2. Fecth initial game data from db 
 def fetch_init_data(id):
