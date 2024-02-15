@@ -293,7 +293,7 @@ def tax_disclosure():
     data = request.args
     userid = data['id']
     taxdisclos = data['tax_disclos'].replace(',', '')
-    audit_value = 0 if random.random() < 0.8 else 1
+    audit_value = 0 if random.random() < 0.8 else 1 # 20% chance of audit
     print("Reported Data:")
     print(f"UserID: {userid}")
     print(f"Audit: {audit_value}")
