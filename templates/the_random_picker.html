@@ -305,7 +305,7 @@
         Thank you for your participation in this study
       </p>
       <p class="text-center" id="thanks-word" style="font-size:24px;line-height:1;margin:auto;color:rgb(256,256,256)">
-        As a token of appreciation <br> You may collect this amount at the end of the session
+        As a token of appreciation <br> You are entitled to receive an e-gift voucher valuing
       </p>
     </div>
   </div>
@@ -329,7 +329,7 @@
       name="compensation-amt" style="height: 50px; width: 240px; margin-top:0px;
       text-align: center;border-radius: 10px;color:white;background:rgb(40, 180, 120);border: none;"> 
 <span  id="compensation-amt"
-  style="visibility: hidden";>AUD {{ '{:,.0f}'.format ( comp_amt ) }}</span>
+  style="visibility: hidden";>A$ {{ '{:,.0f}'.format ( comp_rgainfinal ) }}</span>
       
     </button>
   </div>
@@ -352,11 +352,11 @@
           onmouseout="this.style.backgroundColor = 'white'">
           Next
         </button>   
-                        <input type="hidden" name="comp_amt" value= {{comp_amt}}>
+                        <input type="hidden" name="comp_amt" value= {{comp_rgainfinal}}>
                         <input type="hidden" name="comp_round" value= {{comp_round}}>
                         <input type="hidden" name="user_id" value= {{user_id}}> 
                         <input type="hidden" name="gr" value= {{gr}}> 
-                        <input type="hidden" name="comp_rgainfinal" value= {{comp_rgainfinal}}> 
+                        <input type="hidden" name="comp_rgainfinal" value= {{comp_amt}}> 
       </form>   
     </div>
   </div>

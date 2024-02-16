@@ -25,24 +25,26 @@
       .fixed-box-0 {
       height: 700px; 
       overflow: auto; 
-      border: 1px solid #ccc; 
+      border: 0px solid #ccc; 
       padding: 10px; 
       position: relative;
     }
       .fixed-box-1 {
       font-family: Arial;
       color: rgb(80,80,80);
-      height: 450px; 
+      height: 550px; 
       overflow: auto; 
       border: 1px solid #ccc; 
       padding: 10px; 
       position: relative;
       margin-left:20px;
+      box-shadow: inset 0 0 4px #555;
+      border-radius: 10px;
     }
       .fixed-box-2 {
       font-family: Arial;
       color: rgb(80,80,80);
-      height: 600px; 
+      height: 400px; 
       max-width: 100%;
       overflow: auto; 
       border: 0px solid #ccc; 
@@ -67,18 +69,20 @@
   </p>
   
   <div class="fixed-box-1">
-    Before starting the experiment, you have the chance to take part in a single trial round (Round 0). Please take a moment to familiarise yourself with the information displayed on the screenshot pages below. Following the trial round, you will proceed directly to the main experiment (Round 1 - Round 15)
+    Before starting, you have the chance to take part in a single trial round (Round 0). Please take a moment to familiarise yourself with the information displayed on the screenshots below. Following the trial round, you will proceed to the main rounds (Round 1 - Round 15)
     <span id="id" style="color:rgb(256,256,256);font-size:2px;"> 
        {{ id }}</span>
 <hr>
 
   <div class="fixed-box-2">
 
-     <img src="{{ url_for('static', filename='gif-rounds.gif') }}" style="max-width:800px;">
+     <img src="{{ url_for('static', filename='01.jpg') }}"style="max-width:900px;margin-top:0px;margin-left:20px;">
 
-     <img src="{{ url_for('static', filename='gif-taxreport.gif') }}"style="max-width:800px;"> 
+     <img src="{{ url_for('static', filename='02.jpg') }}"style="max-width:900px;margin-top:20px;margin-left:20px;"> 
 
-     <img src="{{ url_for('static', filename='gif-taxaudit.gif') }}"style="max-width:700px;margin-top:50px;margin-left:100px;">
+     <img src="{{ url_for('static', filename='03.jpg') }}"style="max-width:900px;margin-top:20px;margin-left:20px;">
+
+     <img src="{{ url_for('static', filename='04.jpg') }}"style="max-width:900px;margin-top:20px;margin-left:20px;">
 
     
   </div>

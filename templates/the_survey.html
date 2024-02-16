@@ -25,7 +25,6 @@
       .fixed-box-0 {
       height: 700px; 
       overflow: auto; 
-      border: 1px solid #ccc; 
       padding: 10px; 
       position: relative;
     }
@@ -35,6 +34,8 @@
       height: 400px; 
       overflow: auto; 
       border: 1px solid #ccc; 
+      border-radius: 10px;
+      box-shadow: inset 0 0 4px #555;
       padding: 10px; 
       position: relative;
       margin-left:20px;
@@ -44,7 +45,6 @@
       color: rgb(80,80,80);
       height: 300px; 
       overflow: auto; 
-      border: 1px solid #ccc; 
       padding: 10px; 
       position: relative;
       margin-left:20px;
@@ -84,7 +84,8 @@
 
     
   <div class="fixed-box-1">
-    <img src='https://teg-simulation.mojolaban.repl.co/static/monashuni.png'>
+    
+    <img src="{{ url_for('static', filename='monashuni.png') }}"style="height: 90px;width: 180px;margin-right:10px;"">
 
     <h4 style= "margin-bottom: 3px;margin-top:10px;
       color: rgb(80,80,80);">
@@ -147,11 +148,23 @@
         <div class="row justify-content-center">
           
    <div class="col-9 col-sm-5" style="margin-top: 20px;">
-    <p style="font-size: 12px; text-align: center;">You can enter your email if you are interested to join the follow-up study:</p>
+    <p style="font-size: 12px; text-align: center;">Enter your email to receive the e-gift voucher:</p>
   </div>
   
   <div class="col-9 col-sm-4" style="margin-top: 15px;">
-    <input type="email" class="form-control form-control-sm" id="colFormLabelSm" placeholder="email" style="font-size: 12px; text-align: center;"  name="email" >
+    <input type="email" class="form-control form-control-sm" id="colFormLabelSm" placeholder="email" style="font-size: 12px; text-align: center;"  name="email" required>
+
+    <label for="comments" style="font-size: 12px; margin-top: 20px;">Any comments on the online experiment?</label>
+    <textarea id="comments" name="comments" rows="5" style="font-size: 12px;width: 100%;border: 1px solid #ccc;" required></textarea>
+
+    <label for="followup" style="font-size: 12px; margin-top: 20px;">Interested in participating in the follow-up interview?</label>
+    <select id="followup" name="followup" class="form-control form-control-sm" style="font-size: 12px;margin-bottom:20px;" required>
+        <option value="">Select</option>
+        <option value="Yes">Yes</option>
+        <option value="No">No</option>
+    </select>
+    
+    
   </div>
           
         </div>

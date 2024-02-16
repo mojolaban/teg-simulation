@@ -33,9 +33,13 @@ def form_demog():
     treatment_value = result['treatment']
     if treatment_value == 1:
         asset_type = 'stock'
+        print("ID:", id)  # Debug statement
+        print("asset_type:", asset_type)  # Debug statement
         return render_template('form_demog.html', id=result["id"], asset_type=asset_type)
     elif treatment_value == 2:
         asset_type = 'crypto'  
+        print("ID:", id)  # Debug statement
+        print("asset_type:", asset_type)  # Debug statement
         return render_template('form_demog.html', id=result["id"], asset_type=asset_type)
     else:
         return Error
@@ -57,16 +61,16 @@ def instructions():
         asset_type = request.form['asset_type']
 
         insert_demog(gender, age, education_level, current_education, country_residence, citizenship, asset_experience, tax_experience, description, id)
-
         if 'stock' in asset_type:
-            asset_type = 'stock'
-            return render_template('instruction-2.html', id=id, asset_type=asset_type)
+          print("ID:", id)  # Debug statement
+          print("asset_type:", asset_type)  # Debug statement
+          return render_template('instruction-1.html', id=id, asset_type=asset_type)
+
         elif 'crypto' in asset_type:
-            asset_type = 'crypto'
-            return render_template('instruction-1.html', id=id, asset_type=asset_type)
-        else:
-            # Handle other cases if needed
-            pass
+          print("ID:", id)  # Debug statement
+          print("asset_type:", asset_type)  # Debug statement
+          return render_template('instruction-2.html', id=id, asset_type=asset_type)
+
 
     elif request.method == 'GET':
         gender = request.args.get('gender')
@@ -85,11 +89,9 @@ def instructions():
             insert_demog(gender, age, education_level, current_education, country_residence, citizenship, asset_experience, tax_experience, description, id)
 
             if 'stock' in asset_type:
-                asset_type = 'stock'
-                return render_template('instruction-2.html', id=id, asset_type=asset_type)
-            elif 'crypto' in asset_type:
-                asset_type = 'crypto'
                 return render_template('instruction-1.html', id=id, asset_type=asset_type)
+            elif 'crypto' in asset_type:
+                return render_template('instruction-2.html', id=id, asset_type=asset_type)
             else:
                 # Handle other cases if needed
                 pass
@@ -102,14 +104,35 @@ def instructions():
 #----Insert initial game data from db to try out instruction
 @app.route("/tryout", methods=['GET', 'POST'])
 def tryout():
-    if request.method == 'POST':
-        id = request.form['id']
-        print("ID:", id)  # Debug statement
-        return render_template('instruction-tryout.html', id=id)
-    elif request.method == 'GET':
-        # Handle GET requests (if needed)
-        return render_template('instruction-tryout.html')
+  if request.method == 'POST':
+      id = request.form['id']
+      asset_type = request.form['asset_type']
+      if 'stock' in asset_type:
+          print("ID:", id)  # Debug statement
+          print("asset_Type:", asset_type)  # Debug statement
+          return render_template('instruction-tryout-1.html', id=id, asset_type=asset_type)
+      elif 'crypto' in asset_type:
+          print("ID:", id)  # Debug statement
+          print("asset_Type:", asset_type)  # Debug statement
+          return render_template('instruction-tryout-2.html', id=id, asset_type=asset_type)
+      else:
+          # Handle unsupported asset types
+          return "Unsupported asset type"
 
+  elif request.method == 'GET':
+      id = request.args.get('id')
+      asset_type = request.args.get('asset_type')
+      if asset_type == "stock":
+          print("ID:", id)  # Debug statement
+          print("asset_Type:", asset_type)  # Debug statement
+          return render_template('instruction-tryout-1.html', id=id, asset_type=asset_type)
+      elif asset_type == "crypto":
+          print("ID:", id)  # Debug statement
+          print("asset_Type:", asset_type)  # Debug statement
+          return render_template('instruction-tryout-2.html', id=id, asset_type=asset_type)
+      else:
+          # Handle unsupported asset types
+          return "Unsupported asset type"
   
 #----Insert initial game data from db to html
 @app.route("/start", methods=['GET', 'POST'])
@@ -412,15 +435,20 @@ def next_round():
                 return "No data found"
 
             user_id, gr, comp_round, comp_amt = result
-            comp_rgainfinal = comp_amt
-            comp_amt = comp_amt * 0.0002
+            if comp_amt < 1000000:
+              comp_rgainfinal = 20
+            elif comp_amt >= 1000000 and comp_amt <= 5000000:
+              comp_rgainfinal = 40
+            else:
+              comp_rgainfinal = 80
+
 
             print("Compensation:")
             print(f"UserID: {user_id}")
             print(f"Group: {gr}")
             print(f"Round: {comp_round}")
-            print(f"Round Gain Amount: {comp_rgainfinal}")
-            print(f"Compensation Amount: {comp_amt}")
+            print(f"Round Gain Amount: {comp_amt}")
+            print(f"Compensation Amount: {comp_rgainfinal}")
 
             return render_template("the_random_picker.html", user_id=user_id, comp_round=comp_round, comp_amt=comp_amt, comp_rgainfinal=comp_rgainfinal, gr=gr)
 
@@ -500,6 +528,8 @@ def yes():
         email = form_data.get('email')
         gr = form_data.get('gr')
         id = form_data.get('id')
+        comments = form_data.get('comments')
+        followup = form_data.get('followup')
 
         # Create a dictionary to map the question numbers to column names
         question_columns = {
@@ -545,16 +575,18 @@ def yes():
         insert_values['email'] = email
         insert_values['gr'] = gr
         insert_values['id'] = id
+        insert_values['comments'] = comments
+        insert_values['followup'] = followup
 
         # Execute the insert statement
         with engine.connect() as conn:
             insert_statement = text("""
-                INSERT INTO survey (question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10,question11,question12, question13,question14,question15,question16,question17,question18,question19,question20,question21,question22,question23,question24,question25,question26,question27,question28,question29, email, gr, id)
-                VALUES (:question0, :question1, :question2,  :question3, :question4, :question5, :question6, :question7, :question8, :question9, :question10, :question11, :question12, :question13, :question14, :question15, :question16, :question17, :question18, :question19, :question20, :question21, :question22, :question23, :question24, :question25, :question26, :question27, :question28, :question29, :email, :gr, :id)
+                INSERT INTO survey (question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10,question11,question12, question13,question14,question15,question16,question17,question18,question19,question20,question21,question22,question23,question24,question25,question26,question27,question28,question29, email, gr, id, comments, followup)
+                VALUES (:question0, :question1, :question2,  :question3, :question4, :question5, :question6, :question7, :question8, :question9, :question10, :question11, :question12, :question13, :question14, :question15, :question16, :question17, :question18, :question19, :question20, :question21, :question22, :question23, :question24, :question25, :question26, :question27, :question28, :question29, :email, :gr, :id, :comments, :followup)
             """)
             conn.execute(insert_statement, insert_values)
 
-        return "Thank you for participating!"
+        return render_template('the_survey_ends.html')
     return "Invalid request method"
 
 

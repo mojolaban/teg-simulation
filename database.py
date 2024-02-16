@@ -75,9 +75,9 @@ def fetch_init_data(id):
             r_gain_final = row[24]
 
             if gr_value == '2':
-                asset_type = "Stock"
-            elif gr_value == '1':
                 asset_type = "Crypto"
+            elif gr_value == '1':
+                asset_type = "Stock"
               
             if pos_value == "s":
                 pos_value = "SELL"
@@ -156,9 +156,9 @@ def retrieve_data(id):
             price_value = row[26]
 
             if gr_value == '2':
-                asset_type = "Stock"
-            elif gr_value == '1':
                 asset_type = "Crypto"
+            elif gr_value == '1':
+                asset_type = "Stock"
 
             if pos_value == "s":
                 pos_value = "SELL"
@@ -249,9 +249,9 @@ def fetch_update_data(id):
             r_gain_final = row[24]
 
             if gr_value == '2':
-                asset_type = "Stock"
-            elif gr_value == '1':
                 asset_type = "Crypto"
+            elif gr_value == '1':
+                asset_type = "Stock"
               
             if pos_value == "s":
                 pos_value = "SELL"
