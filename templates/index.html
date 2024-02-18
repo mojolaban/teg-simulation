@@ -43,6 +43,7 @@
           font-size: 16px;
         }
     </style>
+   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <h1>Select Language:</h1>
@@ -51,7 +52,9 @@
             <option value="English">English</option>
             <option value="Indonesian">Indonesian</option>
         </select>
-        <button id="nextButton" type="submit">Submit</button>
+      <!-- reCAPTCHA widget -->
+      <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY"></div>
+       <button id="nextButton" type="submit">Submit</button>
     </form>
 </body>
 </html>

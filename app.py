@@ -4,6 +4,7 @@ from sqlalchemy import text
 from datetime import datetime
 import json
 import random
+import requests
 
 app = Flask(__name__)
 
@@ -13,12 +14,20 @@ def index():
 
 @app.route('/select_language', methods=['POST'])
 def select_language():
-    language = request.form.get('language')
-    if language in ['English', 'Indonesian']:
-        # Redirect to home if a valid language is selected
-        return redirect(url_for('home'))
-    # If somehow an invalid option is submitted, reload the page
-    return render_template('index.html')
+  # reCAPTCHA verification
+  recaptcha_response = request.form['g-recaptcha-response']
+  secret_key = 'YOUR_SECRET_KEY'  # Replace with your secret key
+  payload = {'secret': secret_key, 'response': recaptcha_response}
+  r = requests.post("https://www.google.com/recaptcha/api/siteverify", data=payload)
+  result = r.json()
+
+  if result['success']:
+      language = request.form.get('language')
+      if language in ['English', 'Indonesian']:
+          return redirect(url_for('home'))
+  # If reCAPTCHA validation fails or invalid option is submitted, reload the page
+  return render_template('index.html')
+
 
 
 @app.route('/home')
