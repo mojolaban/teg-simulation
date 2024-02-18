@@ -1,10 +1,10 @@
 from flask import Flask, redirect, render_template, request, jsonify, session, url_for
+import requests
 from database import engine, insert_group_treatment, fetch_init_data, retrieve_data, insert_demog
 from sqlalchemy import text
 from datetime import datetime
 import json
 import random
-import requests
 
 app = Flask(__name__)
 
