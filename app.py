@@ -16,12 +16,16 @@ def index():
 def select_language():
   # reCAPTCHA verification
   recaptcha_response = request.form['g-recaptcha-response']
-  secret_key = '6LfRbXcpAAAAAKLFmY73h5cUjyc13QekX3rGfMRn' # Replace with your secret key
-  payload = {'secret': secret_key, 'response': recaptcha_response}
+  secret_key = 'YOUR_SECRET_KEY'  # Replace with your actual secret key
+  payload = {
+      'secret': secret_key,
+      'response': recaptcha_response
+  }
   r = requests.post("https://www.google.com/recaptcha/api/siteverify", data=payload)
   result = r.json()
 
-  if result['success']:
+  # Check the reCAPTCHA score
+  if result.get('success') and result.get('score', 0) >= 0.5:  # Adjust the score threshold as needed
       language = request.form.get('language')
       if language in ['English', 'Indonesian']:
           return redirect(url_for('home'))

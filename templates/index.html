@@ -43,8 +43,18 @@
           font-size: 16px;
         }
     </style>
-   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-</head>
+<!-- reCAPTCHA v3 script with your site key -->
+<script src="https://www.google.com/recaptcha/api.js?render=your_site_key_here"></script>
+<script>
+    // Execute reCAPTCHA and add the token to the form on page load or form submit
+    grecaptcha.ready(function() {
+        grecaptcha.execute('YOUR_SITE_KEY', {action: 'submit'}).then(function(token) {
+            // You can append the token to the form or a hidden input field before form submission
+            var recaptchaResponse = document.getElementById('recaptchaResponse');
+            recaptchaResponse.value = token;
+        });
+    });
+</script></head>
 <body>
     <h1>Select Language:</h1>
     <form action="/select_language" method="POST">
@@ -52,9 +62,9 @@
             <option value="English">English</option>
             <option value="Indonesian">Indonesian</option>
         </select>
-      <!-- reCAPTCHA widget -->
-      <div class="g-recaptcha" data-sitekey='6LfRbXcpAAAAADUrHj1ldbM02SUTy7Yrnsm4o9b8'></div>
-       <button id="nextButton" type="submit">Submit</button>
+      <!-- Hidden input for reCAPTCHA token -->
+      <input type="hidden" name="g-recaptcha-response" id="recaptchaResponse">
+      <button id="nextButton" type="submit">Submit</button>
     </form>
 </body>
 </html>
