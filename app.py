@@ -16,7 +16,7 @@ def index():
 def select_language():
   # reCAPTCHA verification
   recaptcha_response = request.form['g-recaptcha-response']
-  secret_key = 'YOUR_SECRET_KEY' # Replace with your secret key
+  secret_key = '6LfRbXcpAAAAAKLFmY73h5cUjyc13QekX3rGfMRn' # Replace with your secret key
   payload = {'secret': secret_key, 'response': recaptcha_response}
   r = requests.post("https://www.google.com/recaptcha/api/siteverify", data=payload)
   result = r.json()
