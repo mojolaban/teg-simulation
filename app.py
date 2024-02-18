@@ -1,5 +1,4 @@
 from flask import Flask, redirect, render_template, request, jsonify, session, url_for
-import requests
 from database import engine, insert_group_treatment, fetch_init_data, retrieve_data, insert_demog
 from sqlalchemy import text
 from datetime import datetime
@@ -16,16 +15,12 @@ def index():
 def select_language():
   # reCAPTCHA verification
   recaptcha_response = request.form['g-recaptcha-response']
-  secret_key = 'YOUR_SECRET_KEY'  # Replace with your actual secret key
-  payload = {
-      'secret': secret_key,
-      'response': recaptcha_response
-  }
+  secret_key = 'YOUR_SECRET_KEY'  # Replace with your secret key
+  payload = {'secret': secret_key, 'response': recaptcha_response}
   r = requests.post("https://www.google.com/recaptcha/api/siteverify", data=payload)
   result = r.json()
 
-  # Check the reCAPTCHA score
-  if result.get('success') and result.get('score', 0) >= 0.5:  # Adjust the score threshold as needed
+  if result['success']:
       language = request.form.get('language')
       if language in ['English', 'Indonesian']:
           return redirect(url_for('home'))
