@@ -1,0 +1,504 @@
+<html>
+  <head>
+    {% include 'bootstrap.html' %}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>TEG</title>
+
+    <style>
+      p {
+        font-family: Arial;
+        color: rgb(80, 80, 80);
+        margin-bottom: 20px;
+      }
+      h1 {
+        font-size: 40px;
+        font-family: Arial;
+        color: rgb(80, 80, 80);
+      }
+      #container {
+        max-width: 75%;
+        margin: 10px auto;
+        justify-content: center;
+        align-items: center;
+        background-color: black;
+        border: 1px solid white;
+        
+      }
+      .fixed-box-0 {
+        height: 85px;
+        max-width: 95%;
+        border: 1px solid #ccc;
+        padding: 10px;
+        position: relative;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 20px;
+        background-color: white;
+      }
+      .fixed-box-1 {
+        font-family: Arial;
+        color: rgb(80, 80, 80);
+        height: 450px;
+        overflow: auto;
+        border: 1px solid black;
+        padding: 10px;
+        position: relative;
+        margin-left: 20px;
+        margin-right: 20px;
+        margin-top: 20px;
+      }
+      .fixed-box-2 {
+        font-family: Arial;
+        font-size: 25px;
+        color: rgb(80, 80, 80);
+        height: 60px;
+        overflow: auto;
+        border: 1px solid red;
+        padding: 10px;
+        border-radius: 10px;
+        margin-left: 40px;
+        margin-right: 0px;
+        display: flex;
+        justify-content: center;
+      }
+
+      .fixed-box-2 span {
+        margin-left: 5px;
+      }
+      /* Remove up and down arrow from input[type="number"] */
+      input[type="number"]::-webkit-inner-spin-button,
+      input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="container">
+      <!-- Round and Timer -->
+      <div class="fixed-box-0">
+        <div class='row'>
+          <!-- Round -->
+          <div class="col-md-7" style="margin-left: 20px;">
+            <h1>Akhir Ronde {{ summary_data['round'] }}<span id="round"> </span></h1>
+          </div>
+          <!-- Timer -->
+          <div class="col-md-4">
+            <div class="fixed-box-2">
+              Waktu:
+              <span id="countdown">0</span>s
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="fixed-box-1">
+        <div class='row'>
+          
+          <!-- This is the Totals Pane -->
+          <div id="left-pane" class="col-2" style="margin-left: 30px;">
+            <!-- Start of Left Pane -->
+            
+            <!-- Your Total Asset -->
+            <div id="total-asset-box" style="height: 60px; width: 200px;
+              background-color: black;
+              border: 1px solid #222222;
+              border-radius: 10px;
+              padding: 10px;
+              margin-bottom: 20px;">
+              <div>
+                <div style="text-align: center;">
+                  <p style="line-height:1;
+                    margin: 0;color: rgb(130,130,130);font-size:12px">
+                    <b>Total Aset</b>
+                  </p>
+                </div>
+                <div class="row justify-content-evenly">
+                  <div class="col-2">
+                    <p style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(80,80,80);">
+                      Fiat
+                    </p>
+                  </div>
+                  <div class="col-4">
+                    <p id="fiat" style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(80,80,80);">
+                      <!-- {{ "{:,.0f}".format(summary_data['fiat']) }} -->
+                    </p>
+                  </div>
+                  <div class="col-3">
+                    <p style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(80,80,80);">
+                      {{ summary_data['asset_type'] }}
+                    </p>
+                  </div>
+                  <div class="col-3">
+                    <p id="crypto" style="font-size:12px;line-height:2;
+                      margin: 0;color: rgb(80,80,80);">
+                      <!-- {{ summary_data['crypto'] }} -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            
+
+            <!-- TOTAL GAIN -->
+            <div id="total-gain-box" style="height: 60px; width: 200px;
+              background-color: black;
+              border: 1px solid #111111;
+              border-radius: 10px;
+              padding: 5px;
+              margin-left: 0px;
+              margin-top:5px;
+              margin-bottom:10px;">
+              <div>
+                <div style="text-align: center;">
+                  <p style="line-height:2;
+                    margin: 0;color: rgb(130,130,130);font-size:12px">
+                    <b>Total Keuntungan</b>
+                  </p>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-5">
+                    <p style="font-size:12px;line-height:1.5;
+                      margin-left: 0;color: rgb(80,80,80);" class="text-center">
+                      <i>f</i>
+                    </p>
+                  </div>
+                  <div class="col">
+                    <p id="r_gain" style="font-size:12px;line-height:1.5;
+                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      <!-- {{ "{:,.0f}".format(summary_data['r_gain'])  }} -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TOTAL TAX -->
+            <div id="total-tax-box" style="height: 60px; width: 200px;
+              background-color: black;
+              border: 1px solid #111111;
+              border-radius: 10px;
+              padding: 5px;
+              margin-left: 0px;
+              margin-top:0px;
+              margin-bottom:10px;">
+              <div>
+                <div style="text-align: center;">
+                  <p style="line-height:2;
+                    margin: 0;color: rgb(130,130,130);font-size:12px">
+                    <b>Total Pajak</b>
+                  </p>
+                </div>
+                <div class="row justify-content-evenly">
+                  <div class="col-5">
+                    <p style="font-size:12px;line-height:1.5;
+                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      <i>f</i>
+                    </p>
+                  </div>
+                  <div class="col">
+                    <p id="r_tax" style="font-size:12px;line-height:1.5;
+                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      <!-- {{ "{:,.0f}".format(summary_data['t_tax']) }} -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TOTAL NET GAIN -->
+            <div id="total-net-gain-box" style="height: 75px; width: 200px;
+              background-color: black;
+              border: 1px solid #111111;
+              border-radius: 10px;
+              padding: 10px;
+              margin-left: 0px;
+              margin-top:20px;
+              margin-bottom:10px;">
+              <div>
+                <div style="text-align: center;">
+                  <p style="line-height:2;
+                    margin: 0;color: rgb(130,130,130);font-size:12px">
+                    <b>Total Keuntungan Bersih</b>
+                  </p>
+                </div>
+                <div class="row justify-content-evenly">
+                  <div class="col-5">
+                    <p style="font-size:12px;line-height:1.5;
+                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      <i>f</i>
+                    </p>
+                  </div>
+                  <div class="col">
+                    <p id="r_gain_net" style="font-size:12px;line-height:1.5;
+                      margin: 0;color: rgb(80,80,80);" class="text-center">
+                      <!-- {{ "{:,.0f}".format(summary_data['r_gain_net']) }} -->
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Position Tax Reporting -->
+            <div style="height: 33px; width: 200px;
+              background-color: black;
+              border: 1px solid #111111;
+              border-radius: 10px;
+              padding: 5px;
+              margin-left: 0px;
+              margin-top:20px;              display: flex;               align-items: center;
+              justify-content: center;
+              text-align: right;">
+              <div class="row">
+                <div id="img-star" class="col-3 d-flex justify-content-center align-items-center">
+                  <img src="{{ url_for('static', filename='star.png') }}" alt="Small Image"
+                    style="width: 13px; height: 13px;">
+                </div>
+                <div id="text-star" class="col-9">
+                  <span style="line-height:2;
+                      margin: 0;color: rgb(130,130,130);font-size:11px; text-align: center;">
+                    <b>PELAPORAN PAJAK</b></span>
+                </div>
+              </div>
+            </div>
+
+          </div> <!-- End of left pane  -->
+
+
+
+          
+
+          <!-- This is middle section -->
+          <div id="middle-pane" class="col-md-6 offset-md-1" style="margin-left: 0px;margin-right: 0px;border: 1px solid  rgba(0, 0, 0, 0)">
+            <!-- The Text -->
+            <div class="mx-auto" style="height: 80px;
+            background-color: black;
+            border: 1px solid black;
+            border-radius: 1px;
+            padding: 0px;
+            margin-left: 0px;
+            margin-top:60px;
+            margin-bottom:0px;">
+              <div>
+                <p class="text-center" style="line-height:1.5;margin-bottom:0px;color:rgb(256,256,256);">
+                  Jumlah pajak yang ingin saya laporkan
+                </p>
+                <p class="text-center" style="font-size:30px;line-height:1;margin-bottom:0px;color:rgb(256,256,256)">
+                  pada ronde ini:
+                </p>
+              </div>
+            </div>
+            <!-- The Submit Button -->
+                <form action="/tax_disclosure" > <!-- method="POST" -->
+            <div id="reporting-box" class="mx-auto" style="height: 100px; width: 400px;
+            background-color: black;
+            border: 1px solid black;
+            border-radius: 1px;
+            padding: 0px;
+            margin-left: 0px;
+            margin-top:0px;
+            margin-bottom:20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;">
+    
+                  <span id="id"  style="color:rgba(0,0,0,0);font-size:1px;"> 
+                   {{ summary_data['id'] }}</span>
+                  <span id="tax_disclos"  style="color:rgba(0,0,0,0);font-size:1px;"> 
+                   </span>
+  
+              <input type="text" required id="tax-input" name="tax_disclos" placeholder="Reporting taxes" style="height: 50px; width: 400px; text-align: center;border-radius: 10px;"> </input>
+
+
+            </div>
+
+            <div class="row justify-content-center" style="margin-left: 0px;">
+              <div class="col-5 d-flex justify-content-center">
+                <button type="button" id="showTotalsButton"
+                  style="margin-right: 0px;
+                  width: 190px;
+                  padding: 10px 30px;
+                  border: none;
+                  border-radius: 4px;
+                  font-size: 16px;
+                  font-weight: bold;
+                  background-color:  white;
+                  color: grey ;"
+                  onmouseover="showTotals() ; this.style.backgroundColor = 'rgb(10,10,10)'"
+                  onmouseout="hideTotals();this.style.backgroundColor = 'white'">
+                  Tampilkan Total
+                 </button>
+              </div>
+              <div class="col-5 d-flex justify-content-center">
+
+                <input type="hidden" name="id" value= {{summary_data.id}}>
+                
+                <button type="submit" id="reportTaxesButton"
+                  style="margin-left: 0px;
+                  width: 190px;
+                  padding: 10px 30px;
+                  border: none;
+                  border-radius: 4px;
+                  font-size: 16px;
+                  font-weight: bold;
+                  background-color: white;
+                  color: grey;"
+                  onmouseover="this.style.backgroundColor = 'rgb(10,10,10)'"
+                  onmouseout="this.style.backgroundColor = 'white'">
+                  Lanjut
+                </button>     
+                
+                </form>   
+              
+              </div>
+            </div>
+          </div> <!-- End of middle section  -->
+
+     
+          <!-- This is the right section -->
+          <div id="right-pane" class="col-md-1 offset-md-1" style="margin-left: 0px;">
+            <div class='row'>
+              <div class="col-3" style="margin-top: 120px;margin-left: 0px;">
+
+                <div style="height: 50px; width:250px;
+                  background-color: black;
+                  border: 1px solid black; margin-top:40px;
+                  padding: 10px;">
+                  <p style="line-height:0.5;font-size:40px;
+                    margin: 0;color: rgb(40, 180, 120);text-align: left;">
+                    <i>f</i> <span id="expected_fiat">{{"{:,.0f}".format(summary_data['r_gain'])}}</span></p>
+
+                </div>
+
+                <div style="height: 50px; width:220px;
+                  background-color: black;
+                  border: 1px solid rgb(10,10,10)
+                  border-radius: 10px;
+                  padding: 10px;">
+                  <p style="line-height:1;font-size:11px;
+                    margin: 0;color: rgb(256,256,256);text-align: left;">
+                    (Fiat dari ronde ini setelah pajak)</p>
+                </div>
+
+              </div>
+            </div>
+          </div> <!-- End of right pane   -->
+        </div>
+      </div>
+    </div>
+
+  <script>
+// Input Number Validation
+      function formatNumber(value) {
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      function updateTextView(_obj) {
+        var num = getNumber(_obj.val());
+        if (num === 0) {
+          _obj.val('');
+        } else {
+          _obj.val(formatNumber(num));
+        }
+      }
+
+      function getNumber(_str) {
+        var arr = _str.replace(/,/g, '').split('');
+        var out = new Array();
+        for (var cnt = 0; cnt < arr.length && cnt < 7; cnt++) {
+          if (!isNaN(arr[cnt])) {
+            out.push(arr[cnt]);
+          }
+        }
+        return out.join('');
+      }
+
+ // Hide or Show Totals
+      
+      var showTotalsFlag = false;
+
+      function showTotals() {
+        if (!showTotalsFlag) {
+          $('#fiat').text("{{ '{:,.0f}'.format(summary_data['fiat']) }}");
+          $('#crypto').text("{{ summary_data['crypto'] }}");
+          $('#r_gain').text("{{ '{:,.0f}'.format(summary_data['r_gain']) }}");
+          $('#r_gain_net').text("{{ '{:,.0f}'.format(summary_data['r_gain_net']) }}");
+          $('#r_tax').text("{{ '{:,.0f}'.format(summary_data['r_tax']) }}");
+        }
+      }
+
+      function hideTotals() {
+        if (!showTotalsFlag) {
+          $('#fiat').text('');
+          $('#crypto').text('');
+          $('#r_gain').text('');
+          $('#r_gain_net').text('');
+          $('#r_tax').text('');
+        }
+      }
+
+// Enter Input to "Reporting Taxes" 
+      $(document).ready(function () {
+        $('input[type=text]').on('input', function () {
+          var maxDigits = 8;
+          var inputValue = $(this).val();
+          if (inputValue.length > maxDigits) {
+            $(this).val(inputValue.slice(0, maxDigits+1));
+          }
+          updateTextView($(this));
+        });
+
+      document.getElementById("tax-input").addEventListener("input", function () {
+        var input = getNumber(this.value);
+        var expectedFiat = document.getElementById("expected_fiat");
+        var rGain = parseFloat("{{ summary_data['r_gain']|int }}");
+
+        if (input === "") {
+          expectedFiat.textContent = formatNumber(rGain);
+        } else {
+          var inputNumber = parseInt(input.substring(0, 7));
+          expectedFiat.textContent = formatNumber(rGain - inputNumber);
+        }
+
+        // Validate input
+        var inputLength = this.value.trim().replace(/,/g, '').length;
+        if (isNaN(inputNumber) || inputLength > 8) {
+          this.setCustomValidity("Please enter a valid number up to 7 digits.");
+        } else {
+          this.setCustomValidity("");
+        }
+      });
+
+
+
+//Press "Report Taxes"
+        
+     $('form').on('submit', function () {
+        var id = "{{ summary_data['id'] }}";
+        var taxInput = $('#tax-input').val();
+       
+        $('#id').text(id);
+        $('#tax_disclos').text(taxInput);
+
+        
+      // Include the "id" value in the form submission
+        $('form').append('<input type="hidden" name="id" value="' + id + '">');
+        $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">');
+ 
+      
+        });
+
+
+        
+      });
+      
+    </script>
+
+  </body>
+</html>

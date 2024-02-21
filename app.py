@@ -503,7 +503,7 @@ def survey():
         'I trust the tax officers because the political and economic situation enables them to work professionally.',
         'I trust the tax officers because they accomplish their work very well and competently.',
         'I trust the tax officers because they are benevolent to taxpayers.',        
-        'I trust the tax officers because the tax officers pursue important goals.',        
+        'I trust the tax officers because the tax officers pursue important goals for the country.',        
         'Most other taxpayers are paying their taxes correctly without thinking about it.',    
         'Most other taxpayers automatically pay their taxes.',        
         'Most other taxpayers pay their taxes honestly without dealing with it deeply.',       
@@ -515,6 +515,39 @@ def survey():
         'Most other taxpayers pay taxes because its a way to close the gap between rich and poor.',        
         'How likley will you pay your taxes for the current year correctly and in full extent to the tax authority?'
         ]
+
+questions = [
+  '... karena bagi saya jelas ini yang harus Anda lakukan.',
+  '... bahkan jika audit pajak tidak ada.',
+  '... tanpa menghabiskan waktu lama memikirkan bagaimana saya bisa menguranginya.',
+  'Saya merasa bahwa saya dipaksa untuk membayar pajak.',
+  'Saya membayar pajak karena risiko diaudit terlalu tinggi.',
+  'Saya membayar pajak karena saya tidak tahu cara menghindari pajak tanpa menarik perhatian.',
+  'Petugas pajak menyampaikan informasi dengan cara yang mudah dipahami.',
+  'Petugas pajak tahu persis bagaimana seharusnya laporan pajak yang benar.',
+  'Petugas pajak menginformasikan dan menasihati wajib pajak cara membayar pajak dengan benar.',
+  'Petugas pajak memiliki mandat hukum untuk mengumpulkan pajak.',
+  'Petugas pajak menerapkan hukuman yang berat.',
+  'Petugas pajak memprosekusi wajib pajak terutama dengan audit dan denda.',
+  'Petugas pajak memaksa wajib pajak patuh melalui audit dan denda.',
+  'Saya mempercayai petugas pajak tanpa memikirkannya.',
+  'Saya secara otomatis mempercayai petugas pajak.',
+  'Biasanya saya mempercayai petugas pajak tanpa memikirkannya secara mendalam.',
+  'Saya mempercayai petugas pajak karena situasi politik dan ekonomi memungkinkan mereka bekerja secara profesional.',
+  'Saya mempercayai petugas pajak karena mereka melakukan pekerjaan mereka dengan sangat baik dan kompeten.',
+  'Saya mempercayai petugas pajak karena mereka memiliki niatan baik kepada wajib pajak.',
+  'Saya mempercayai petugas pajak karena petugas pajak bekerja untuk mencapai tujuan penting bernegara.',
+  'Sebagian besar wajib pajak lain membayar pajak mereka dengan benar tanpa memikirkannya.',
+  'Sebagian besar wajib pajak lain secara otomatis membayar pajak mereka.',
+  'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur tanpa memikirkannya secara mendalam.',
+  'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur karena audit dan denda.',
+  'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur karena mereka menghormati hukum.',
+  'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur karena mereka mencintai negaranya.',
+  'Sebagian besar wajib pajak lain membayar pajak karena mereka mendapatkan sesuatu sebagai imbalannya.',
+  'Sebagian besar wajib pajak lain membayar pajak karena pajak digunakan untuk kepentingan publik seperti pendidikan & kesehatan.',
+  'Sebagian besar wajib pajak lain membayar pajak sebagai cara untuk menutup kesenjangan antara kaya dan miskin.',
+  'Seberapa mungkin Anda akan membayar pajak Anda untuk tahun ini secara benar dan penuh kepada otoritas pajak?'
+  ]
 
     return render_template('the_survey.html', id=user_id, gr=gr, questions=questions)
 

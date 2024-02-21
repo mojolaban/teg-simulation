@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    {% include 'bootstrap.html' %}
+    <title>TEG</title>
+  
+    <style>
+      p {
+        font-family: Arial;
+        color: rgb(80,80,80);
+        margin-bottom: 20px;
+        }
+      h1{
+        font-size: 40px;
+        font-family: Arial;
+        color: rgb(80,80,80);
+      }
+      #container {
+        max-width: 70%;
+        margin: 10px auto;
+        justify-content: center;
+        align-items: center;
+      }
+      .fixed-box-0 {
+      height: 700px; 
+      overflow: auto; 
+      border: 3px grooved solid #ccc; 
+      padding: 10px; 
+      position: relative;
+    }
+      .fixed-box-1 {
+      font-family: Arial;
+      color: rgb(80,80,80);
+      height: 450px; 
+      overflow: auto; 
+      border: 3px grooved solid #ccc; 
+      padding: 10px; 
+      position: relative;
+      margin-left:20px;
+      box-shadow: inset 0 0 4px #555;
+      border-radius: 10px;
+    }
+      .fixed-box-2 {
+      font-family: Arial;
+      color: rgb(80,80,80);
+      height: 250px; 
+      overflow: auto; 
+      border: 3px grooved solid #ccc; 
+      padding: 10px; 
+      position: relative;
+      margin-left:20px;
+      border-radius: 10px;
+      }
+  
+    </style>
+    
+  </head>
+  
+<body>
+  <div id="container">
+  <div class="fixed-box-0">
+    
+  <h1>Instruksi</h1>
+ 
+  <p>
+    
+  </p>
+  
+  <div class="fixed-box-1">
+    <div class="fixed-box-2" >
+    <p><b>Ikhtisar</b></p>
+    <p>Dalam eksperimen ini, Anda akan berperan sebagai pedagang {{asset_type}}, dengan dua jenis aset yang dapat Anda gunakan: mata uang fiat dan {{asset_type}} di bursa terdesentralisasi. Anda akan memulai simulasi dengan 1 unit {{asset_type}} dan tanpa mata uang fiat.
+</p>
+    <p><b>Simulasi Perdagangan</b></p>
+    <ul>
+      <li>Ronde: Simulasi ini mencakup 15 ronde perdagangan.</li>
+      <li>Mekanisme Perdagangan: Dalam tiap ronde, Anda akan secara selang-seling menjual dan membeli aset, dengan kesempatan melakukan hingga 5 transaksi per ronde. Tiap ronde akan berlangsung 40 detik.</li>
+      <li>Cara Berdagang: Untuk melakukan perdagangan, cukup klik tombol "Beli" atau "Jual".</li>      
+    </ul>
+    <p><b>Pelaporan Pajak</b></p>
+    <ul>
+      <li>Di akhir setiap ronde, Anda akan memasuki fase pelaporan pajak, di mana Anda diharapkan membayar pajak 20% atas keuntungan perdagangan.</li>
+      <li>Contoh Perhitungan Pajak: Jika Anda membeli {{asset_type}} seharga <i>f</i> 10.000 dan kemudian menjualnya seharga <i>f</i> 15.000, keuntungan Anda adalah <i>f</i> 5.000. Pajak yang terhutang atas keuntungan ini adalah <i>f</i> 1.000 (20% dari <i>f</i> 5.000)
+      </li>
+      <li>Perhitungan pajak dilakukan secara otomatis. Anda dapat melihat kewajiban pajak perkiraan Anda dengan mengarahkan kursor ke tombol "tampilkan total" di halaman pelaporan pajak. Namun, Anda harus memasukkan jumlah pajak yang ingin Anda laporkan secara manual pada kotak yang disediakan. Meskipun Anda memiliki kebebasan untuk melaporkan jumlah berapa pun, Anda harus mengungkapkan angka perkiraan dengan akurat untuk menghindari sanksi apabila transaksi Anda diaudit.</li>    
+    </ul>
+    <p><b>Kompensasi, Undian, dan Audit</b></p>
+    <ul>
+      <li>Memaksimalkan keuntungan Anda sangat penting karena kompensasi dari studi ini berbasis kinerja.</li>
+      <li>Undian: Dengan berpartisipasi, Anda secara otomatis terdaftar. Pada akhir keseluruhan ronde, satu ronde akan dipilih secara acak oleh sistem, dan Anda akan menerima e-gift voucher berdasarkan keuntungan yang Anda peroleh di ronde tersebut. Jika keuntungan Anda kurang dari <i>f</i> 1 juta, Anda akan menerima voucher Rp 50.000,-. Untuk keuntungan antara <i>f</i> 1-5 juta, hadiahnya meningkat menjadi Rp 100.000,-. Melampaui <i>f</i> 5 juta akan memberikan Anda Rp 200.000,-.</li>
+      <li>Jika terjadi audit, pajak yang tidak dilaporkan pada suatu ronde akan menjadi dasar pengenaan denda sebesar 200% dari jumlah pajak yang tidak dilaporkan tersebut. Denda ini, ditambah dengan pajak yang seharusnya dilaporkan, akan dikurangi dari total keuntungan Anda.</li>
+      <li>Kemungkinan untuk terkena audit adalah 20%, tetapi perdagangan di bursa terdesentralisasi (di mana transaksi terjadi antar pihak, tanpa perlu perantara/broker) dapat mengurangi kemungkinan ini hingga setengah atau lebih karena akses terbatas otoritas atas informasi.
+      </li>
+    </ul>
+    <p><b>Strategi dan Umpan Balik</b></p>
+    <ul>
+      <li>Anda tidak harus menggunakan seluruh 5 kesempatan transaksi di setiap ronde, memberikan Anda waktu untuk merencanakan strategi transaksi berdasarkan fluktuasi harga aset.</li>
+      <li>Setelah simulasi, Anda akan menerima kuesioner tentang perilaku kepatuhan dan umpan balik penelitian.</li>
+     </ul>
+    <p><b>Wawancara Tindak Lanjut Opsional</b></p>
+    <ul>
+      <li>Setelah menyelesaikan kuesioner, Anda dapat memilih untuk berpartisipasi dalam wawancara tindak lanjut untuk memberikan umpan balik yang lebih mendalam. Jika Anda memilih demikian, email dengan jadwal dan detail mengenai wawancara ini akan dikirimkan kepada Anda.</li>
+     </ul>
+    </div class="fixed-box-2" style="background-color: lightgray;">
+
+<hr>
+
+    <div class="fixed-box-2" style="background-color: lightgray;">
+      
+    <p>Untuk memastikan pemahaman Anda tentang instruksi eksperimen di atas, silakan jawab pertanyaan-pertanyaan berikut dengan benar:</p>
+      <div style="margin-left: 20px;">
+          <form id="simulationForm">
+              <p>1. Berapa banyak ronde dalam simulasi ini?<br>
+              <input type="radio" name="q1" value="10"> 10<br>
+              <input type="radio" name="q1" value="20"> 20<br>
+              <input type="radio" name="q1" value="15"> 15<br>
+              <input type="radio" name="q1" value="30"> 30<br>
+              <p id="q1-warning" style="color: red;"></p></p>
+
+                <p>2. Berapa lama durasi perdagangan setiap ronde?<br>
+                <input type="radio" name="q2" value="30"> 40 detik<br>
+                <input type="radio" name="q2" value="60"> 60 detik<br>
+                <input type="radio" name="q2" value="20"> 20 detik<br>
+                <input type="radio" name="q2" value="15"> 15 detik<br>
+                <p id="q2-warning" style="color: red;"></p></p>
+
+             <p>3. Apa peran Anda?<br>
+              <input type="radio" name="q3" value="A crypto user"> Pedagang kripto<br>
+              <input type="radio" name="q3" value="A stock user"> Pedagang saham<br>
+              <input type="radio" name="q3" value="A tax officer"> Petugas pajak<br>
+              <input type="radio" name="q3" value="A broker"> Broker<br>
+              <p id="q3-warning" style="color: red;"></p></p>
+
+              <p>4. Berapa kemungkinan otoritas mengaudit transaksi Anda ketika Anda tidak beroperasi di bursa terdesentralisasi?<br>
+              <input type="radio" name="q4" value="10%"> 10%<br>
+              <input type="radio" name="q4" value="0%"> 0%<br>
+              <input type="radio" name="q4" value="20%"> 20%<br>
+              <input type="radio" name="q4" value="9%"> 9%<br>
+              <p id="q4-warning" style="color: red;"></p></p>
+
+              <p>5. Berapa banyak transaksi yang dapat Anda lakukan dalam setiap ronde?<br>
+              <input type="radio" name="q5" value="10"> 10<br>
+              <input type="radio" name="q5" value="20"> 20<br>
+              <input type="radio" name="q5" value="5"> 5<br>
+              <input type="radio" name="q5" value="3"> 13<br>
+              <p id="q5-warning" style="color: red;"></p></p>
+
+              <p>6. Berapa tarif pajak yang berlaku atas keuntungan perdagangan yang Anda peroleh?<br>
+              <input type="radio" name="q6" value="10%"> 10%<br>
+              <input type="radio" name="q6" value="20%"> 20%<br>
+              <input type="radio" name="q6" value="30%"> 30%<br>
+              <input type="radio" name="q6" value="15%"> 15%<br>
+              <p id="q6-warning" style="color: red;"></p></p>
+
+              <p>7. Jika Anda membeli {{asset_type}} seharga <i>f</i> 10.000 dan menjualnya seharga <i>f</i> 20.000, berapa banyak pajak yang harus Anda laporkan sesuai dengan tarif pajak yang berlaku?<br>
+              <input type="radio" name="q7" value="f 1,000"> <i>f</i> 1.000<br>
+              <input type="radio" name="q7" value="f 0"> <i>f</i> 0<br>
+              <input type="radio" name="q7" value="f 2,000"> <i>f</i> 2.000<br>
+              <input type="radio" name="q7" value="f 1,500"> <i>f</i> 1.500<br>
+              <p id="q7-warning" style="color: red;"></p></p>
+
+              <p>8. Dalam satu ronde acak, Anda melaporkan pajak sebesar <i>f</i> 100.000, sementara keuntungan Anda adalah <i>f</i> 1.200.000, dan pajak yang tidak dilaporkan adalah <i>f</i> 300.000. Dalam ronde ini, Anda tidak diaudit oleh otoritas. Berapa nilai e-gift voucher yang berhak Anda terima apabila ronde ini terpilih dalam undian?<br>
+              <input type="radio" name="q8" value="AUD 20">  Rp 200.000,-<br>
+              <input type="radio" name="q8" value="A percentage amount of 10,000"> Rp 50.000,-<br>
+              <input type="radio" name="q8" value="A percentage dollar amount of f 5,000"> Rp 100.000,-<br>
+              <input type="radio" name="q8" value="No compensation because there is no audit">Rp 0,-, karena tidak ada audit<br>
+              <p id="q8-warning" style="color: red;"></p></p>
+
+                <p>9. Dalam satu ronde, Anda memiliki pajak yang tidak dilaporkan sebesar <i>f</i> 300. Otoritas mengaudit Anda dan memberlakukan denda. Berapa banyak pajak yang masih harus Anda bayar?<br>
+                <input type="radio" name="q9" value="A questionnaire"><i>f</i> 900<br>
+                <input type="radio" name="q9" value="An online game"><i>f</i> 300<br>
+                <input type="radio" name="q9" value="A captcha"><i>f</i> 600<br>
+                <input type="radio" name="q9" value="A tax calculation"><i>f</i> 1,200<br>
+              <p id="q9-warning" style="color: red;"></p></p>
+
+              <p>10. Jumlah keuntungan dan pajak Anda dalam satu ronde di halaman pelaporan pajak...<br>
+              <input type="radio" name="q10" value="For you to calculate and type in the field"> untuk Anda hitung dan ketik di kolom kosong.<br>
+              <input type="radio" name="q10" value="Shown after you hover your mouse over a button"> ditampilkan setelah Anda mengarahkan kursor tetikus Anda ke atas tombol.<br>
+              <input type="radio" name="q10" value="Automatically refreshed after you press enter"> secara otomatis diperbarui setelah Anda klik "Enter".<br>
+              <input type="radio" name="q10" value="Not available if you do not click 'Buy' or 'Sell'"> tidak tersedia jika Anda tidak meng-klik "Beli" atau "Jual".<br>
+              <p id="q10-warning" style="color: red;"></p></p>
+
+               <br> 
+              <button style="margin-bottom:30px;" type="button" onclick="checkAnswers()">Periksa Jawaban</button>
+          </form>
+      </div>
+  </div>
+
+
+
+  </div>
+
+  <h4 style="margin-left: 20px; 
+  margin-bottom: 5px;
+  font-family: Arial;
+  color: rgb(80,80,80);">
+  <b>
+  </b>
+  </h4>
+
+  <form action="/tryout" method="POST" >
+    <input type="hidden" name="id" id="id" value={{id}}>
+    <input type="hidden" name="asset_type" id="asset_type" value={{asset_type}}>
+
+    
+  <input type="checkbox" required id="consentCheckbox"  style="margin-left: 20px;">
+  <label for="consentCheckbox" style="font-family: Arial;
+  color: rgb(80,80,80);">
+    Saya telah menelaah instruksi eksperimen dan saya siap untuk mulai berpartisipasi.
+  </label>
+
+  <br>
+  <br>
+
+  <button id="nextButton" style="margin-left: 20px;
+  background-color: rgb(10, 103, 173, 0.9); 
+  color: white; 
+  padding: 10px 30px; 
+  border: none; 
+  border-radius: 4px; 
+  font-size: 16px; 
+  font-weight: bold;"
+  type="submit"
+  onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
+  onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'"
+  disabled
+  >
+  Lanjut
+  </button>
+
+  </form>
+
+  </div>
+
+
+  </div>
+
+
+
+  <script>
+
+
+  function checkAnswers() {
+      var q1Answer = document.querySelector('input[name="q1"]:checked');
+      var q2Answer = document.querySelector('input[name="q2"]:checked');
+      var q3Answer = document.querySelector('input[name="q3"]:checked');
+      var q4Answer = document.querySelector('input[name="q4"]:checked');
+      var q5Answer = document.querySelector('input[name="q5"]:checked');
+      var q6Answer = document.querySelector('input[name="q6"]:checked');
+      var q7Answer = document.querySelector('input[name="q7"]:checked');
+      var q8Answer = document.querySelector('input[name="q8"]:checked');
+      var q9Answer = document.querySelector('input[name="q9"]:checked');
+      var q10Answer = document.querySelector('input[name="q10"]:checked');
+
+      var q1Warning = document.getElementById('q1-warning');
+      var q2Warning = document.getElementById('q2-warning');
+      var q3Warning = document.getElementById('q3-warning');
+      var q4Warning = document.getElementById('q4-warning');
+      var q5Warning = document.getElementById('q5-warning');
+      var q6Warning = document.getElementById('q6-warning');
+      var q7Warning = document.getElementById('q7-warning');
+      var q8Warning = document.getElementById('q8-warning');
+      var q9Warning = document.getElementById('q9-warning');
+      var q10Warning = document.getElementById('q10-warning');
+
+      if (!q1Answer) {
+          q1Warning.textContent = "Jawab pertanyaan ini.";
+      } else {
+          if (q1Answer.value !== "15") {
+              q1Warning.textContent = "Jawaban tidak tepat.";
+          } else {
+              q1Warning.textContent = "";
+          }
+      }
+
+      if (!q2Answer) {
+          q2Warning.textContent = "Jawab pertanyaan ini.";
+      } else {
+          if (q2Answer.value !== "30") {
+              q2Warning.textContent = "Jawaban tidak tepat.";
+          } else {
+              q2Warning.textContent = "";
+          }
+      }
+
+      if (!q3Answer) {
+          q3Warning.textContent = "Jawab pertanyaan ini.";
+      } else {
+          if (q3Answer.value !== "A {{asset_type}} user") {
+              q3Warning.textContent = "Jawaban tidak tepat.";
+          } else {
+              q3Warning.textContent = "";
+          }
+      }
+
+      if (!q4Answer) {
+          q4Warning.textContent = "Jawab pertanyaan ini.";
+      } else {
+          if (q4Answer.value !== "20%") {
+              q4Warning.textContent = "Jawaban tidak tepat.";
+          } else {
+              q4Warning.textContent = "";
+          }
+      }
+
+      if (!q5Answer) {
+          q5Warning.textContent = "Jawab pertanyaan ini.";
+      } else {
+          if (q5Answer.value !== "5") {
+              q5Warning.textContent = "Jawaban tidak tepat.";
+          } else {
+              q5Warning.textContent = "";
+          }
+      }
+
+      if (!q6Answer) {
+          q6Warning.textContent = "Jawab pertanyaan ini.";
+      } else {
+          if (q6Answer.value !== "20%") {
+              q6Warning.textContent = "Jawaban tidak tepat.";
+          } else {
+              q6Warning.textContent = "";
+          }
+      }
+
+      if (!q7Answer) {
+          q7Warning.textContent = "Jawab pertanyaan ini.";
+      } else {
+          if (q7Answer.value !== "f 2,000") {
+              q7Warning.textContent = "Jawaban tidak tepat.";
+          } else {
+              q7Warning.textContent = "";
+          }
+      }
+
+      if (!q8Answer) {
+          q8Warning.textContent = "Jawab pertanyaan ini.";
+      } else {
+          if (q8Answer.value !== "A percentage dollar amount of f 5,000") {
+              q8Warning.textContent = "Jawaban tidak tepat.";
+          } else {
+              q8Warning.textContent = "";
+          }
+      }
+
+      if (!q9Answer) {
+          q9Warning.textContent = "Jawab pertanyaan ini.";
+      } else {
+          if (q9Answer.value !== "A questionnaire") {
+              q9Warning.textContent = "Jawaban tidak tepat.";
+          } else {
+              q9Warning.textContent = "";
+          }
+      }
+
+      if (!q10Answer) {
+          q10Warning.textContent = "Jawab pertanyaan ini.";
+      } else {
+          if (q10Answer.value !== "Shown after you hover your mouse over a button") {
+              q10Warning.textContent = "Jawaban tidak tepat.";
+          } else {
+              q10Warning.textContent = "";
+          }
+      }
+
+
+      var allAnswersCorrect = !q1Warning.textContent && !q2Warning.textContent && !q3Warning.textContent && !q4Warning.textContent &&
+          !q5Warning.textContent && !q6Warning.textContent && !q7Warning.textContent && !q8Warning.textContent && !q9Warning.textContent &&
+          !q10Warning.textContent;
+    var consentCheckbox = document.getElementById('consentCheckbox');
+    var nextButton = document.getElementById('nextButton');
+
+      if (allAnswersCorrect) {
+          popupText = "Your answers are all correct. Press 'Next' to proceed.";
+        consentCheckbox.checked = true;  // Automatically check the checkbox
+        nextButton.disabled = false;     // Enable the "Next" button
+      } else {
+          popupText = "Check again for blank or incorrect answer(s).";
+        consentCheckbox.checked = false; // Uncheck the checkbox if answers are incorrect
+        nextButton.disabled = true;      // Disable the "Next" button
+      }
+
+    var popupText = allAnswersCorrect ? "Your answers are all correct. Press 'Next' to proceed." : "Check again for blank or incorrect answer(s).";
+    alert(popupText);
+  }
+  </script>
+
+
+</body>
+  
+</html>
