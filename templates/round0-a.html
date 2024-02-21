@@ -133,8 +133,8 @@
               padding: 3px;">
               <p id="asset_type" style="line-height:1.5;
                 margin: 0;color: white;">
-                {{ data['asset_type'] }} 
-                Harga</p>
+                Harga {{ "Kripto" if data['asset_type'] == "Crypto" else "Saham" if data['asset_type'] == "Stock" else data['asset_type'] }}
+                </p>
               <p style="font-size:28px;line-height:1;
                 margin: 0;color: white;">
                 <i>f </i>
@@ -162,7 +162,7 @@
                   <div style="text-align: center;">
                     <p style="line-height:1;
                       margin: 0;color: rgb(130,130,130);font-size:11px">
-                      <b>Total Asset</b>
+                      <b>Total Aset</b>
                     </p>
                   </div>
                   <div class="row justify-content-evenly">
@@ -181,11 +181,11 @@
                         margin: 0;color: rgb(80,80,80);">
                          {{ data['asset_type'] }} </p>
                       </div>
-                      <div class="col-3">
-                       <p id="crypto" style="font-size:11px;line-height:2;
-                        margin: 0;color: rgb(80,80,80);">
-                         {{ data['crypto']}}</p>
-                      </div>
+                    <div class="col-3">
+                     <p id="crypto" style="font-size:11px;line-height:2;
+                      margin: 0;color: rgb(80,80,80);">
+                       {{ data['crypto']}}</p>
+                    </div>
                   </div>
                 </div>
             </div>
@@ -203,7 +203,7 @@
                   <div style="text-align: center;">
                     <p style="line-height:2;
                       margin: 0;color: rgb(130,130,130);font-size:11px">
-                      <b>Transaksi {{ data['asset_type'] }} Terkini</b>
+                      <b>Transaksi {{ "Kripto" if data['asset_type'] == "Crypto" else "Saham" if data['asset_type'] == "Stock" else data['asset_type'] }} Terkini</b>
                     </p>
                   </div>
                   <div class="row justify-content-evenly">
@@ -241,7 +241,7 @@
                     </div>
                   </div>
                   <div class="row justify-content-center">
-                    <div class="col-4">
+                    <div class="col-6">
                         <p style="font-size:11px;line-height:3;
                           margin: 0;color: rgb(130,130,130);">
                           Keuntungan</p>
@@ -274,18 +274,18 @@
               margin-bottom:0px;">
                 
                 <div class="row align-items-center">
-                  <div class="col-5">
-                     <p style="font-size:12px;line-height:3;
+                  <div class="col-7">
+                     <p style="font-size:11px;line-height:3;
                       margin: 0;color: rgb(200,50,20);">
                        Pajak (20%)</p>
                   </div>
                   <div class="col-2 d-flex align-items-center">
-                     <p style="font-size:12px;line-height:2;
+                     <p style="font-size:11px;line-height:2;
                       margin: 0;color: rgb(200,50,20);">
                       <i>f</i></p>
                   </div>
                   <div class="col-2">
-                     <p id="t_tax" style="font-size:12px;line-height:2;
+                     <p id="t_tax" style="font-size:11px;line-height:2;
                       margin: 0;color: rgb(200,50,20);" class="text-center">
                        {{data.t_tax }}
                        </p>
@@ -295,18 +295,18 @@
 
                 
                 <div class="row align-items-center">
-                  <div class="col-5">
-                     <p style="font-size:12px;line-height:3;
+                  <div class="col-7">
+                     <p style="font-size:11px;line-height:3;
                       margin: 0;color: rgb(40, 180, 120);">
                        Keuntungan Bersih</p>
                   </div>
                   <div class="col-2 d-flex align-items-center">
-                     <p style="font-size:12px;line-height:2;
+                     <p style="font-size:11px;line-height:2;
                       margin: 0;color: rgb(40, 180, 120);">
                       <i>f</i></p>
                   </div>
                   <div class="col-2">
-                     <p id="t_gain_net" style="font-size:12px;line-height:2;
+                     <p id="t_gain_net" style="font-size:11px;line-height:2;
                       margin: 0;color: rgb(40, 180, 120);" >
                        {{data.t_gain_net}}
                        </p>
@@ -334,7 +334,8 @@
                     style="width: 12px; height: 12px;margin-right: 15px;">  <span style="line-height:2;
                       margin: 0;color: rgb(130,130,130);font-size:12px; text-align: center;">
                     <b>POSISI :       </b>
-                      <b> <span id="pos" style="color:white;"> {{ data.pos }} </span> </b> </span>
+                      <b> <span id="pos" style="color:white;">  {{ "BELI" if data.pos == "BUY" else "JUAL" if data.pos == "SELL" else data.pos }}
+</span> </b> </span>
                 </div>
               </div>
             </div><!-- End of Position  --> 

@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, request, jsonify, session, url_for
-from database import engine, insert_group_treatment, fetch_init_data, retrieve_data, insert_demog
+from database import engine, insert_group_treatment, fetch_init_data, retrieve_data, insert_demog, insert_group_lang
 from sqlalchemy import text
 from datetime import datetime
 import json
@@ -14,35 +14,58 @@ def index():
 @app.route('/select_language', methods=['POST'])
 def select_language():
     language = request.form.get('language')
-    if language in ['English', 'Indonesian']:
-        # Redirect to home if a valid language is selected
-        return redirect(url_for('home'))
+    # Call insert_group_treatment function to insert the language into the database
+    # and retrieve the treatment dictionary
+    treatment_dict = insert_group_lang(language)
+    id=treatment_dict["id"]
+    treatment=treatment_dict["treatment"]
+    lang=treatment_dict["lang"]
+    if language == 'English':
+        # Pass the treatment dictionary to the render_template function
+        print(treatment_dict["id"])
+        return render_template('home.html', id=id, treatment=treatment, lang=lang)
+    elif language == 'Indonesian':
+        # Pass the treatment dictionary to the render_template function
+        return render_template('home-a.html', id=id, treatment=treatment, lang=lang)
     # If somehow an invalid option is submitted, reload the page
     return render_template('index.html')
 
-
-@app.route('/home')
-def home():
-    return render_template('home.html')
   
 
 #-----After home page, assign group and insert init data
-@app.route("/form_demog")
+@app.route("/form_demog", methods=['GET', 'POST'])
 def form_demog():
-    result = insert_group_treatment()
-    treatment_value = result['treatment']
-    if treatment_value == 1:
+    # Determine the method and retrieve parameters accordingly
+    if request.method == 'POST':
+        lang_value = request.form.get('lang')
+        treatment_value = request.form.get('treatment')
+        id_value = request.form.get('id')
+    else:  # GET method
+        lang_value = request.args.get('lang')
+        treatment_value = request.args.get('treatment')
+        id_value = request.args.get('id')
+
+
+  # Debug statement to print the values in the server console
+    print("Debug - ID:", id_value, "Treatment:", treatment_value, "Language:", lang_value)
+
+
+    if treatment_value == "1" and lang_value == "1":
         asset_type = 'stock'
-        print("ID:", id)  # Debug statement
-        print("asset_type:", asset_type)  # Debug statement
-        return render_template('form_demog.html', id=result["id"], asset_type=asset_type)
-    elif treatment_value == 2:
-        asset_type = 'crypto'  
-        print("ID:", id)  # Debug statement
-        print("asset_type:", asset_type)  # Debug statement
-        return render_template('form_demog.html', id=result["id"], asset_type=asset_type)
+        return render_template('form_demog-a.html', id=id_value, asset_type=asset_type, lang=lang_value)
+    elif treatment_value == "1" and lang_value == "0":
+        asset_type = 'stock'
+        return render_template('form_demog.html', id=id_value, asset_type=asset_type, lang=lang_value)
+    elif treatment_value == "2" and lang_value == "1":
+        asset_type = 'crypto'
+        return render_template('form_demog-a.html', id=id_value, asset_type=asset_type, lang=lang_value)
+    elif treatment_value == "2" and lang_value == "0":
+        asset_type = 'crypto'
+        return render_template('form_demog.html', id=id_value, asset_type=asset_type, lang=lang_value)
     else:
-        return Error
+        # You might want to return a proper error response here
+        return "Error"
+
 
 #----Insert into instructions page
 @app.route("/instructions", methods=['GET', 'POST'])
@@ -59,17 +82,29 @@ def instructions():
         description = request.form['description']
         id = request.form['id']
         asset_type = request.form['asset_type']
+        lang = request.form['lang']
 
         insert_demog(gender, age, education_level, current_education, country_residence, citizenship, asset_experience, tax_experience, description, id)
-        if 'stock' in asset_type:
+        if 'stock' in asset_type and lang == "0":
           print("ID:", id)  # Debug statement
           print("asset_type:", asset_type)  # Debug statement
-          return render_template('instruction-1.html', id=id, asset_type=asset_type)
-
-        elif 'crypto' in asset_type:
+          print("language:", lang)  # Debug statement
+          return render_template('instruction-1.html', id=id, asset_type=asset_type, lang=lang)
+        elif 'stock' in asset_type and lang == "1":
           print("ID:", id)  # Debug statement
           print("asset_type:", asset_type)  # Debug statement
-          return render_template('instruction-2.html', id=id, asset_type=asset_type)
+          print("language:", lang)  # Debug statement
+          return render_template('instruction-1-a.html', id=id, asset_type=asset_type, lang=lang)
+        elif 'crypto' in asset_type and lang == "0":
+          print("ID:", id)  # Debug statement
+          print("asset_type:", asset_type)  # Debug statement
+          print("language:", lang)  # Debug statement
+          return render_template('instruction-2.html', id=id, asset_type=asset_type, lang=lang)
+        elif 'crypto' in asset_type and lang =="1":
+          print("ID:", id)  # Debug statement
+          print("asset_type:", asset_type)  # Debug statement
+          print("language:", lang)  # Debug statement
+          return render_template('instruction-2-a.html', id=id, asset_type=asset_type, lang=lang)
 
 
     elif request.method == 'GET':
@@ -84,14 +119,19 @@ def instructions():
         description = request.args.get('description')
         id = request.args.get('id')
         asset_type = request.args.get('asset_type')
+        lang = request.args.get('lang')
 
         if gender and age and education_level and current_education and country_residence and citizenship and asset_experience and tax_experience and description and id and asset_type:
             insert_demog(gender, age, education_level, current_education, country_residence, citizenship, asset_experience, tax_experience, description, id)
 
-            if 'stock' in asset_type:
-                return render_template('instruction-1.html', id=id, asset_type=asset_type)
-            elif 'crypto' in asset_type:
-                return render_template('instruction-2.html', id=id, asset_type=asset_type)
+            if 'stock' in asset_type and lang == "1":
+                return render_template('instruction-1.html', id=id, asset_type=asset_type, lang=lang)
+            elif 'stock' in asset_type and lang =="0":
+                return render_template('instruction-1-a.html', id=id, asset_type=asset_type, lang=lang)
+            elif 'crypto' in asset_type and lang == "1":
+                return render_template('instruction-2.html', id=id, asset_type=asset_type, lang=lang)
+            elif 'crypto' in asset_type and lang =="0":
+                return render_template('instruction-2-a.html', id=id, asset_type=asset_type, lang=lang)
             else:
                 # Handle other cases if needed
                 pass
@@ -105,31 +145,71 @@ def instructions():
 @app.route("/tryout", methods=['GET', 'POST'])
 def tryout():
   if request.method == 'POST':
-      id = request.form['id']
-      asset_type = request.form['asset_type']
-      if 'stock' in asset_type:
+    lang = request.form['lang']
+    id = request.form['id']
+    asset_type = request.form['asset_type']
+    if asset_type == "stock":
+        gr = "1"
+    elif asset_type == "crypto":
+        gr = "2"
+    else:
+        gr = "unknown"
+    insert_group_treatment(gr,id)
+    if 'stock' in asset_type and lang=="0":
           print("ID:", id)  # Debug statement
           print("asset_Type:", asset_type)  # Debug statement
-          return render_template('instruction-tryout-1.html', id=id, asset_type=asset_type)
-      elif 'crypto' in asset_type:
+          print("language:", lang)  # Debug statement
+          return render_template('instruction-tryout-1.html', id=id, asset_type=asset_type, lang=lang)
+    elif 'stock' in asset_type and lang=="1":
           print("ID:", id)  # Debug statement
           print("asset_Type:", asset_type)  # Debug statement
-          return render_template('instruction-tryout-2.html', id=id, asset_type=asset_type)
-      else:
+          print("language:", lang)  # Debug statement
+          return render_template('instruction-tryout-1-a.html', id=id, asset_type=asset_type, lang=lang)
+    elif 'crypto' in asset_type and lang=="0":
+          print("ID:", id)  # Debug statement
+          print("asset_Type:", asset_type)  # Debug statement
+          print("language:", lang)  # Debug statement
+          return render_template('instruction-tryout-2.html', id=id, asset_type=asset_type, lang=lang)
+    elif 'crypto' in asset_type and lang=="1":
+          print("ID:", id)  # Debug statement
+          print("asset_Type:", asset_type)  # Debug statement
+          print("language:", lang)  # Debug statement
+          return render_template('instruction-tryout-2-a.html', id=id, asset_type=asset_type, lang=lang)
+    else:
           # Handle unsupported asset types
           return "Unsupported asset type"
 
   elif request.method == 'GET':
       id = request.args.get('id')
       asset_type = request.args.get('asset_type')
+      lang = request.args.get('lang')
       if asset_type == "stock":
-          print("ID:", id)  # Debug statement
-          print("asset_Type:", asset_type)  # Debug statement
-          return render_template('instruction-tryout-1.html', id=id, asset_type=asset_type)
+          gr = "1"
       elif asset_type == "crypto":
+          gr = "2"
+      else:
+          gr = "unknown"
+      insert_group_treatment(gr,id)
+      if asset_type == "stock" and lang=="0":
           print("ID:", id)  # Debug statement
           print("asset_Type:", asset_type)  # Debug statement
-          return render_template('instruction-tryout-2.html', id=id, asset_type=asset_type)
+          print("language:", lang)  # Debug statement
+          return render_template('instruction-tryout-1.html', id=id, asset_type=asset_type, lang=lang)
+      elif asset_type == "stock" and lang=="1":
+          print("ID:", id)  # Debug statement
+          print("asset_Type:", asset_type)  # Debug statement
+          print("language:", lang)  # Debug statement
+          return render_template('instruction-tryout-1-a.html', id=id, asset_type=asset_type, lang=lang)
+      elif asset_type == "crypto" and lang=="0":
+          print("ID:", id)  # Debug statement
+          print("asset_Type:", asset_type)  # Debug statement
+          print("language:", lang)  # Debug statement
+          return render_template('instruction-tryout-2.html', id=id, asset_type=asset_type, lang=lang)
+      elif asset_type == "crypto" and lang=="1":
+          print("ID:", id)  # Debug statement
+          print("asset_Type:", asset_type)  # Debug statement
+          print("language:", lang)  # Debug statement
+          return render_template('instruction-tryout-2-a.html', id=id, asset_type=asset_type, lang=lang)
       else:
           # Handle unsupported asset types
           return "Unsupported asset type"
@@ -139,22 +219,31 @@ def tryout():
 def starting_game():
     if request.method == 'POST':
         id = request.form.get('id')
+        lang = request.form.get('lang')
         print("ID:", id)  # Debug statement
+        print("language:", lang)  # Debug statement
         if id:
             init_data = fetch_init_data(id)
             print("Init Data:", init_data)  # Debug statement
-            if init_data:
+            if init_data and lang == "0":
                 return render_template('round0.html', data=init_data)
+            elif init_data and lang == "1":
+              return render_template('round0-a.html', data=init_data)
         return "Error: Invalid ID"
     elif request.method == 'GET':
         # Handle GET requests (if needed)
         id = request.form.get('id')
+        lang = request.form.get('lang')
         print("ID:", id)  # Debug statement
+        print("language:", lang)  # Debug statement
         if id:
             init_data = fetch_init_data(id)
             print("Init Data:", init_data)  # Debug statement
-            if init_data:
+            if init_data and lang=="0":
               return render_template('round0.html')  # Example template to render for GET requests
+            elif init_data and lang=="1":
+              return render_template('round0-a.html')  # Example template to render for GET requests 
+        return "Error: Invalid ID"
       
 
        
@@ -173,19 +262,77 @@ def send_games_data():
   
   user_id = data.get('userid').replace('\n', '').strip()
   group_id = data.get('groupid').replace('\n', '').strip()
-  pos_value = data.get('posValue').replace('\n', '').strip()
+  # Assuming data.get('posValue') returns a string
+  pos_value_str = data.get('posValue', '').replace('\n', '').strip()  # Clean the string
+  
+  # Map "JUAL" to "SELL" and "BELI" to "BUY"
+  if pos_value_str == "JUAL":
+      pos_value = "b"
+  elif pos_value_str == "BELI":
+      pos_value = "s"
+  else:
+      pos_value = pos_value_str  # Use the original value if it's neither "JUAL" nor "BELI"
+  
   trx_value = data.get('trxValue')
   round_value = data.get('roundValue')
   crypto_prev_value = data.get('cryptoPrevValue').replace('\n', '').strip()
   fiat_prev_value = data.get('fiatPrevValue')
-  crypto_value = data.get('cryptoValue')
-  fiat_value = data.get('fiatValue')
+#  crypto_value = data.get('cryptoValue').replace('\n', '').strip()
+  crypto_value_raw = data.get('cryptoValue')
+  
+  # Check if the value is a string and clean it; otherwise, handle it as an integer
+  if isinstance(crypto_value_raw, str):
+      crypto_value = crypto_value_raw.replace('\n', '').strip()
+  else:  # If it's not a string, assume it's an integer
+      crypto_value = crypto_value_raw  # Use the integer value directly
+    
+#  fiat_value = data.get('fiatValue').replace('\n', '').strip()
+  fiat_value_raw = data.get('fiatValue')
+  
+  # Check if the value is a string and clean it; otherwise, handle it as an integer
+  if isinstance(fiat_value_raw, str):
+      fiat_value = fiat_value_raw.replace('\n', '').strip()
+  else:  # If it's not a string, assume it's an integer
+      fiat_value = fiat_value_raw  # Use the integer value directly
+    
   buy_prev_value = data.get('buyPrevValue')
-  sell_value = data.get('sellValue')
+
+#  sell_value = data.get('sellValue').replace('\n', '').strip()
+  sell_value_raw = data.get('sellValue')
+
+  # Check if the value is a string and clean it; if it's an integer, use it directly
+  if isinstance(sell_value_raw, str):
+      sell_value = sell_value_raw.replace('\n', '').strip()
+  else:
+      sell_value = sell_value_raw
+
   buy_value = data.get('buyValue')
-  t_gain_value = data.get('tGainValue')
+#  t_gain_value = data.get('tGainValue').replace('\n', '').strip()
+
+  t_gain_value_raw = data.get('tGainValue')
+
+  # Check if the value is a string and clean it; otherwise, handle it as an integer
+  if isinstance(t_gain_value_raw, str):
+      t_gain_value = t_gain_value_raw.replace('\n', '').strip()
+  else:  # If it's not a string, assume it's an integer
+      t_gain_value = t_gain_value_raw  # Use the integer value directly
+
+
   t_tax_value = int(data.get('tTaxValue'))
-  t_gain_net_value = data.get('tGainNetValue')
+
+#  t_gain_net_value = data.get('tGainNetValue').replace('\n', '').strip()
+
+  t_gain_net_value_raw = data.get('tGainNetValue')
+
+  # Determine the type and proceed accordingly
+  if isinstance(t_gain_net_value_raw, str):
+      # If it's a string, strip newlines and whitespace
+      t_gain_net_value = t_gain_net_value_raw.replace('\n', '').strip()
+  else:
+      # If it's an integer (or any non-string), use it directly
+      t_gain_net_value = t_gain_net_value_raw
+
+
   r_gain_value = data.get('rGainValue')
   r_gain_prev_value = data.get('rGainPrevValue')
   r_tax_value = data.get('rTaxValue')
@@ -256,9 +403,9 @@ def send_games_data():
             r_gain_final = row[24]
 
             if gr_value == '2':
-                asset_type = "Stock"
-            elif gr_value == '1':
                 asset_type = "Crypto"
+            elif gr_value == '1':
+                asset_type = "Stock"
               
             if trx_value < 5:
                 if pos_value == "s":
@@ -516,37 +663,37 @@ def survey():
         'How likley will you pay your taxes for the current year correctly and in full extent to the tax authority?'
         ]
 
-questions = [
-  '... karena bagi saya jelas ini yang harus Anda lakukan.',
-  '... bahkan jika audit pajak tidak ada.',
-  '... tanpa menghabiskan waktu lama memikirkan bagaimana saya bisa menguranginya.',
-  'Saya merasa bahwa saya dipaksa untuk membayar pajak.',
-  'Saya membayar pajak karena risiko diaudit terlalu tinggi.',
-  'Saya membayar pajak karena saya tidak tahu cara menghindari pajak tanpa menarik perhatian.',
-  'Petugas pajak menyampaikan informasi dengan cara yang mudah dipahami.',
-  'Petugas pajak tahu persis bagaimana seharusnya laporan pajak yang benar.',
-  'Petugas pajak menginformasikan dan menasihati wajib pajak cara membayar pajak dengan benar.',
-  'Petugas pajak memiliki mandat hukum untuk mengumpulkan pajak.',
-  'Petugas pajak menerapkan hukuman yang berat.',
-  'Petugas pajak memprosekusi wajib pajak terutama dengan audit dan denda.',
-  'Petugas pajak memaksa wajib pajak patuh melalui audit dan denda.',
-  'Saya mempercayai petugas pajak tanpa memikirkannya.',
-  'Saya secara otomatis mempercayai petugas pajak.',
-  'Biasanya saya mempercayai petugas pajak tanpa memikirkannya secara mendalam.',
-  'Saya mempercayai petugas pajak karena situasi politik dan ekonomi memungkinkan mereka bekerja secara profesional.',
-  'Saya mempercayai petugas pajak karena mereka melakukan pekerjaan mereka dengan sangat baik dan kompeten.',
-  'Saya mempercayai petugas pajak karena mereka memiliki niatan baik kepada wajib pajak.',
-  'Saya mempercayai petugas pajak karena petugas pajak bekerja untuk mencapai tujuan penting bernegara.',
-  'Sebagian besar wajib pajak lain membayar pajak mereka dengan benar tanpa memikirkannya.',
-  'Sebagian besar wajib pajak lain secara otomatis membayar pajak mereka.',
-  'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur tanpa memikirkannya secara mendalam.',
-  'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur karena audit dan denda.',
-  'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur karena mereka menghormati hukum.',
-  'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur karena mereka mencintai negaranya.',
-  'Sebagian besar wajib pajak lain membayar pajak karena mereka mendapatkan sesuatu sebagai imbalannya.',
-  'Sebagian besar wajib pajak lain membayar pajak karena pajak digunakan untuk kepentingan publik seperti pendidikan & kesehatan.',
-  'Sebagian besar wajib pajak lain membayar pajak sebagai cara untuk menutup kesenjangan antara kaya dan miskin.',
-  'Seberapa mungkin Anda akan membayar pajak Anda untuk tahun ini secara benar dan penuh kepada otoritas pajak?'
+    questindo = [
+        '... karena bagi saya jelas ini yang harus Anda lakukan.',
+        '... bahkan jika audit pajak tidak ada.',
+        '... tanpa menghabiskan waktu lama memikirkan bagaimana saya bisa menguranginya.',
+        'Saya merasa bahwa saya dipaksa untuk membayar pajak.',
+        'Saya membayar pajak karena risiko diaudit terlalu tinggi.',
+        'Saya membayar pajak karena saya tidak tahu cara menghindari pajak tanpa menarik perhatian.',
+        'Petugas pajak menyampaikan informasi dengan cara yang mudah dipahami.',
+        'Petugas pajak tahu persis bagaimana seharusnya laporan pajak yang benar.',
+        'Petugas pajak menginformasikan dan menasihati wajib pajak cara membayar pajak dengan benar.',
+        'Petugas pajak memiliki mandat hukum untuk mengumpulkan pajak.',
+        'Petugas pajak menerapkan hukuman yang berat.',
+        'Petugas pajak memprosekusi wajib pajak terutama dengan audit dan denda.',
+        'Petugas pajak memaksa wajib pajak patuh melalui audit dan denda.',
+        'Saya mempercayai petugas pajak tanpa memikirkannya.',
+        'Saya secara otomatis mempercayai petugas pajak.',
+        'Biasanya saya mempercayai petugas pajak tanpa memikirkannya secara mendalam.',
+        'Saya mempercayai petugas pajak karena situasi politik dan ekonomi memungkinkan mereka bekerja secara profesional.',
+        'Saya mempercayai petugas pajak karena mereka melakukan pekerjaan mereka dengan sangat baik dan kompeten.',
+        'Saya mempercayai petugas pajak karena mereka memiliki niatan baik kepada wajib pajak.',
+        'Saya mempercayai petugas pajak karena petugas pajak bekerja untuk mencapai tujuan penting bernegara.',
+        'Sebagian besar wajib pajak lain membayar pajak mereka dengan benar tanpa memikirkannya.',
+        'Sebagian besar wajib pajak lain secara otomatis membayar pajak mereka.',
+        'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur tanpa memikirkannya secara mendalam.',
+        'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur karena audit dan denda.',
+        'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur karena mereka menghormati hukum.',
+        'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur karena mereka mencintai negaranya.',
+        'Sebagian besar wajib pajak lain membayar pajak karena mereka mendapatkan sesuatu sebagai imbalannya.',
+        'Sebagian besar wajib pajak lain membayar pajak karena pajak digunakan untuk kepentingan publik seperti pendidikan & kesehatan.',
+        'Sebagian besar wajib pajak lain membayar pajak sebagai cara untuk menutup kesenjangan antara kaya dan miskin.',
+        'Seberapa mungkin Anda akan membayar pajak Anda untuk tahun ini secara benar dan penuh kepada otoritas pajak?'
   ]
 
     return render_template('the_survey.html', id=user_id, gr=gr, questions=questions)

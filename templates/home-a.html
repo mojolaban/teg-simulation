@@ -73,7 +73,7 @@
   <div id="container">
   <div class="fixed-box-0">
     
-  <h1 >Welcome</h1>
+  <h1 >Selamat Datang</h1>
  
   <p style="margin-left:20px;">
     Terima kasih atas minat Anda dalam penelitian ini. Silakan membaca pernyataan penjelasan berikut sebelum memulai ekperimen daring. Jika Anda membutuhkan informasi atau bantuan, hubungi peneliti utama, Yayan Riyanto, pada yayan.riyanto@monash.edu. Untuk berpartisipasi, silakan membaca formulir kesediaan dan tandai kotak "Setuju" di bawah. Anda dapat menolak atau meninggalkan penelitian ini kapan saja. Eksperimen akan memakan waktu 30 menit; kami mengharapkan perhatian penuh Anda selama durasi eksperimen. 
@@ -94,7 +94,7 @@
     
   <div class="fixed-box-2">
     <div style="color: rgb(80,80,80);">
-      <p><b>Introduction</b></p>
+      <p><b>Pendahuluan</b></p>
     <ol>
       Anda diundang untuk mengambil bagian dalam penelitian ini. Harap membaca Pernyataan Penjelasan ini secara lengkap sebelum memutuskan untuk berpartisipasi atau tidak dalam penelitian ini. Jika Anda ingin informasi lebih lanjut mengenai aspek apa pun dari proyek ini, Anda dianjurkan untuk menghubungi para peneliti melalui nomor telepon atau alamat email yang tercantum di bawah ini.
 
@@ -197,7 +197,7 @@
       <li>Saya bersedia berpartisipasi dalam proyek ini, dimana rinciannya telah dijelaskan kepada saya, dan saya telah diberikan Pernyataan Penjelasan tertulis untuk direviu.</li>
       <li>Saya mengerti bahwa tujuan riset ini untuk menyelidiki perilaku kepatuhan pajak dalam perdagangan jenis kelas aset yang berbeda.</li>
       <li>Saya mengerti bahwa keikutsertaan saya dalam proyek ini hanya untuk tujuan riset semata.</li> 
-      <li>Saya mengakui bahwa kemungkinan dampak dari keikutsertaan dalam proyek riset ini telah dijelaskan dengan memadai kepada saya.</li>
+      <li>Saya mengakui bahwa kemungkinan dampak dari keikutsertaan dalam proyek riset ini telah dijelaskan secara memadai.</li>
       <li>Dalam proyek ini saya diharuskan mengikuti eksperimen daring kepatuhan pajak yang akan berlangsung sekitar 30 menit.</li>
       <li>Saya mengerti bahwa interaksi saya dalam eksperimen daring ini akan direkam.</li>
       <li>Saya mengerti bahwa keikutsertaan saya sukarela dan saya bebas mundur dari proyek ini kapan pun tanpa penjelasan atau merasa dirugikan dan menarik semua data yang belum diproses yang saya berikan.</li>
@@ -223,6 +223,11 @@
   </h4>
 
   <form action="/form_demog">
+    
+    <input type="hidden" name="id" value= {{id}}>
+    <input type="hidden" name="treatment" value= {{treatment}}>
+    <input type="hidden" name="lang" value= {{lang}}>
+    
     <input type="checkbox" id="consentCheckbox" required style="margin-left: 20px;">
     <label for="consentCheckbox" style="font-family: Arial;
       color: rgb(80,80,80);">

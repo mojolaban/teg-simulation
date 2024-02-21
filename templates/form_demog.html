@@ -76,7 +76,7 @@
         <h1>Participant Profile</h1>
         <div class="fixed-box-1" 
           style="box-shadow: inset 0 0 4px #555;">
-            <p style="margin-top:10px;">Complete the background questions below before starting the online experiment. <br>Your confidentiality is assured as outlined in the explanatory statement.</p>
+            <p style="margin-top:10px;">Before starting the online experiment, please complete the following questions. We assure the confidentiality of your data as outlined in the explanatory statement.</p>
             <div class="fixed-box-2">
                 <form action="/instructions" method="post" onsubmit="return validateForm()">
                     <div id="error-message" class="error" style="display:none;"></div> <!-- General error message -->
@@ -144,11 +144,11 @@
                     <div id="tax_experience-error" class="error" style="display:none;">Please select your experience with taxation.</div>
 
                     <label>9. Which description best suits you?</label>
-                    <label style="margin-left:25px;"><input type="radio" name="description" id="desc_one_off" value="one-off"> A one-off crypto investor</label>
+                    <label style="margin-left:25px;"><input type="radio" name="description" id="desc_one_off" value="one-off"> An ex-crypto trader</label>
                     <label style="margin-left:25px;"><input type="radio" name="description" id="desc_favourable" value="favourable"> I trade crypto only when the situation seems favorable</label>
                     <label style="margin-left:25px;"><input type="radio" name="description" id="desc_frequent" value="frequent"> A frequent and active crypto-asset trader</label>
                     <div id="description-error" class="error" style="display:none;">Please select the description that best suits you.</div>
- 
+<input type="hidden" name="lang" id="lang" value={{lang}}>
 <input type="hidden" name="id" id="id" value={{id}}>
 <input type="hidden" name="asset_type" id="asset_type" value={{asset_type}}>
 

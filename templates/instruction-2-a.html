@@ -72,7 +72,7 @@
     <div class="fixed-box-2" >
     
     <p><b>Ikhtisar</b></p>
-    <p>Dalam eksperimen ini, Anda akan berperan sebagai pedagang {{asset_type}}, dengan dua jenis aset yang dapat Anda gunakan: mata uang fiat dan {{asset_type}} di bursa terdesentralisasi. Anda akan memulai simulasi dengan 1 unit {{asset_type}} dan tanpa mata uang fiat.</p>
+    <p>Dalam eksperimen ini, Anda akan berperan sebagai pedagang {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }}, dengan dua jenis aset yang dapat Anda gunakan: mata uang fiat dan {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }} di bursa terdesentralisasi. Anda akan memulai simulasi dengan 1 unit {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }} dan tanpa mata uang fiat.</p>
     <p><b>Simulasi Perdagangan</b></p>
     <ul>
     <li>Ronde: Simulasi ini mencakup 15 ronde perdagangan.</li>
@@ -82,7 +82,7 @@
     <p><b>Pelaporan Pajak</b></p>
     <ul>
     <li>Di akhir setiap ronde, Anda akan memasuki fase pelaporan pajak, di mana Anda diharapkan membayar pajak 20% atas keuntungan perdagangan.</li>
-    <li>Contoh Perhitungan Pajak: Jika Anda membeli {{asset_type}} seharga <i>f</i> 10.000 dan kemudian menjualnya seharga <i>f</i> 15.000, keuntungan Anda adalah <i>f</i> 5.000. Pajak yang terhutang atas keuntungan ini adalah <i>f</i> 1.000 (20% dari <i>f</i> 5.000)</li>
+    <li>Contoh Perhitungan Pajak: Jika Anda membeli {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }} seharga <i>f</i> 10.000 dan kemudian menjualnya seharga <i>f</i> 15.000, keuntungan Anda adalah <i>f</i> 5.000. Pajak yang terhutang atas keuntungan ini adalah <i>f</i> 1.000 (20% dari <i>f</i> 5.000)</li>
     <li>Perhitungan pajak dilakukan secara otomatis. Anda dapat melihat kewajiban pajak perkiraan Anda dengan mengarahkan kursor ke tombol "tampilkan total" di halaman pelaporan pajak. Namun, Anda harus memasukkan jumlah pajak yang ingin Anda laporkan secara manual pada kotak yang disediakan. Meskipun Anda memiliki kebebasan untuk melaporkan jumlah berapa pun, Anda harus mengungkapkan angka perkiraan dengan akurat untuk menghindari sanksi apabila transaksi Anda diaudit.</li>    
     </ul>
     <p><b>Kompensasi, Undian, dan Audit</b></p>
@@ -99,7 +99,7 @@
     </ul>
     <p><b>Wawancara Tindak Lanjut Opsional</b></p>
     <ul>
-    <li>Setelah menyelesaikan kuesioner, Anda dapat memilih untuk berpartisipasi dalam wawancara tindak lanjut untuk memberikan umpan balik yang lebih mendalam. Jika Anda memilih demikian, email dengan jadwal dan detail mengenai wawancara ini akan dikirimkan kepada Anda.</li>
+    <li>Setelah menyelesaikan kuesioner, Anda dapat memilih untuk berpartisipasi dalam wawancara tindak lanjut untuk memberikan umpan balik yang lebih mendalam. Jika Anda memilih demikian, email dengan jadwal dan rincian mengenai wawancara ini akan dikirimkan kepada Anda.</li>
     </ul>
 
 </div class="fixed-box-2" >
@@ -142,7 +142,7 @@
                 <input type="radio" name="q5" value="10"> 10<br>
                 <input type="radio" name="q5" value="20"> 20<br>
                 <input type="radio" name="q5" value="5"> 5<br>
-                <input type="radio" name="q5" value="3"> 20<br>
+                <input type="radio" name="q5" value="3"> 13<br>
                 <p id="q5-warning" style="color: red;"></p></p>
 
                 <p>6.Berapa tarif pajak yang berlaku atas keuntungan perdagangan yang Anda peroleh?<br>
@@ -152,7 +152,7 @@
                 <input type="radio" name="q6" value="15%"> 15%<br>
                 <p id="q6-warning" style="color: red;"></p></p>
 
-                <p>7. Jika Anda membeli {{asset_type}} seharga <i>f</i> 10.000 dan menjualnya seharga <i>f</i> 20.000, berapa banyak pajak yang harus Anda laporkan sesuai dengan tarif pajak yang berlaku?<br>
+                <p>7. Jika Anda membeli {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }} seharga <i>f</i> 10.000 dan menjualnya seharga <i>f</i> 20.000, berapa banyak pajak yang harus Anda laporkan sesuai dengan tarif pajak yang berlaku?<br>
                 <input type="radio" name="q7" value="f 1,000"> <i>f</i> 1,000<br>
                 <input type="radio" name="q7" value="f 0"> <i>f</i> 0<br>
                 <input type="radio" name="q7" value="f 2,000"> <i>f</i> 2,000<br>
@@ -175,7 +175,7 @@
 
                 <p>10. Jumlah keuntungan dan pajak Anda dalam satu ronde di halaman pelaporan pajak...<br>
                 <input type="radio" name="q10" value="For you to calculate and type in the field"> untuk Anda hitung dan ketik di kolom kosong. <br>
-                <input type="radio" name="q10" value="Shown after you hover your mouse over a button"> ditampilkan setelah Anda mengarahkan kursor tetikus Anda ke atas tombol. <br>
+                <input type="radio" name="q10" value="Shown after you hover your mouse over a button"> ditampilkan setelah Anda mengarahkan kursor tetikus Anda pada tombol "tampilkan total". <br>
                 <input type="radio" name="q10" value="Automatically refreshed after you press enter"> secara otomatis diperbarui setelah Anda klik "Enter".<br>
                 <input type="radio" name="q10" value="Not available if you do not click 'Buy' or 'Sell'"> tidak tersedia jika Anda tidak meng-klik "Beli" atau "Jual".<br>
                 <p id="q10-warning" style="color: red;"></p></p>
@@ -201,6 +201,7 @@
 <form action="/tryout" method="POST" >
   <input type="hidden" name="id" id="id" value={{id}}>
   <input type="hidden" name="asset_type" id="asset_type" value={{asset_type}}>
+  <input type="hidden" name="lang" id="lang" value={{lang}}>
 
   
   <input type="checkbox" required id="consentCheckbox"  style="margin-left: 20px;">
@@ -371,16 +372,16 @@
       var nextButton = document.getElementById('nextButton');
 
         if (allAnswersCorrect) {
-            popupText = "Your answers are all correct. Press 'Next' to proceed.";
+            popupText = "Seluruh jawaban Anda benar. Silakan klik 'Lanjut' untuk meneruskan.";
           consentCheckbox.checked = true;  // Automatically check the checkbox
           nextButton.disabled = false;     // Enable the "Next" button
         } else {
-            popupText = "Check again for blank or incorrect answer(s).";
+            popupText = "Periksa lagi apabila ada jawaban kosong atau tidak benar.";
           consentCheckbox.checked = false; // Uncheck the checkbox if answers are incorrect
           nextButton.disabled = true;      // Disable the "Next" button
         }
 
-      var popupText = allAnswersCorrect ? "Your answers are all correct. Press 'Next' to proceed." : "Check again for blank or incorrect answer(s).";
+      var popupText = allAnswersCorrect ? "Seluruh jawaban Anda benar. Silakan klik 'Lanjut' untuk meneruskan." : "Periksa lagi apabila ada jawaban kosong atau tidak benar.";
       alert(popupText);
     }
   </script>

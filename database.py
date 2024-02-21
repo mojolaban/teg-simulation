@@ -12,26 +12,36 @@ engine = create_engine(db_connection_string,
                          }
                        })
 
-#----1. Assign random to treatment, start inserting initial data to db
-def insert_group_treatment():
+
+#----0.1 Assign treatment based on language selection
+def insert_group_lang(lang):
   with engine.connect() as conn:
-        # Generate a random 2-character ID
-        random_id = ''.join(random.choices(string.ascii_uppercase +
-                                           string.ascii_lowercase + string.digits,
-                                           k=2))
-        # Fetch the treatment value from the log table while handling the case when num is null
-        result = conn.execute(text("SELECT IFNULL((SELECT CASE WHEN num % 2 = 0 THEN 2 ELSE 1 END AS treatment FROM log ORDER BY num DESC LIMIT 1), 2) AS treatment;"))
-        data = result.fetchone()
-        treatment = data[0]       
-        # Insert the counter, treatment, and ID values into the 'log' table
-        conn.execute(text("INSERT INTO `teg-simulation`.`log` (`counter`, `gr`, `id`) VALUES ('1', :treatment, :id);"),
-            {"treatment": treatment, "id": random_id})
+    # Generate a random 2-character ID
+    random_id = ''.join(random.choices(string.ascii_uppercase +
+                                       string.ascii_lowercase + string.digits,
+                                       k=2))
+    # Fetch the treatment value from the log table while handling the case when num is null
+    result = conn.execute(text("SELECT IFNULL((SELECT CASE WHEN num % 2 = 0 THEN 2 ELSE 1 END AS treatment FROM log ORDER BY num DESC LIMIT 1), 2) AS treatment;"))
+    data = result.fetchone()
+    treatment = data[0]
+    # Map language to the corresponding value
+    lang_value = 1 if lang == 'Indonesian' else 0
+    # Insert the counter, treatment, ID, and language values into the 'log' table
+    conn.execute(text("INSERT INTO `teg-simulation`.`log` (`counter`, `gr`, `id`,`lang` ) VALUES ('1', :treatment, :id, :lang);"),
+                 {"treatment": treatment, "id": random_id, "lang": lang_value})
+    # Create a dictionary with the treatment, id, and lang values
+    treatment_dict = {"treatment": treatment, "id": random_id, "lang": lang_value}
+
+  return treatment_dict
+
+
+#----1. Assign random to treatment, start inserting initial data to db
+def insert_group_treatment(gr,id):
+  with engine.connect() as conn:
         # Insert the treatment, ID, round, transaction, initial asset, and other values into the 'responses' table
         conn.execute(
-            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`, `r_gain`, `t_tax`, `tax_disclos`, `audit`, `t_gain_net`, `r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`, `buy_prev`, `r_gain_prev`,`r_tax_prev`)VALUES ('0', :treatment, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"), {"treatment": treatment, "id": random_id})
-      # Create a dictionary with the treatment and id values
-        treatment = {"treatment": treatment, "id": random_id}
-        return treatment
+            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`, `r_gain`, `t_tax`, `tax_disclos`, `audit`, `t_gain_net`, `r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`, `buy_prev`, `r_gain_prev`,`r_tax_prev`)VALUES ('0', :gr, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"), {"gr": gr, "id": id})
+
 
 #----1a. Insert participant profile
 def insert_demog(gender, age, education_level, current_education, country_residence, citizenship, asset_experience, tax_experience, description,id):
