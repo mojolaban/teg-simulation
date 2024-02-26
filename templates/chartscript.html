@@ -83,6 +83,7 @@
     var updateCount = 0;
     var updateInterval;
     var round = {{ data['round'] }};
+    var lang = {{ data['lang'] }}; 
 
     function addData(data) {
       for (var i = 0; i < data.length; i++) {
@@ -128,18 +129,19 @@
       var previousDataPoint = dataPoints[dataPoints.length - 2].y;
 
       var pricePoint = document.getElementById("pricePoint");
-      pricePoint.textContent = formatNumber(latestDataPoint);
+      pricePoint.textContent = (lang === 1) ? formatNumberId(latestDataPoint) : formatNumberEn(latestDataPoint);
+
 
       var percentage = ((latestDataPoint - previousDataPoint) / previousDataPoint) * 100;
       var percPoint = document.getElementById("percPoint");
       if (percentage < 0) {
-        percPoint.textContent = "▼ " + formatNumber(percentage.toFixed(2)) + "%";
+        percPoint.textContent = "▼ " + ((lang === 1) ? formatNumberId(percentage.toFixed(2)) : formatNumberEn(percentage.toFixed(2))) + "%";
         percPoint.style.color = "rgb(200, 50, 20)";
       } else if (percentage > 0) {
-        percPoint.textContent = "▲ " + formatNumber(percentage.toFixed(2)) + "%";
+        percPoint.textContent = "▲ " + ((lang === 1) ? formatNumberId(percentage.toFixed(2)) : formatNumberEn(percentage.toFixed(2))) + "%";
         percPoint.style.color = "rgb(40, 180, 120)";
       } else {
-        percPoint.textContent = formatNumber(percentage.toFixed(2)) + "%";
+        percPoint.textContent = ((lang === 1) ? formatNumberId(percentage.toFixed(2)) : formatNumberEn(percentage.toFixed(2))) + "%";
         percPoint.style.color = "rgb(40, 180, 120)";
       }
 
@@ -162,11 +164,22 @@
     updateInterval = setInterval(updateData, 1000);
   }
 
-  function formatNumber(value) {
+
+  //------------ Format number function - English
+  function formatNumberEn(value) {
     if (value < 0) {
-      return "(" + Math.abs(value).toLocaleString() + ")";
+      return "(" + Math.abs(value).toLocaleString('en-US') + ")";
     } else {
-      return value.toLocaleString();
+      return value.toLocaleString('en-US');
+    }
+  }
+
+  //------------ Format number function - Indonesian
+  function formatNumberId(value) {
+    if (value < 0) {
+      return "(" + Math.abs(value).toLocaleString('id-ID') + ")";
+    } else {
+      return value.toLocaleString('id-ID');
     }
   }
 </script>

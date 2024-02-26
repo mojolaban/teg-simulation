@@ -27,7 +27,7 @@ def insert_group_lang(lang):
     # Map language to the corresponding value
     lang_value = 1 if lang == 'Indonesian' else 0
     # Insert the counter, treatment, ID, and language values into the 'log' table
-    conn.execute(text("INSERT INTO `teg-simulation`.`log` (`counter`, `gr`, `id`,`lang` ) VALUES ('1', :treatment, :id, :lang);"),
+    conn.execute(text("INSERT INTO `teg-simulation-sandbox`.`log` (`counter`, `gr`, `id`,`lang` ) VALUES ('1', :treatment, :id, :lang);"),
                  {"treatment": treatment, "id": random_id, "lang": lang_value})
     # Create a dictionary with the treatment, id, and lang values
     treatment_dict = {"treatment": treatment, "id": random_id, "lang": lang_value}
@@ -36,18 +36,18 @@ def insert_group_lang(lang):
 
 
 #----1. Assign random to treatment, start inserting initial data to db
-def insert_group_treatment(gr,id):
+def insert_group_treatment(gr,id,lang):
   with engine.connect() as conn:
         # Insert the treatment, ID, round, transaction, initial asset, and other values into the 'responses' table
         conn.execute(
-            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`, `r_gain`, `t_tax`, `tax_disclos`, `audit`, `t_gain_net`, `r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`, `buy_prev`, `r_gain_prev`,`r_tax_prev`)VALUES ('0', :gr, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"), {"gr": gr, "id": id})
+            text("INSERT INTO `teg-simulation-sandbox`.`responses`(`round`,`gr`, `id`, `lang`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`, `r_gain`, `t_tax`, `tax_disclos`, `audit`, `t_gain_net`, `r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`, `buy_prev`, `r_gain_prev`,`r_tax_prev`)VALUES ('0', :gr, :id, :lang, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"), {"gr": gr, "id": id, "lang": lang})
 
 
 #----1a. Insert participant profile
 def insert_demog(gender, age, education_level, current_education, country_residence, citizenship, asset_experience, tax_experience, description,id):
   with engine.connect() as conn:
       conn.execute(
-          text("INSERT INTO `teg-simulation`.`demog`(`gender`, `age`, `education_level`, `current_education`, `country_residence`, `citizenship`, `asset_experience`, `tax_experience`, `description`, `id`) VALUES (:gender, :age, :education_level, :current_education, :country_residence, :citizenship, :asset_experience, :tax_experience, :description, :id);"), 
+          text("INSERT INTO `teg-simulation-sandbox`.`demog`(`gender`, `age`, `education_level`, `current_education`, `country_residence`, `citizenship`, `asset_experience`, `tax_experience`, `description`, `id`) VALUES (:gender, :age, :education_level, :current_education, :country_residence, :citizenship, :asset_experience, :tax_experience, :description, :id);"), 
           {"gender": gender, "age": age, "education_level": education_level, "current_education": current_education, "country_residence": country_residence, "citizenship": citizenship, "asset_experience": asset_experience, "tax_experience": tax_experience, "description": description, "id": id}
       )
 
@@ -55,7 +55,7 @@ def insert_demog(gender, age, education_level, current_education, country_reside
 #----2. Fecth initial game data from db 
 def fetch_init_data(id):
     with engine.connect() as conn:
-        result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"), {"id": id})
+        result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final, lang FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"), {"id": id})
         row = result.fetchone()
         if row:
             round_value = row[0]
@@ -83,16 +83,26 @@ def fetch_init_data(id):
             audit = row[22]
             penalty = row[23]
             r_gain_final = row[24]
-
-            if gr_value == '2':
+            lang = row[25]
+ 
+            asset_type = None 
+            if gr_value == '2' and lang==0:
                 asset_type = "Crypto"
-            elif gr_value == '1':
+            elif gr_value == '2' and lang==1:
+                asset_type = "Kripto"
+            elif gr_value == '1' and lang==0:
                 asset_type = "Stock"
+            elif gr_value == '1' and lang==1:
+                asset_type = "Saham"
               
-            if pos_value == "s":
+            if pos_value == "s" and lang==0:
                 pos_value = "SELL"
-            elif pos_value == "b":
+            elif pos_value == "s" and lang==1:
+                pos_value = "JUAL"
+            elif pos_value == "b" and lang==0:
                 pos_value = "BUY"
+            elif pos_value == "b" and lang==1:
+                pos_value = "BELI"
 
             init_data = {
                 "round": round_value,
@@ -120,7 +130,8 @@ def fetch_init_data(id):
                 "tax_discre":tax_discre,
                 "audit":audit,
                 "penalty":penalty,
-                "r_gain_final":r_gain_final
+                "r_gain_final":r_gain_final,
+                "lang": lang
             }
             return init_data
         return None
@@ -133,7 +144,7 @@ def retrieve_data(id):
     with engine.connect() as conn:
         result = conn.execute(
             text(
-                "SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final, sec, price  FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"),
+                "SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final, sec, price, lang  FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"),
             {"id": user_id})
         row = result.fetchone()
         if row:
@@ -164,17 +175,26 @@ def retrieve_data(id):
             r_gain_final = row[24]
             sec_value = row[25]
             price_value = row[26]
+            lang = row[27]
 
-            if gr_value == '2':
+            if gr_value == '2' and lang==0:
                 asset_type = "Crypto"
-            elif gr_value == '1':
+            elif gr_value == '2' and lang==1:
+                asset_type = "Kripto"
+            elif gr_value == '1' and lang==0:
                 asset_type = "Stock"
-
-            if pos_value == "s":
+            elif gr_value == '1' and lang==1:
+                asset_type = "Saham"
+  
+            if pos_value == "s" and lang==0:
                 pos_value = "SELL"
-            elif pos_value == "b":
+            elif pos_value == "s" and lang==1:
+                pos_value = "JUAL"
+            elif pos_value == "b" and lang==0:
                 pos_value = "BUY"
-
+            elif pos_value == "b" and lang==1:
+                pos_value = "BELI"
+              
             updated_data = {
                 "round": round_value,
                 "gr": gr_value,
@@ -203,7 +223,8 @@ def retrieve_data(id):
                 "penalty": penalty,
                 "r_gain_final": r_gain_final,
                 "sec" : sec_value,
-                "price": price_value
+                "price": price_value,
+                "lang": lang
             }
           
 
@@ -218,7 +239,7 @@ def send_data(data):
     with engine.connect() as conn:
         # Insert the treatment, ID, round, transaction, initial asset, and other values into the 'responses' table
         conn.execute(
-            text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`,`r_gain`,`t_tax`,`tax_disclos`,`audit`,`t_gain_net`,`r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`,`buy_prev`,`r_gain_prev`, `r_tax_prev`)VALUES ('1', :treatment, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"), {"treatment": treatment, "id": random_id})
+            text("INSERT INTO `teg-simulation-sandbox`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`,`r_gain`,`t_tax`,`tax_disclos`,`audit`,`t_gain_net`,`r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`,`buy_prev`,`r_gain_prev`, `r_tax_prev`)VALUES ('1', :treatment, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"), {"treatment": treatment, "id": random_id})
       # Create a dictionary with the treatment and id values
         treatment = {"treatment": treatment, "id": random_id}
         return treatment

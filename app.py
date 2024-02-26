@@ -154,7 +154,7 @@ def tryout():
         gr = "2"
     else:
         gr = "unknown"
-    insert_group_treatment(gr,id)
+    insert_group_treatment(gr,id,lang)
     if 'stock' in asset_type and lang=="0":
           print("ID:", id)  # Debug statement
           print("asset_Type:", asset_type)  # Debug statement
@@ -240,9 +240,9 @@ def starting_game():
             init_data = fetch_init_data(id)
             print("Init Data:", init_data)  # Debug statement
             if init_data and lang=="0":
-              return render_template('round0.html')  # Example template to render for GET requests
+              return render_template('round0.html', data=init_data)  # Example template to render for GET requests
             elif init_data and lang=="1":
-              return render_template('round0-a.html')  # Example template to render for GET requests 
+              return render_template('round0-a.html', data=init_data)  # Example template to render for GET requests 
         return "Error: Invalid ID"
       
 
@@ -254,9 +254,10 @@ def starting_game():
 def send_games_data():
   data = request.get_json()
   timer_value = data.get('timerValue')
+  lang = data.get('lang')
 #  price_value = data.get('priceValue').replace(',', '')
-  
-  price_value = data.get('priceValue').replace(',', '')
+  price_value = data.get('priceValue', '').replace(',', '').replace('.', '')
+
   if not price_value:
       price_value = 0 
   
@@ -278,52 +279,50 @@ def send_games_data():
   crypto_prev_value = data.get('cryptoPrevValue').replace('\n', '').strip()
   fiat_prev_value = data.get('fiatPrevValue')
 #  crypto_value = data.get('cryptoValue').replace('\n', '').strip()
-  crypto_value_raw = data.get('cryptoValue')
-  
+  crypto_value_raw = data.get('cryptoValue')  
   # Check if the value is a string and clean it; otherwise, handle it as an integer
   if isinstance(crypto_value_raw, str):
       crypto_value = crypto_value_raw.replace('\n', '').strip()
   else:  # If it's not a string, assume it's an integer
-      crypto_value = crypto_value_raw  # Use the integer value directly
-    
-#  fiat_value = data.get('fiatValue').replace('\n', '').strip()
-  fiat_value_raw = data.get('fiatValue')
+      crypto_value = crypto_value_raw  # Use the integer value directly  
+
   
+  
+  #  fiat_value = data.get('fiatValue').replace('\n', '').strip()
+  fiat_value_raw = data.get('fiatValue')  
   # Check if the value is a string and clean it; otherwise, handle it as an integer
   if isinstance(fiat_value_raw, str):
       fiat_value = fiat_value_raw.replace('\n', '').strip()
   else:  # If it's not a string, assume it's an integer
-      fiat_value = fiat_value_raw  # Use the integer value directly
-    
-  buy_prev_value = data.get('buyPrevValue')
+      fiat_value = fiat_value_raw  # Use the integer value directly   
 
+
+  
+  buy_prev_value = data.get('buyPrevValue')
 #  sell_value = data.get('sellValue').replace('\n', '').strip()
   sell_value_raw = data.get('sellValue')
-
   # Check if the value is a string and clean it; if it's an integer, use it directly
   if isinstance(sell_value_raw, str):
       sell_value = sell_value_raw.replace('\n', '').strip()
   else:
       sell_value = sell_value_raw
-
   buy_value = data.get('buyValue')
 #  t_gain_value = data.get('tGainValue').replace('\n', '').strip()
-
   t_gain_value_raw = data.get('tGainValue')
-
   # Check if the value is a string and clean it; otherwise, handle it as an integer
   if isinstance(t_gain_value_raw, str):
       t_gain_value = t_gain_value_raw.replace('\n', '').strip()
   else:  # If it's not a string, assume it's an integer
       t_gain_value = t_gain_value_raw  # Use the integer value directly
-
-
-  t_tax_value = int(data.get('tTaxValue'))
-
+  t_tax_value_raw = data.get('tTaxValue')
+  # Check if the value is a string and clean it; otherwise, handle it as an integer
+  if isinstance(t_tax_value_raw, str):
+    t_tax_value = t_tax_value_raw.replace('\n', '').strip()
+  else:  # If it's not a string, assume it's an integer
+    t_tax_value = t_tax_value_raw  # Use the integer value directly
+    
 #  t_gain_net_value = data.get('tGainNetValue').replace('\n', '').strip()
-
   t_gain_net_value_raw = data.get('tGainNetValue')
-
   # Determine the type and proceed accordingly
   if isinstance(t_gain_net_value_raw, str):
       # If it's a string, strip newlines and whitespace
@@ -331,8 +330,6 @@ def send_games_data():
   else:
       # If it's an integer (or any non-string), use it directly
       t_gain_net_value = t_gain_net_value_raw
-
-
   r_gain_value = data.get('rGainValue')
   r_gain_prev_value = data.get('rGainPrevValue')
   r_tax_value = data.get('rTaxValue')
@@ -344,9 +341,10 @@ def send_games_data():
   audit_value =data.get('auditValue')
 #  penalty_value =data.get('penaltyValue')
 #  r_gain_final_value =data.get('rGainFinalValue')
+
   
   with engine.connect() as conn:
-    conn.execute(text("INSERT INTO `teg-simulation`.`responses` (`sec`,`price`,`id`, `gr`, `pos`, `trx`, `round`, `crypto_prev`, `fiat_prev`,`crypto`, `fiat`, `buy_prev`, `buy`, `sell`, `t_gain`,`t_tax`, `t_gain_net`, `r_gain`, `r_gain_prev`, `r_tax`, `r_tax_prev`, `r_gain_net`, `tax_disclos`,`audit`) VALUES (:sec, :price, :id, :gr, :pos, :trx, :round, :crypto_prev, :fiat_prev, :crypto, :fiat, :buy_prev,:buy, :sell, :t_gain, :t_tax, :t_gain_net, :r_gain, :r_gain_prev, :r_tax, :r_tax_prev, :r_gain_net, :tax_disclos,:audit)"), {"sec": timer_value, "price": price_value, "id": user_id, "gr" : group_id, "pos" : pos_value, "trx" : trx_value, "round" : round_value, "crypto_prev" :crypto_prev_value,  "fiat_prev" :fiat_prev_value, "crypto" :crypto_value,  "fiat" :fiat_value, "buy_prev":buy_prev_value,"buy":buy_value, "sell":sell_value, "t_gain":t_gain_value, "t_tax":t_tax_value, "t_gain_net": t_gain_net_value, "r_gain": r_gain_value, "r_gain_prev": r_gain_prev_value, "r_tax": r_tax_value, "r_tax_prev": r_tax_prev_value,"r_gain_net": r_gain_net_value,"tax_disclos": tax_disclos_value,"audit": audit_value})
+    conn.execute(text("INSERT INTO `teg-simulation-sandbox`.`responses` (`sec`,`price`,`id`, `gr`, `pos`, `trx`, `round`, `crypto_prev`, `fiat_prev`,`crypto`, `fiat`, `buy_prev`, `buy`, `sell`, `t_gain`,`t_tax`, `t_gain_net`, `r_gain`, `r_gain_prev`, `r_tax`, `r_tax_prev`, `r_gain_net`, `tax_disclos`,`audit`, `lang`) VALUES (:sec, :price, :id, :gr, :pos, :trx, :round, :crypto_prev, :fiat_prev, :crypto, :fiat, :buy_prev,:buy, :sell, :t_gain, :t_tax, :t_gain_net, :r_gain, :r_gain_prev, :r_tax, :r_tax_prev, :r_gain_net, :tax_disclos,:audit,:lang)"), {"sec": timer_value, "price": price_value, "id": user_id, "gr" : group_id, "pos" : pos_value, "trx" : trx_value, "round" : round_value, "crypto_prev" :crypto_prev_value,  "fiat_prev" :fiat_prev_value, "crypto" :crypto_value,  "fiat" :fiat_value, "buy_prev":buy_prev_value,"buy":buy_value, "sell":sell_value, "t_gain":t_gain_value, "t_tax":t_tax_value, "t_gain_net": t_gain_net_value, "r_gain": r_gain_value, "r_gain_prev": r_gain_prev_value, "r_tax": r_tax_value, "r_tax_prev": r_tax_prev_value,"r_gain_net": r_gain_net_value,"tax_disclos": tax_disclos_value,"audit": audit_value, "lang": lang})
     print(f"Sending Data:")
     print(f"Timer Value: {timer_value}")
     print(f"Price Value: {price_value}")
@@ -372,8 +370,9 @@ def send_games_data():
     print(f"Rnd Gain Net Value: {r_gain_net_value}")
     print(f"Tax Disclos Value: {tax_disclos_value}")
     print(f"Audit Value: {audit_value}")
+    print(f"Language: {lang}")
 
-    result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"), {"id": user_id})
+    result = conn.execute(text("SELECT round, gr, id, trx, crypto, fiat, buy, sell, pos, t_gain, r_gain, t_tax, crypto_prev, fiat_prev, buy_prev, r_tax, r_gain_net, t_gain_net, r_gain_prev, r_tax_prev, tax_disclos, tax_discre, audit, penalty, r_gain_final, lang FROM responses WHERE id = :id ORDER BY ts DESC LIMIT 1;"), {"id": user_id})
     row = result.fetchone()
     if row:
             round_value = row[0]
@@ -401,17 +400,27 @@ def send_games_data():
             audit = row[22]
             penalty = row[23]
             r_gain_final = row[24]
+            lang = row[25]
 
-            if gr_value == '2':
+            asset_type = "Unknown" 
+            if gr_value == '2' and lang == 0:
                 asset_type = "Crypto"
-            elif gr_value == '1':
+            elif gr_value == '2' and lang == 1:
+                asset_type = "Kripto"
+            elif gr_value == '1' and lang == 0:
                 asset_type = "Stock"
+            elif gr_value == '1' and lang == 1:
+                asset_type = "Saham"
               
             if trx_value < 5:
-                if pos_value == "s":
+                if pos_value == "s" and lang == 0:
                     pos_value = "SELL"
-                elif pos_value == "b":
+                elif pos_value == "s" and lang == 1:
+                    pos_value = "JUAL"
+                elif pos_value == "b" and lang == 0:
                     pos_value = "BUY"
+                elif pos_value == "b" and lang == 1:
+                    pos_value = "BELI"
             else:
                 pos_value = "STOP"
 
@@ -441,7 +450,8 @@ def send_games_data():
                 "tax_discre":tax_discre,
                 "audit":audit,
                 "penalty":penalty,
-                "r_gain_final":r_gain_final
+                "r_gain_final":r_gain_final,
+                "lang": lang
             }
             print("Retrieved Data:")
             print(updated_data)
@@ -455,7 +465,13 @@ def tax_reporting():
     response = retrieve_data(user_id)
     response_data =  response.json  # Convert the content to a dictionary
     print("Summary Data:", response_data)
-    return render_template('tax_reporting.html', summary_data=response_data)
+    print("Language:",  response_data['lang'])
+    if response_data['lang'] == 0:
+      return render_template('tax_reporting.html', summary_data=response_data)
+    elif response_data['lang'] == 1:
+      return render_template('tax_reporting-a.html', summary_data=response_data)
+    else: 
+      return "Error: Invalid ID"
 
 #----Sending data from tax reporting page to db, then show them to audit page
 @app.route("/tax_disclosure")
@@ -471,7 +487,7 @@ def tax_disclosure():
 
     with engine.connect() as conn:
         update_statement = text("""
-            UPDATE `teg-simulation`.`responses`
+            UPDATE `teg-simulation-sandbox`.`responses`
             SET `tax_disclos` = :new_tax_disclos_value, `audit` = :audit_value
             WHERE `id` = :user_id
             ORDER BY `ts` DESC
@@ -484,7 +500,7 @@ def tax_disclosure():
 
         select_statement_1 = text("""
             SELECT `round`, `audit`
-            FROM `teg-simulation`.`responses`
+            FROM `teg-simulation-sandbox`.`responses`
             WHERE `id` = :user_id
             ORDER BY `ts` DESC
             LIMIT 1
@@ -544,7 +560,7 @@ def next_round():
     with engine.connect() as conn:
         select_statement = text("""
             SELECT `round`, `gr` 
-            FROM `teg-simulation`.`responses`
+            FROM `teg-simulation-sandbox`.`responses`
             WHERE `id` = :user_id
             ORDER BY `ts` DESC
             LIMIT 1
@@ -555,7 +571,7 @@ def next_round():
         if latest_round < 15:
             next_round = latest_round + 1
             conn.execute(
-                text("INSERT INTO `teg-simulation`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`, `r_gain`, `t_tax`, `tax_disclos`, `audit`, `t_gain_net`, `r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`, `buy_prev`, `r_gain_prev`,`r_tax_prev`)VALUES (:round, :gr, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"),
+                text("INSERT INTO `teg-simulation-sandbox`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`, `r_gain`, `t_tax`, `tax_disclos`, `audit`, `t_gain_net`, `r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`, `buy_prev`, `r_gain_prev`,`r_tax_prev`)VALUES (:round, :gr, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"),
                 {"round": next_round, "gr": gr, "id": userid}
             )
             init_data = fetch_init_data({userid})
@@ -567,7 +583,7 @@ def next_round():
 
             select_statement_2 = text("""
                 SELECT `id`, `gr`,`round`, CASE WHEN `r_gain_final` <= 0 THEN 100000 ELSE `r_gain_final` END AS `r_gain_final`
-                FROM `teg-simulation`.`responses`
+                FROM `teg-simulation-sandbox`.`responses`
                 WHERE `id` = :user_id AND `round` = :random_number
                 ORDER BY `trx` DESC
                 LIMIT 1

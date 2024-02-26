@@ -131,9 +131,9 @@
               background-color: black; 
               border: 0px solid black; 
               padding: 3px;">
-              <p id="asset_type" style="line-height:1.5;
+              <p style="line-height:1.5;
                 margin: 0;color: white;">
-                Harga {{ "Kripto" if data['asset_type'] == "Crypto" else "Saham" if data['asset_type'] == "Stock" else data['asset_type'] }}
+                Harga <span id="asset_type"> {{ "Kripto" if data['asset_type'] == "Crypto" else "Saham" if data['asset_type'] == "Stock" else data['asset_type'] }} </span>
                 </p>
               <p style="font-size:28px;line-height:1;
                 margin: 0;color: white;">
