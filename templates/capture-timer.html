@@ -1,12 +1,37 @@
 <script>
-  //------------ Remove comma function
 
-  function rc(numberString) {
-    return parseFloat(numberString.toString().replace(/[,\.]/g, ''));
+
+    '''
+    function rc(numberString) {
+      return parseFloat(numberString.toString().replace(/[,\.]/g, ''));
+    }
+  '''
+  
+  function removeComma(numberString) {
+    return parseFloat(numberString.toString().replace(/,/g, ''));
   }
 
-
-  //------------ Format number function 
+  function removeDot(numberString) {
+    return parseFloat(numberString.toString().replace(/\./g, ''));
+  }
+  function rc(numberString) {
+    // Adjusted to use removeComma or removeDot based on lang value
+    if (lang === 0) {
+      return removeComma(numberString);
+    } else if (lang === 1) {
+      return removeDot(numberString);
+    }
+  }
+  
+  //------------ Format number function
+  function formatNumber(value) {
+    if (value < 0) {
+      return "(" + Math.abs(value).toLocaleString() + ")";
+    } else {
+      return value.toLocaleString();
+    }
+  }
+  //------------ Format number function - English
   function formatNumberEn(value) {
     if (value < 0) {
       return "(" + Math.abs(value).toLocaleString('en-US') + ")";
@@ -15,7 +40,7 @@
     }
   }
 
-  //------------ Format number function
+  //------------ Format number function - Indonesian
   function formatNumberId(value) {
     if (value < 0) {
       return "(" + Math.abs(value).toLocaleString('id-ID') + ")";
@@ -24,8 +49,8 @@
     }
   }
 
-  
   //------------ Timer countdown function
+  var timer = 1; /* 40 seconds */
   var timer = 40; /* 40 seconds */
   var timerText = document.getElementById("countdown");
   var userid = document.getElementById("id").textContent; // Define userid here
@@ -34,20 +59,16 @@
     if (timer === 0) {
       clearInterval(countdown); /* End */
       timerText.innerHTML = "0";
-      console.log("User ID:", userid); // Debug statement to log the userid
       window.location.href = "/tr?id=" + encodeURIComponent(userid); // Pass the id as a query parameter in the URL
     } else {
       timer -= 1; /* Countdown */
       timerText.innerHTML = timer;
     }
   }, 1000); /* Milliseconds */
-
-
   // ------------ Button color changing
 function updateButtonColor(trxValue) {
   const buyButton = document.getElementById("buyButton");
   const sellButton = document.getElementById("sellButton");
-
   if (trxValue === 1 || trxValue === 3) {
     buyButton.style.backgroundColor = "rgb(40, 180, 120)";
     buyButton.style.color = "white";
@@ -55,7 +76,6 @@ function updateButtonColor(trxValue) {
     buyButton.style.backgroundColor = "white";
     buyButton.style.color = "black"; 
   }
-
   if (trxValue === 0 || trxValue === 2 || trxValue === 4) {
     sellButton.style.backgroundColor = "rgb(40, 180, 120)";
     sellButton.style.color = "white";
@@ -64,19 +84,13 @@ function updateButtonColor(trxValue) {
     sellButton.style.color = "black";
   }
 }
-
   
-
   //------------ Execute transaction function
-
   // Add event listener to the "sellButton" button
   const sellButton = document.getElementById("sellButton");
   sellButton.addEventListener("click", handleSellButtonClick);
   const buyButton = document.getElementById("buyButton");
   buyButton.addEventListener("click", handleBuyButtonClick);
-
-
-//------------ SELL BUTTON FUNCTION
   
   function handleSellButtonClick() {
     var trxValue = document.getElementById("trx").textContent;
@@ -109,13 +123,10 @@ function updateButtonColor(trxValue) {
       var penaltyValue = document.getElementById("penalty").textContent;
       var rGainFinalValue = document.getElementById("r_gain_final").textContent;
       var lang = document.getElementById("lang").textContent;
-
+      
       trxValue = (parseInt(trxValue) + 1) % 6;
-
-
         // Call the function to update button colors
         updateButtonColor(trxValue);
-
       if (trxValue % 2 !== 0) {
         // if trx is odd
         buyPrevValue = rc(buyValue);
@@ -124,8 +135,7 @@ function updateButtonColor(trxValue) {
         buyPrevValue = rc(priceValue);
       }
       buyValue = rc(buyPrevValue);
-
-      if (posValue === "SELL" || posValue === "JUAL") {
+      if (posValue === "SELL") {
         posValue = "b";
         cryptoPrevValue = cryptoValue;
         cryptoValue = 0.0;
@@ -137,7 +147,7 @@ function updateButtonColor(trxValue) {
           tTaxValue = 0.2 * rc(tGainValue);
         }
         tGainNetValue = rc(tGainValue) - rc(tTaxValue);
-      } else if (posValue === "BUY" || posValue === "BELI") {
+      } else if (posValue === "BUY") {
         posValue = "s";
         cryptoPrevValue = cryptoValue;
         fiatPrevValue = rc(fiatValue);
@@ -148,7 +158,6 @@ function updateButtonColor(trxValue) {
         tTaxValue = 0;
         tGainNetValue = 0;
       }
-
       if (trxValue >= 1 && trxValue <= 5) {
         rGainPrevValue = rc(rGainValue);
         rGainValue = rc(tGainValue) + rc(rGainPrevValue);
@@ -159,7 +168,6 @@ function updateButtonColor(trxValue) {
         rGainValue = 0;
         rTaxValue = 0;
       }
-
       fetch("/sendData", {
         method: "POST",
         headers: {
@@ -193,13 +201,12 @@ function updateButtonColor(trxValue) {
           auditValue: auditValue,
           penaltyValue: penaltyValue,
           rGainFinalValue: rGainFinalValue,
-          lang: lang,
+          lang : lang,
         }),
       })
         .then((response) => response.json())
         .then((data) => {
           // Handle the response from your endpoint if needed
-
           const roundElement = document.getElementById("round");
           const grElement = document.getElementById("gr");
           const idElement = document.getElementById("id");
@@ -227,7 +234,6 @@ function updateButtonColor(trxValue) {
           const penaltyElement = document.getElementById("penalty");
           const rGainFinalElement = document.getElementById("r_gain_final");
           const lang = document.getElementById("lang");
-
           // Below are the elements shown in HTML from the updated database:
           lang.innerHTML = data.lang;
           roundElement.innerHTML = data.round;
@@ -256,18 +262,12 @@ function updateButtonColor(trxValue) {
           auditElement.innerHTML = data.audit;
           penaltyElement.innerHTML = data.penalty;
           rGainFinalElement.innerHTML = data.r_gain_final;
-
         })
         .catch((error) => {
           console.error("Error:", error);
         });
     }
   }
-
-
-//------------ BUY BUTTON FUNCTION
-
-  
   function handleBuyButtonClick() {
     var trxValue = document.getElementById("trx").textContent;
 //    var trxValue = data.trx;
@@ -299,12 +299,10 @@ function updateButtonColor(trxValue) {
       var penaltyValue = document.getElementById("penalty").textContent;
       var rGainFinalValue = document.getElementById("r_gain_final").textContent;
       var lang = document.getElementById("lang").textContent;
-
+      
       trxValue = (parseInt(trxValue) + 1) % 6;
-
       // Call the function to update button colors
         updateButtonColor(trxValue);
-
       if (trxValue % 2 !== 0) {
         // if trx is odd
         buyPrevValue = rc(buyValue);
@@ -313,8 +311,7 @@ function updateButtonColor(trxValue) {
         buyPrevValue = rc(priceValue);
       }
       buyValue = rc(buyPrevValue);
-
-      if (posValue === "SELL" || posValue === "JUAL") {
+      if (posValue === "SELL") {
         posValue = "b";
         cryptoPrevValue = cryptoValue;
         cryptoValue = 0.0;
@@ -326,7 +323,7 @@ function updateButtonColor(trxValue) {
           tTaxValue = 0.2 * rc(tGainValue);
         }
         tGainNetValue = rc(tGainValue) - rc(tTaxValue);
-      } else if (posValue === "BUY" || posValue === "BELI") {
+      } else if (posValue === "BUY") {
         posValue = "s";
         cryptoPrevValue = cryptoValue;
         fiatPrevValue = rc(fiatValue);
@@ -337,7 +334,6 @@ function updateButtonColor(trxValue) {
         tTaxValue = 0;
         tGainNetValue = 0;
       }
-
       if (trxValue >= 1 && trxValue <= 5) {
         rGainPrevValue = rc(rGainValue);
         rGainValue = rc(tGainValue) + rc(rGainPrevValue);
@@ -348,7 +344,6 @@ function updateButtonColor(trxValue) {
         rGainValue = 0;
         rTaxValue = 0;
       }
-
       fetch("/sendData", {
         method: "POST",
         headers: {
@@ -382,13 +377,12 @@ function updateButtonColor(trxValue) {
           auditValue: auditValue,
           penaltyValue: penaltyValue,
           rGainFinalValue: rGainFinalValue,
-          lang: lang,
+          lang : lang,
         }),
       })
         .then((response) => response.json())
         .then((data) => {
           // Handle the response from your endpoint if needed
-
           const roundElement = document.getElementById("round");
           const grElement = document.getElementById("gr");
           const idElement = document.getElementById("id");
@@ -416,7 +410,6 @@ function updateButtonColor(trxValue) {
           const penaltyElement = document.getElementById("penalty");
           const rGainFinalElement = document.getElementById("r_gain_final");
           const lang = document.getElementById("lang");
-
           // Below are the elements shown in HTML from the updated database:
           lang.innerHTML = data.lang;
           roundElement.innerHTML = data.round;
@@ -445,7 +438,6 @@ function updateButtonColor(trxValue) {
           auditElement.innerHTML = data.audit;
           penaltyElement.innerHTML = data.penalty;
           rGainFinalElement.innerHTML = data.r_gain_final;
-
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -453,6 +445,5 @@ function updateButtonColor(trxValue) {
     }
   }
   
-
   
 </script>

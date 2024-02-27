@@ -176,7 +176,8 @@ def retrieve_data(id):
             sec_value = row[25]
             price_value = row[26]
             lang = row[27]
-
+          
+            asset_type = None
             if gr_value == '2' and lang==0:
                 asset_type = "Crypto"
             elif gr_value == '2' and lang==1:
