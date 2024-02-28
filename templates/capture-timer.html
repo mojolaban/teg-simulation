@@ -1,56 +1,54 @@
 <script>
+  //------------ Remove comma function
 
-
-    '''
-    function rc(numberString) {
-      return parseFloat(numberString.toString().replace(/[,\.]/g, ''));
-    }
-  '''
-  
-  function removeComma(numberString) {
-    return parseFloat(numberString.toString().replace(/,/g, ''));
-  }
-
-  function removeDot(numberString) {
-    return parseFloat(numberString.toString().replace(/\./g, ''));
-  }
   function rc(numberString) {
-    // Adjusted to use removeComma or removeDot based on lang value
-    if (lang === 0) {
-      return removeComma(numberString);
-    } else if (lang === 1) {
-      return removeDot(numberString);
-    }
+    return parseFloat(numberString.toString().replace(/[,\.]/g, ''));
   }
-  
-  //------------ Format number function
-  function formatNumber(value) {
-    if (value < 0) {
-      return "(" + Math.abs(value).toLocaleString() + ")";
-    } else {
-      return value.toLocaleString();
-    }
-  }
-  //------------ Format number function - English
+
+
+  //------------ Format number function 
   function formatNumberEn(value) {
     if (value < 0) {
       return "(" + Math.abs(value).toLocaleString('en-US') + ")";
     } else {
-      return value.toLocaleString('en-US');
+      return Math.abs(value).toLocaleString('en-US');
     }
   }
 
-  //------------ Format number function - Indonesian
+  //------------ Format number function
   function formatNumberId(value) {
     if (value < 0) {
       return "(" + Math.abs(value).toLocaleString('id-ID') + ")";
     } else {
-      return value.toLocaleString('id-ID');
+      return Math.abs(value).toLocaleString('id-ID'); 
     }
   }
+  function fn(value) {
+    var locale = lang == "0" ? "en-US" : "id-ID"; // Assuming '0' is for English and '1' for Indonesian
+    if (value < 0) {
+      return "(" + Math.abs(value).toLocaleString(locale) + ")";
+    } else {
+      return Math.abs(value).toLocaleString(locale);
+    }
+  }
+  
+  function cdtn(decimalStr) {
+      // Assuming lang is defined earlier in the scope
+      // Check if the language or locale uses a comma as the decimal separator
+      let decimalPoint = lang === '0' ? '.' : ',';
 
+      // If lang is '0', it implies dot is used as decimal separator, so no replacement needed.
+      // Otherwise, replace comma with dot if necessary, to ensure JavaScript can parse it.
+      let normalizedDecimalStr = lang === '0' ? decimalStr : decimalStr.replace(/,/g, '.');
+
+      // Parse the normalized string as a float
+      let numericValue = parseFloat(normalizedDecimalStr);
+
+      return numericValue;
+  }
+
+  
   //------------ Timer countdown function
-  var timer = 1; /* 40 seconds */
   var timer = 40; /* 40 seconds */
   var timerText = document.getElementById("countdown");
   var userid = document.getElementById("id").textContent; // Define userid here
@@ -59,16 +57,20 @@
     if (timer === 0) {
       clearInterval(countdown); /* End */
       timerText.innerHTML = "0";
+      console.log("User ID:", userid); // Debug statement to log the userid
       window.location.href = "/tr?id=" + encodeURIComponent(userid); // Pass the id as a query parameter in the URL
     } else {
       timer -= 1; /* Countdown */
       timerText.innerHTML = timer;
     }
   }, 1000); /* Milliseconds */
+
+
   // ------------ Button color changing
 function updateButtonColor(trxValue) {
   const buyButton = document.getElementById("buyButton");
   const sellButton = document.getElementById("sellButton");
+
   if (trxValue === 1 || trxValue === 3) {
     buyButton.style.backgroundColor = "rgb(40, 180, 120)";
     buyButton.style.color = "white";
@@ -76,6 +78,7 @@ function updateButtonColor(trxValue) {
     buyButton.style.backgroundColor = "white";
     buyButton.style.color = "black"; 
   }
+
   if (trxValue === 0 || trxValue === 2 || trxValue === 4) {
     sellButton.style.backgroundColor = "rgb(40, 180, 120)";
     sellButton.style.color = "white";
@@ -84,13 +87,19 @@ function updateButtonColor(trxValue) {
     sellButton.style.color = "black";
   }
 }
+
   
+
   //------------ Execute transaction function
+
   // Add event listener to the "sellButton" button
   const sellButton = document.getElementById("sellButton");
   sellButton.addEventListener("click", handleSellButtonClick);
   const buyButton = document.getElementById("buyButton");
   buyButton.addEventListener("click", handleBuyButtonClick);
+
+
+//------------ SELL BUTTON FUNCTION
   
   function handleSellButtonClick() {
     var trxValue = document.getElementById("trx").textContent;
@@ -123,10 +132,13 @@ function updateButtonColor(trxValue) {
       var penaltyValue = document.getElementById("penalty").textContent;
       var rGainFinalValue = document.getElementById("r_gain_final").textContent;
       var lang = document.getElementById("lang").textContent;
-      
+
       trxValue = (parseInt(trxValue) + 1) % 6;
+
+
         // Call the function to update button colors
         updateButtonColor(trxValue);
+
       if (trxValue % 2 !== 0) {
         // if trx is odd
         buyPrevValue = rc(buyValue);
@@ -135,19 +147,23 @@ function updateButtonColor(trxValue) {
         buyPrevValue = rc(priceValue);
       }
       buyValue = rc(buyPrevValue);
-      if (posValue === "SELL") {
+
+      if (posValue === "SELL" || posValue === "JUAL") {
         posValue = "b";
-        cryptoPrevValue = cryptoValue;
+        cryptoPrevValue = cdtn(cryptoValue);
         cryptoValue = 0.0;
         fiatPrevValue = rc(fiatValue);
-        fiatValue = rc(cryptoPrevValue) * rc(priceValue);
+        fiatValue = cryptoPrevValue * rc(priceValue);
         sellValue = rc(priceValue);
         tGainValue = rc(sellValue) - rc(buyValue);
         if (tGainValue > 0) {
-          tTaxValue = 0.2 * rc(tGainValue);
+          tTaxValue = (0.2 * rc(tGainValue)) | 0;
+          tGainNetValue = tGainValue - rc(tTaxValue);
+        } else {
+          tTaxValue = 0;
+          tGainNetValue = tGainValue; // No tax if there's no gain
         }
-        tGainNetValue = rc(tGainValue) - rc(tTaxValue);
-      } else if (posValue === "BUY") {
+      } else if (posValue === "BUY" || posValue === "BELI") {
         posValue = "s";
         cryptoPrevValue = cryptoValue;
         fiatPrevValue = rc(fiatValue);
@@ -158,16 +174,18 @@ function updateButtonColor(trxValue) {
         tTaxValue = 0;
         tGainNetValue = 0;
       }
+
       if (trxValue >= 1 && trxValue <= 5) {
         rGainPrevValue = rc(rGainValue);
         rGainValue = rc(tGainValue) + rc(rGainPrevValue);
-        rTaxPrevValue = 0.2 * rc(rGainPrevValue);
-        rTaxValue = 0.2 * rc(rGainValue);
-        rGainNetValue = rc(rGainValue) - rc(rTaxValue);
+        rTaxPrevValue = ( 0.2 * rc(rGainPrevValue) ) | 0;
+        rTaxValue = ( 0.2 * rc(rGainValue) ) | 0;
+        rGainNetValue = rGainValue - rTaxValue;
       } else {
         rGainValue = 0;
         rTaxValue = 0;
       }
+
       fetch("/sendData", {
         method: "POST",
         headers: {
@@ -201,12 +219,13 @@ function updateButtonColor(trxValue) {
           auditValue: auditValue,
           penaltyValue: penaltyValue,
           rGainFinalValue: rGainFinalValue,
-          lang : lang,
+          lang: lang,
         }),
       })
         .then((response) => response.json())
         .then((data) => {
           // Handle the response from your endpoint if needed
+
           const roundElement = document.getElementById("round");
           const grElement = document.getElementById("gr");
           const idElement = document.getElementById("id");
@@ -234,27 +253,28 @@ function updateButtonColor(trxValue) {
           const penaltyElement = document.getElementById("penalty");
           const rGainFinalElement = document.getElementById("r_gain_final");
           const lang = document.getElementById("lang");
+
           // Below are the elements shown in HTML from the updated database:
           lang.innerHTML = data.lang;
           roundElement.innerHTML = data.round;
           grElement.innerHTML = data.gr;
           idElement.innerHTML = data.id;
           trxElement.innerHTML = data.trx;
-          cryptoElement.textContent = data["crypto"];
-          fiatElement.textContent = (data.lang === 1) ? formatNumberId(data["fiat"]) : formatNumberEn(data["fiat"]);
-          buyElement.innerHTML = (data.lang === 1) ? formatNumberId(data.buy) : formatNumberEn(data.buy);
-          sellElement.innerHTML = (data.lang === 1) ? formatNumberId(data.sell) : formatNumberEn(data.sell);
+          cryptoElement.textContent = fn(data["crypto"]);
+          fiatElement.textContent = fn(data["fiat"]);
+          buyElement.innerHTML = fn(data.buy);
+          sellElement.innerHTML = fn(data.sell);
           posElement.innerHTML = data.pos;
-          tGainElement.innerHTML = (data.lang === 1) ? formatNumberId(data.t_gain) : formatNumberEn(data.t_gain);
-          rGainElement.innerHTML = (data.lang === 1) ? formatNumberId(data.r_gain) : formatNumberEn(data.r_gain);
-          tTaxElement.innerHTML = (data.lang === 1) ? formatNumberId(data.t_tax) : formatNumberEn(data.t_tax);
+          tGainElement.innerHTML = fn(data.t_gain);
+          rGainElement.innerHTML =fn(data.r_gain);
+          tTaxElement.innerHTML = fn(data.t_tax);
           assetTypeElement.innerHTML = data.asset_type;
           fiatPrevElement.innerHTML = data.fiat_prev;
           cryptoPrevElement.innerHTML = data.crypto_prev;
           buyPrevElement.innerHTML = data.buy_prev;
-          rTaxElement.innerHTML = (data.lang === 1) ? formatNumberId(data.r_tax) : formatNumberEn(data.r_tax);
-          rGainNetElement.innerHTML = (data.lang === 1) ? formatNumberId(data.r_gain_net) : formatNumberEn(data.r_gain_net);
-          tGainNetElement.innerHTML = (data.lang === 1) ? formatNumberId(data.t_gain_net) : formatNumberEn(data.t_gain_net);
+          rTaxElement.innerHTML = fn(data.r_tax);
+          rGainNetElement.innerHTML = fn(data.r_gain_net);
+          tGainNetElement.innerHTML = fn(data.t_gain_net);
           rGainPrevElement.innerHTML = data.r_gain_prev;
           rTaxPrevElement.innerHTML = data.r_tax_prev;
           taxDisclosElement.innerHTML = data.tax_disclos;
@@ -262,12 +282,18 @@ function updateButtonColor(trxValue) {
           auditElement.innerHTML = data.audit;
           penaltyElement.innerHTML = data.penalty;
           rGainFinalElement.innerHTML = data.r_gain_final;
+
         })
         .catch((error) => {
           console.error("Error:", error);
         });
     }
   }
+
+
+//------------ BUY BUTTON FUNCTION
+
+  
   function handleBuyButtonClick() {
     var trxValue = document.getElementById("trx").textContent;
 //    var trxValue = data.trx;
@@ -299,10 +325,12 @@ function updateButtonColor(trxValue) {
       var penaltyValue = document.getElementById("penalty").textContent;
       var rGainFinalValue = document.getElementById("r_gain_final").textContent;
       var lang = document.getElementById("lang").textContent;
-      
+
       trxValue = (parseInt(trxValue) + 1) % 6;
+
       // Call the function to update button colors
         updateButtonColor(trxValue);
+
       if (trxValue % 2 !== 0) {
         // if trx is odd
         buyPrevValue = rc(buyValue);
@@ -311,19 +339,23 @@ function updateButtonColor(trxValue) {
         buyPrevValue = rc(priceValue);
       }
       buyValue = rc(buyPrevValue);
-      if (posValue === "SELL") {
+
+      if (posValue === "SELL" || posValue === "JUAL") {
         posValue = "b";
-        cryptoPrevValue = cryptoValue;
+        cryptoPrevValue = cdtn(cryptoValue);
         cryptoValue = 0.0;
         fiatPrevValue = rc(fiatValue);
-        fiatValue = rc(cryptoPrevValue) * rc(priceValue);
+        fiatValue = cryptoPrevValue * rc(priceValue);
         sellValue = rc(priceValue);
         tGainValue = rc(sellValue) - rc(buyValue);
         if (tGainValue > 0) {
-          tTaxValue = 0.2 * rc(tGainValue);
+          tTaxValue = (0.2 * rc(tGainValue)) | 0;
+          tGainNetValue = tGainValue - rc(tTaxValue);
+        } else {
+          tTaxValue = 0;
+          tGainNetValue = tGainValue; // No tax if there's no gain
         }
-        tGainNetValue = rc(tGainValue) - rc(tTaxValue);
-      } else if (posValue === "BUY") {
+      } else if (posValue === "BUY" || posValue === "BELI") {
         posValue = "s";
         cryptoPrevValue = cryptoValue;
         fiatPrevValue = rc(fiatValue);
@@ -334,16 +366,18 @@ function updateButtonColor(trxValue) {
         tTaxValue = 0;
         tGainNetValue = 0;
       }
+
       if (trxValue >= 1 && trxValue <= 5) {
         rGainPrevValue = rc(rGainValue);
         rGainValue = rc(tGainValue) + rc(rGainPrevValue);
-        rTaxPrevValue = 0.2 * rc(rGainPrevValue);
-        rTaxValue = 0.2 * rc(rGainValue);
-        rGainNetValue = rc(rGainValue) - rc(rTaxValue);
+        rTaxPrevValue = ( 0.2 * rc(rGainPrevValue) ) | 0;
+        rTaxValue = (0.2 * rc(rGainValue))| 0;
+        rGainNetValue = rGainValue - rTaxValue;
       } else {
         rGainValue = 0;
         rTaxValue = 0;
       }
+
       fetch("/sendData", {
         method: "POST",
         headers: {
@@ -377,12 +411,13 @@ function updateButtonColor(trxValue) {
           auditValue: auditValue,
           penaltyValue: penaltyValue,
           rGainFinalValue: rGainFinalValue,
-          lang : lang,
+          lang: lang,
         }),
       })
         .then((response) => response.json())
         .then((data) => {
           // Handle the response from your endpoint if needed
+
           const roundElement = document.getElementById("round");
           const grElement = document.getElementById("gr");
           const idElement = document.getElementById("id");
@@ -410,27 +445,28 @@ function updateButtonColor(trxValue) {
           const penaltyElement = document.getElementById("penalty");
           const rGainFinalElement = document.getElementById("r_gain_final");
           const lang = document.getElementById("lang");
+
           // Below are the elements shown in HTML from the updated database:
           lang.innerHTML = data.lang;
           roundElement.innerHTML = data.round;
           grElement.innerHTML = data.gr;
           idElement.innerHTML = data.id;
           trxElement.innerHTML = data.trx;
-          cryptoElement.textContent = data["crypto"];
-          fiatElement.textContent = (data.lang === 1) ? formatNumberId(data["fiat"]) : formatNumberEn(data["fiat"]);
-          buyElement.innerHTML = (data.lang === 1) ? formatNumberId(data.buy) : formatNumberEn(data.buy);
-          sellElement.innerHTML = (data.lang === 1) ? formatNumberId(data.sell) : formatNumberEn(data.sell);
+          cryptoElement.textContent = fn(data["crypto"]);
+          fiatElement.textContent = fn(data["fiat"]);
+          buyElement.innerHTML = fn(data.buy);
+          sellElement.innerHTML = fn(data.sell);
           posElement.innerHTML = data.pos;
-          tGainElement.innerHTML = (data.lang === 1) ? formatNumberId(data.t_gain) : formatNumberEn(data.t_gain);
-          rGainElement.innerHTML = (data.lang === 1) ? formatNumberId(data.r_gain) : formatNumberEn(data.r_gain);
-          tTaxElement.innerHTML = (data.lang === 1) ? formatNumberId(data.t_tax) : formatNumberEn(data.t_tax);
+          tGainElement.innerHTML = fn(data.t_gain);
+          rGainElement.innerHTML = fn(data.r_gain);
+          tTaxElement.innerHTML = fn(data.t_tax);
           assetTypeElement.innerHTML = data.asset_type;
           fiatPrevElement.innerHTML = data.fiat_prev;
           cryptoPrevElement.innerHTML = data.crypto_prev;
           buyPrevElement.innerHTML = data.buy_prev;
-          rTaxElement.innerHTML = (data.lang === 1) ? formatNumberId(data.r_tax) : formatNumberEn(data.r_tax);
-          rGainNetElement.innerHTML = (data.lang === 1) ? formatNumberId(data.r_gain_net) : formatNumberEn(data.r_gain_net);
-          tGainNetElement.innerHTML = (data.lang === 1) ? formatNumberId(data.t_gain_net) : formatNumberEn(data.t_gain_net);
+          rTaxElement.innerHTML = fn(data.r_tax);
+          rGainNetElement.innerHTML = fn(data.r_gain_net);
+          tGainNetElement.innerHTML = fn(data.t_gain_net);
           rGainPrevElement.innerHTML = data.r_gain_prev;
           rTaxPrevElement.innerHTML = data.r_tax_prev;
           taxDisclosElement.innerHTML = data.tax_disclos;
@@ -438,6 +474,7 @@ function updateButtonColor(trxValue) {
           auditElement.innerHTML = data.audit;
           penaltyElement.innerHTML = data.penalty;
           rGainFinalElement.innerHTML = data.r_gain_final;
+
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -445,5 +482,6 @@ function updateButtonColor(trxValue) {
     }
   }
   
+
   
 </script>

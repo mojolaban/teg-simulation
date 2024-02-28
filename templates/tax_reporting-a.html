@@ -295,7 +295,7 @@
               </div>
             </div>
             <!-- The Submit Button -->
-                <form action="/tax_disclosure" > <!-- method="POST" -->
+                <form action="/tax_disclosure" method ="POST" > <!-- method="POST" -->
             <div id="reporting-box" class="mx-auto" style="height: 100px; width: 400px;
             background-color: black;
             border: 1px solid black;
@@ -338,6 +338,7 @@
               <div class="col-5 d-flex justify-content-center">
 
                 <input type="hidden" name="id" value= {{summary_data.id}}>
+                <input type="hidden" name="lang" value= {{summary_data.lang}}>
                 
                 <button type="submit" id="reportTaxesButton"
                   style="margin-left: 0px;
@@ -372,7 +373,7 @@
                   padding: 10px;">
                   <p style="line-height:0.5;font-size:40px;
                     margin: 0;color: rgb(40, 180, 120);text-align: left;">
-                    <i>f</i> <span id="expected_fiat">{{"{:,.0f}".format(summary_data['r_gain'])}}</span></p>
+                    <i>f</i> <span id="expected_fiat">{{"{:,.0f}".format(summary_data['r_gain'])|replace(",", "X")|replace(".", ",")|replace("X", ".") }}</span></p>
 
                 </div>
 
@@ -396,7 +397,7 @@
   <script>
 // Input Number Validation
       function formatNumber(value) {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
       }
 
       function updateTextView(_obj) {
@@ -411,7 +412,7 @@
       function getNumber(_str) {
         var arr = _str.replace(/,/g, '').split('');
         var out = new Array();
-        for (var cnt = 0; cnt < arr.length && cnt < 7; cnt++) {
+        for (var cnt = 0; cnt < arr.length && cnt < 8; cnt++) {
           if (!isNaN(arr[cnt])) {
             out.push(arr[cnt]);
           }
@@ -423,15 +424,23 @@
       
       var showTotalsFlag = false;
 
-      function showTotals() {
-        if (!showTotalsFlag) {
-          $('#fiat').text("{{ '{:,.0f}'.format(summary_data['fiat']) }}");
-          $('#crypto').text("{{ summary_data['crypto'] }}");
-          $('#r_gain').text("{{ '{:,.0f}'.format(summary_data['r_gain']) }}");
-          $('#r_gain_net').text("{{ '{:,.0f}'.format(summary_data['r_gain_net']) }}");
-          $('#r_tax').text("{{ '{:,.0f}'.format(summary_data['r_tax']) }}");
-        }
+    function showTotals() {
+      if (!showTotalsFlag) {
+        // Create a formatter for Indonesian locale
+        var formatter = new Intl.NumberFormat('id-ID', {
+          minimumFractionDigits: 0, // Adjust as necessary for decimal places
+          maximumFractionDigits: 0, // Adjust as necessary for decimal places
+        });
+
+        // Format each number and update the text content
+        $('#fiat').text(formatter.format({{ summary_data['fiat'] }}));
+        $('#crypto').text(formatter.format({{ summary_data['crypto'] }}));
+        $('#r_gain').text(formatter.format({{ summary_data['r_gain'] }}));
+        $('#r_gain_net').text(formatter.format({{ summary_data['r_gain_net'] }}));
+        $('#r_tax').text(formatter.format({{ summary_data['r_tax'] }}));
       }
+    }
+
 
       function hideTotals() {
         if (!showTotalsFlag) {
@@ -446,7 +455,7 @@
 // Enter Input to "Reporting Taxes" 
       $(document).ready(function () {
         $('input[type=text]').on('input', function () {
-          var maxDigits = 8;
+          var maxDigits = 9;
           var inputValue = $(this).val();
           if (inputValue.length > maxDigits) {
             $(this).val(inputValue.slice(0, maxDigits+1));
@@ -462,13 +471,13 @@
         if (input === "") {
           expectedFiat.textContent = formatNumber(rGain);
         } else {
-          var inputNumber = parseInt(input.substring(0, 7));
+          var inputNumber = parseInt(input.substring(0, 9));
           expectedFiat.textContent = formatNumber(rGain - inputNumber);
         }
 
         // Validate input
         var inputLength = this.value.trim().replace(/,/g, '').length;
-        if (isNaN(inputNumber) || inputLength > 8) {
+        if (isNaN(inputNumber) || inputLength > 9) {
           this.setCustomValidity("Please enter a valid number up to 7 digits.");
         } else {
           this.setCustomValidity("");
@@ -481,14 +490,17 @@
         
      $('form').on('submit', function () {
         var id = "{{ summary_data['id'] }}";
+        var lang = "{{ summary_data['lang'] }}";
         var taxInput = $('#tax-input').val();
        
         $('#id').text(id);
+        $ ( '#tax_disclos' ).text(lang)
         $('#tax_disclos').text(taxInput);
 
         
       // Include the "id" value in the form submission
         $('form').append('<input type="hidden" name="id" value="' + id + '">');
+        $('form').append('<input type="hidden" name="lang" value="' + lang + '">');
         $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">');
  
       

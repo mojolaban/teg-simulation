@@ -2,6 +2,7 @@ from flask import Flask, redirect, render_template, request, jsonify, session, u
 from database import engine, insert_group_treatment, fetch_init_data, retrieve_data, insert_demog, insert_group_lang
 from sqlalchemy import text
 from datetime import datetime
+from decimal import Decimal
 import json
 import random
 
@@ -214,6 +215,19 @@ def tryout():
           # Handle unsupported asset types
           return "Unsupported asset type"
   
+# Custom Jinja filter
+def format_crypto(value, lang):
+    if isinstance(value, Decimal):
+        # Format based on language
+        if lang == 1:  # Indonesian
+            return "{:,.2f}".format(value).replace(",", "X").replace(".", ",").replace("X", ".")
+        else:  # Default to English
+            return "{:,.2f}".format(value)
+    return value
+
+app.jinja_env.filters['format_crypto'] = format_crypto
+
+
 #----Insert initial game data from db to html
 @app.route("/start", methods=['GET', 'POST'])
 def starting_game():
@@ -276,7 +290,16 @@ def send_games_data():
   
   trx_value = data.get('trxValue')
   round_value = data.get('roundValue')
-  crypto_prev_value = data.get('cryptoPrevValue').replace('\n', '').strip()
+  
+#  crypto_prev_value = data.get('cryptoPrevValue').replace('\n', '').strip()
+  
+  crypto_prev_value_raw = data.get('cryptoPrevValue')  
+  # Check if the value is a string and clean it; otherwise, handle it as an integer
+  if isinstance(crypto_prev_value_raw, str):
+      crypto_prev_value = crypto_prev_value_raw.replace('\n', '').strip()
+  else:  # If it's not a string, assume it's an integer
+      crypto_prev_value = crypto_prev_value_raw  # Use the integer value directly  
+    
   fiat_prev_value = data.get('fiatPrevValue')
 #  crypto_value = data.get('cryptoValue').replace('\n', '').strip()
   crypto_value_raw = data.get('cryptoValue')  
@@ -286,8 +309,6 @@ def send_games_data():
   else:  # If it's not a string, assume it's an integer
       crypto_value = crypto_value_raw  # Use the integer value directly  
 
-  
-  
   #  fiat_value = data.get('fiatValue').replace('\n', '').strip()
   fiat_value_raw = data.get('fiatValue')  
   # Check if the value is a string and clean it; otherwise, handle it as an integer
@@ -296,7 +317,7 @@ def send_games_data():
   else:  # If it's not a string, assume it's an integer
       fiat_value = fiat_value_raw  # Use the integer value directly   
 
-
+#  fiat_value = data.get('fiatValue')  
   
   buy_prev_value = data.get('buyPrevValue')
 #  sell_value = data.get('sellValue').replace('\n', '').strip()
@@ -341,7 +362,6 @@ def send_games_data():
   audit_value =data.get('auditValue')
 #  penalty_value =data.get('penaltyValue')
 #  r_gain_final_value =data.get('rGainFinalValue')
-
   
   with engine.connect() as conn:
     conn.execute(text("INSERT INTO `teg-simulation-sandbox`.`responses` (`sec`,`price`,`id`, `gr`, `pos`, `trx`, `round`, `crypto_prev`, `fiat_prev`,`crypto`, `fiat`, `buy_prev`, `buy`, `sell`, `t_gain`,`t_tax`, `t_gain_net`, `r_gain`, `r_gain_prev`, `r_tax`, `r_tax_prev`, `r_gain_net`, `tax_disclos`,`audit`, `lang`) VALUES (:sec, :price, :id, :gr, :pos, :trx, :round, :crypto_prev, :fiat_prev, :crypto, :fiat, :buy_prev,:buy, :sell, :t_gain, :t_tax, :t_gain_net, :r_gain, :r_gain_prev, :r_tax, :r_tax_prev, :r_gain_net, :tax_disclos,:audit,:lang)"), {"sec": timer_value, "price": price_value, "id": user_id, "gr" : group_id, "pos" : pos_value, "trx" : trx_value, "round" : round_value, "crypto_prev" :crypto_prev_value,  "fiat_prev" :fiat_prev_value, "crypto" :crypto_value,  "fiat" :fiat_value, "buy_prev":buy_prev_value,"buy":buy_value, "sell":sell_value, "t_gain":t_gain_value, "t_tax":t_tax_value, "t_gain_net": t_gain_net_value, "r_gain": r_gain_value, "r_gain_prev": r_gain_prev_value, "r_tax": r_tax_value, "r_tax_prev": r_tax_prev_value,"r_gain_net": r_gain_net_value,"tax_disclos": tax_disclos_value,"audit": audit_value, "lang": lang})
@@ -474,53 +494,60 @@ def tax_reporting():
       return "Error: Invalid ID"
 
 #----Sending data from tax reporting page to db, then show them to audit page
-@app.route("/tax_disclosure")
-def tax_disclosure():
-    data = request.args
-    userid = data['id']
-    taxdisclos = data['tax_disclos'].replace(',', '')
-    audit_value = 0 if random.random() < 0.8 else 1 # 20% chance of audit
-    print("Reported Data:")
-    print(f"UserID: {userid}")
-    print(f"Audit: {audit_value}")
-    print(f"Tax Disclos: {taxdisclos}")
+      @app.route("/tax_disclosure", methods=["POST"])
+      def tax_disclosure():
+          # Using request.form for POST request data
+          userid = request.form.get('id')
+          lang = request.form.get('lang')
+          taxdisclos = request.form.get('tax_disclos', '').replace(',', '')
+          audit_value = 0 if random.random() < 0.8 else 1  # 20% chance of audit
 
-    with engine.connect() as conn:
-        update_statement = text("""
-            UPDATE `teg-simulation-sandbox`.`responses`
-            SET `tax_disclos` = :new_tax_disclos_value, `audit` = :audit_value
-            WHERE `id` = :user_id
-            ORDER BY `ts` DESC
-            LIMIT 1
-        """)
-        conn.execute(
-            update_statement,
-            {"new_tax_disclos_value": taxdisclos, "audit_value": audit_value, "user_id": userid}
-        )
+          if not userid or not lang or taxdisclos is None:
+              return "Missing data", 400  # Bad Request
 
-        select_statement_1 = text("""
-            SELECT `round`, `audit`
-            FROM `teg-simulation-sandbox`.`responses`
-            WHERE `id` = :user_id
-            ORDER BY `ts` DESC
-            LIMIT 1
-        """)
-        result_1 = conn.execute(select_statement_1, {"user_id": userid})
-        latest_round, latest_audit = result_1.fetchone()
+          print("Reported Data:")
+          print(f"UserID: {userid}, Audit: {audit_value}, Tax Disclos: {taxdisclos}, Lang: {lang}")
 
-        print("Latest Data:")
-        print(f"Round: {latest_round}")
-        print(f"Audit: {latest_audit}")
+          with engine.begin() as conn:  # Use 'begin()' for automatic transaction management
+              update_statement = text("""
+                  UPDATE `teg-simulation-sandbox`.`responses`
+                  SET `tax_disclos` = :new_tax_disclos_value, `audit` = :audit_value
+                  WHERE `id` = :user_id
+                  ORDER BY `ts` DESC
+                  LIMIT 1
+              """)
+              conn.execute(update_statement, {"new_tax_disclos_value": taxdisclos, "audit_value": audit_value, "user_id": userid})
 
-        if latest_audit == 1:
+              select_statement = text("""
+                  SELECT `round`, `audit`
+                  FROM `teg-simulation-sandbox`.`responses`
+                  WHERE `id` = :user_id
+                  ORDER BY `ts` DESC
+                  LIMIT 1
+              """)
+              result = conn.execute(select_statement, {"user_id": userid})
+              latest_round, latest_audit = result.fetchone()
+
+          print("Latest Data:", f"Round: {latest_round}, Audit: {latest_audit}")
+
+          if latest_audit == 1 and lang == 0:
             response = retrieve_data(userid)
             response_data = response.json
             return render_template("tax_audit_1.html", summary_data=response_data)
-        elif latest_audit == 0:
+          elif latest_audit == 1 and lang == 1:
+            response = retrieve_data(userid)
+            response_data = response.json
+            return render_template("tax_audit-a.html", summary_data=response_data)
+          elif latest_audit == 0 and lang ==0:
             response = retrieve_data(userid)
             response_data = response.json
             return render_template("tax_audit_0.html", summary_data=response_data)
- 
+          elif latest_audit == 0 and lang == 1:
+            response = retrieve_data(userid)
+            response_data = response.json
+            return render_template("tax_audit-a.html", summary_data=response_data)
+
+       
 
 #            select_statement_2 = text("""
 #                SELECT `round`, `r_gain_final`

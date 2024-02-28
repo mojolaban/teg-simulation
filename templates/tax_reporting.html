@@ -338,6 +338,7 @@
               <div class="col-5 d-flex justify-content-center">
 
                 <input type="hidden" name="id" value= {{summary_data.id}}>
+                <input type="hidden" name="lang" value= {{summary_data.lang}}>
                 
                 <button type="submit" id="reportTaxesButton"
                   style="margin-left: 0px;
@@ -480,17 +481,19 @@
 //Press "Report Taxes"
         
      $('form').on('submit', function () {
-        var id = "{{ summary_data['id'] }}";
-        var taxInput = $('#tax-input').val();
-       
-        $('#id').text(id);
-        $('#tax_disclos').text(taxInput);
+       var id = "{{ summary_data['id'] }}";
+       var lang = "{{ summary_data['lang'] }}";
+       var taxInput = $('#tax-input').val();
 
-        
-      // Include the "id" value in the form submission
-        $('form').append('<input type="hidden" name="id" value="' + id + '">');
-        $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">');
- 
+       $('#id').text(id);
+       $ ( '#tax_disclos' ).text(lang)
+       $('#tax_disclos').text(taxInput);
+
+
+       // Include the "id" value in the form submission
+       $('form').append('<input type="hidden" name="id" value="' + id + '">');
+       $('form').append('<input type="hidden" name="lang" value="' + lang + '">');
+       $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">'); 
       
         });
 

@@ -184,7 +184,7 @@
                     <div class="col-3">
                      <p id="crypto" style="font-size:11px;line-height:2;
                       margin: 0;color: rgb(80,80,80);">
-                       {{ data['crypto']}}</p>
+                       {{ data['crypto'] | format_crypto(data['lang']) }}</p>
                     </div>
                   </div>
                 </div>
