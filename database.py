@@ -31,8 +31,9 @@ def insert_group_lang(lang):
                  {"treatment": treatment, "id": random_id, "lang": lang_value})
     # Create a dictionary with the treatment, id, and lang values
     treatment_dict = {"treatment": treatment, "id": random_id, "lang": lang_value}
-
+  
   return treatment_dict
+  
 
 
 #----1. Assign random to treatment, start inserting initial data to db

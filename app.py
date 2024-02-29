@@ -486,66 +486,89 @@ def tax_reporting():
     response_data =  response.json  # Convert the content to a dictionary
     print("Summary Data:", response_data)
     print("Language:",  response_data['lang'])
-    if response_data['lang'] == 0:
-      return render_template('tax_reporting.html', summary_data=response_data)
-    elif response_data['lang'] == 1:
-      return render_template('tax_reporting-a.html', summary_data=response_data)
-    else: 
-      return "Error: Invalid ID"
-
+    # Determine the template based on the language
+    template_name = 'tax_reporting-a.html' if response_data['lang'] == 1 else 'tax_reporting.html'
+    # Check for valid ID indirectly by ensuring 'lang' is present and correctly set
+    if 'lang' in response_data and response_data['lang'] in [0, 1]:
+        return render_template(template_name, summary_data=response_data)
+    else:
+        return "Error: Invalid ID"
+  
 #----Sending data from tax reporting page to db, then show them to audit page
-      @app.route("/tax_disclosure", methods=["POST"])
-      def tax_disclosure():
-          # Using request.form for POST request data
-          userid = request.form.get('id')
-          lang = request.form.get('lang')
-          taxdisclos = request.form.get('tax_disclos', '').replace(',', '')
-          audit_value = 0 if random.random() < 0.8 else 1  # 20% chance of audit
+@app.route("/tax_disclosure", methods=["GET","POST"])
+def tax_disclosure():
+    if request.method == "POST":
+      # Handling POST request data
+      userid = request.form.get('id')
+      lang = request.form.get('lang')
+      taxdisclos = request.form.get('tax_disclos', '').replace(',', '')
+      audit_value = 0 if random.random() < 0.8 else 1  # 20% chance of audit
 
-          if not userid or not lang or taxdisclos is None:
-              return "Missing data", 400  # Bad Request
+      if not userid or not lang or taxdisclos is None:
+          return "Missing data", 400  # Bad Request
+        
+      print("Reported Data:")
+      print(f"UserID: {userid}, Audit: {audit_value}, Tax Disclos: {taxdisclos}, Lang: {lang}")
 
-          print("Reported Data:")
-          print(f"UserID: {userid}, Audit: {audit_value}, Tax Disclos: {taxdisclos}, Lang: {lang}")
+      with engine.begin() as conn:  # Use 'begin()' for automatic transaction management
+          update_statement = text("""
+              UPDATE `teg-simulation-sandbox`.`responses`
+              SET `tax_disclos` = :new_tax_disclos_value, `audit` = :audit_value
+              WHERE `id` = :user_id
+              ORDER BY `ts` DESC
+              LIMIT 1
+          """)
+          conn.execute(update_statement, {"new_tax_disclos_value": taxdisclos, "audit_value": audit_value, "user_id": userid})
 
-          with engine.begin() as conn:  # Use 'begin()' for automatic transaction management
-              update_statement = text("""
-                  UPDATE `teg-simulation-sandbox`.`responses`
-                  SET `tax_disclos` = :new_tax_disclos_value, `audit` = :audit_value
-                  WHERE `id` = :user_id
-                  ORDER BY `ts` DESC
-                  LIMIT 1
-              """)
-              conn.execute(update_statement, {"new_tax_disclos_value": taxdisclos, "audit_value": audit_value, "user_id": userid})
+          select_statement = text("""
+              SELECT `round`, `audit`
+              FROM `teg-simulation-sandbox`.`responses`
+              WHERE `id` = :user_id
+              ORDER BY `ts` DESC
+              LIMIT 1
+          """)
+          result = conn.execute(select_statement, {"user_id": userid})
+          latest_round, latest_audit = result.fetchone()
 
-              select_statement = text("""
-                  SELECT `round`, `audit`
-                  FROM `teg-simulation-sandbox`.`responses`
-                  WHERE `id` = :user_id
-                  ORDER BY `ts` DESC
-                  LIMIT 1
-              """)
-              result = conn.execute(select_statement, {"user_id": userid})
-              latest_round, latest_audit = result.fetchone()
+      print("Latest Data:", f"Round: {latest_round}, Audit: {latest_audit}")
 
-          print("Latest Data:", f"Round: {latest_round}, Audit: {latest_audit}")
+    elif request.method == "GET":
+      # Handling GET request data, if necessary
+      # You can access GET parameters with request.args
+      userid = request.args.get('id')
+      lang = request.args.get('lang')
+      taxdisclos = request.args.get('tax_disclos', '').replace(',', '')
+      audit_value = 0 if random.random() < 0.8 else 1  # 20% chance of audit
 
-          if latest_audit == 1 and lang == 0:
-            response = retrieve_data(userid)
-            response_data = response.json
-            return render_template("tax_audit_1.html", summary_data=response_data)
-          elif latest_audit == 1 and lang == 1:
-            response = retrieve_data(userid)
-            response_data = response.json
-            return render_template("tax_audit-a.html", summary_data=response_data)
-          elif latest_audit == 0 and lang ==0:
-            response = retrieve_data(userid)
-            response_data = response.json
-            return render_template("tax_audit_0.html", summary_data=response_data)
-          elif latest_audit == 0 and lang == 1:
-            response = retrieve_data(userid)
-            response_data = response.json
-            return render_template("tax_audit-a.html", summary_data=response_data)
+      with engine.begin() as conn:  # Use 'begin()' for automatic transaction management
+          update_statement = text("""
+              UPDATE `teg-simulation-sandbox`.`responses`
+              SET `tax_disclos` = :new_tax_disclos_value, `audit` = :audit_value
+              WHERE `id` = :user_id
+              ORDER BY `ts` DESC
+              LIMIT 1
+          """)
+          conn.execute(update_statement, {"new_tax_disclos_value": taxdisclos, "audit_value": audit_value, "user_id": userid})
+
+          select_statement = text("""
+              SELECT `round`, `audit`
+              FROM `teg-simulation-sandbox`.`responses`
+              WHERE `id` = :user_id
+              ORDER BY `ts` DESC
+              LIMIT 1
+          """)
+          result = conn.execute(select_statement, {"user_id": userid})
+          latest_round, latest_audit = result.fetchone()
+
+      print("Latest Data:", f"Round: {latest_round}, Audit: {latest_audit}")
+        
+    # Example conditional rendering based on `latest_audit` and `lang`
+    # Assuming `latest_audit` and `lang` are determined inside your function
+    template_name = f"tax_audit_{'1' if latest_audit == 1 else '0'}{'-a' if lang == '1' else ''}.html"
+    response_data = retrieve_data(userid).json
+    return render_template(template_name, summary_data=response_data)
+        
+
 
        
 

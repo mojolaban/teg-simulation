@@ -335,7 +335,7 @@
                                     </div>
                               </div>
                             </div>
-                            <p id="tooltip" style="font-size:8px; color:rgb(256,256,256);display:none;">(Real Gain < <i>f</i> 1 million: <b>A$ 20</b>; <i>f</i>1-5 million: <b>A$ 40</b>; > <i>f</i> 5 million: <b>A$ 80)</b></p>
+                            <p id="tooltip" style="font-size:8px; color:rgb(256,256,256);display:none;">(Real Gain < <i>f</i> 1 million: <b>A$ 15</b>; <i>f</i>1-5 million: <b>A$ 30</b>; > <i>f</i> 5 million: <b>A$ 60)</b></p>
                           </div>
                    </div>
 
@@ -359,11 +359,11 @@
               <button type="button" id="compensation" name="compensation" placeholder="compensation" style="height: 50px; width: 225px; text-align: center; border-radius: 10px; background:rgb(40, 180, 120);">
                   A$
                   {% if summary_data.r_gain_final < 1000000 %}
-                      20
+                      15
                   {% elif 1000000 <= summary_data.r_gain_final <= 5000000 %}
-                      40
+                      30
                   {% else %}
-                      80
+                      60
                   {% endif %}
               </button>
 
@@ -478,38 +478,6 @@
           $('#r_tax').text('');
         }
       }
-
-// Enter Input to "Reporting Taxes" 
-      $(document).ready(function () {
-        $('input[type=text]').on('input', function () {
-          var maxDigits = 7;
-          var inputValue = $(this).val();
-          if (inputValue.length > maxDigits) {
-            $(this).val(inputValue.slice(0, maxDigits));
-          }
-          updateTextView($(this));
-        });
-
-      document.getElementById("tax-input").addEventListener("input", function () {
-        var input = getNumber(this.value);
-        var expectedFiat = document.getElementById("expected_fiat");
-        var rGain = parseFloat("{{ summary_data['r_gain']|int }}");
-
-        if (input === "") {
-          expectedFiat.textContent = formatNumber(rGain);
-        } else {
-          var inputNumber = parseInt(input.substring(0, 6));
-          expectedFiat.textContent = formatNumber(rGain - inputNumber);
-        }
-
-        // Validate input
-        var inputLength = this.value.trim().replace(/,/g, '').length;
-        if (isNaN(inputNumber) || inputLength > 7) {
-          this.setCustomValidity("Please enter a valid number up to 6 digits.");
-        } else {
-          this.setCustomValidity("");
-        }
-      });
 
 
 

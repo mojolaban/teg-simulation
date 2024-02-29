@@ -82,7 +82,7 @@
         <div class='row'>
           <!-- Round -->
           <div class="col-md-7" style="margin-left: 20px;">
-            <h1>Akhir dari Ronde {{ summary_data['round'] }}<span id="round"> </span></h1>
+            <h1>Akhir Ronde {{ summary_data['round'] }}<span id="round"> </span></h1>
           </div>
           <!-- Timer -->
           <div class="col-md-4">
@@ -159,7 +159,7 @@
                 <div style="text-align: center;">
                   <p style="line-height:2;
                     margin: 0;color: rgb(130,130,130);font-size:12px">
-                    <b>Total Gain</b>
+                    <b>Total Keuntungan</b>
                   </p>
                 </div>
                 <div class="row justify-content-center">
@@ -326,16 +326,41 @@
                               <div class="col-5 d-flex justify-content-center" 
                                 style="font-size: 11px; color: rgb(125, 125, 125);">
                                     <div>
-                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain) }}</span><br>
-                                    <span><u><i>f </i>{{'{:,.0f}'.format(summary_data.tax_disclos|int) }}</u> _</span><br>
-                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain - summary_data.tax_disclos|int) }} </span><br>
-                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.tax_discre) }} </span><br>
-                                      <span><u><i>f </i>{{'{:,.0f}'.format(summary_data.penalty) }}</u> _</span><br>
-                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain_final )  }}</span>
+                                    <span><i>f </i> 
+                                      <span id ="r_gain_displayed">
+                                        '{:,.0f}'.format(summary_data.r_gain) }}
+                                      </span>
+                                    </span><br>
+                                    <span><u><i>f </i>
+                                      <span id="tax_disclos_displayed">
+                                        {{'{:,.0f}'.format(summary_data.tax_disclos |int) }}
+                                      </span>
+                                    </u> _</span><br>
+                                    <span><i>f </i>
+                                      <span id="r_gain_net_displayed">
+                                      {{'{:,.0f}'.format(summary_data.r_gain - summary_data.tax_disclos|int) }}
+                                      </span>
+                                    </span>
+                                      <br>
+                                    <span><i>f </i>
+                                      <span id= "tax_discre_displayed">
+                                      {{'{:,.0f}'.format(summary_data.tax_discre) }}
+                                      </span>
+                                    </span><br>
+                                      <span><u><i>f </i>
+                                        <span id="penalty_displayed">
+                                        {{'{:,.0f}'.format(summary_data.penalty) }}
+                                        </span>
+                                      </u> _</span><br>
+                                    <span><i>f </i>
+                                      <span id="r_gain_final_displayed">
+                                      {{'{:,.0f}'.format(summary_data.r_gain_final )  }}
+                                      </span>                                       
+                                    </span>
                                     </div>
                               </div>
                             </div>
-                            <p id="tooltip" style="font-size:8px; color:rgb(256,256,256);display:none;">(Real Gain < <i>f</i> 1 million: <b>A$ 20</b>; <i>f</i>1-5 million: <b>A$ 40</b>; > <i>f</i> 5 million: <b>A$ 80)</b></p>
+                          <p id="tooltip" style="font-size:8px; color:rgb(256,256,256);display:none;">(Keuntungan Bersih < <i>f</i> 1 juta: <b>Rp 50.000,-</b>; <i>f</i>1-5 juta: <b>Rp 100.000,-</b>; > <i>f</i> 5 juta: <b>Rp 200.000)</b></p>
                           </div>
                    </div>
 
@@ -432,7 +457,7 @@
   <script>
 // Input Number Validation
       function formatNumber(value) {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
       }
 
       function updateTextView(_obj) {
@@ -461,11 +486,18 @@
 
       function showTotals() {
         if (!showTotalsFlag) {
-          $('#fiat').text("{{ '{:,.0f}'.format(summary_data['fiat']) }}");
-          $('#crypto').text("{{ summary_data['crypto'] }}");
-          $('#r_gain').text("{{ '{:,.0f}'.format(summary_data['r_gain']) }}");
-          $('#r_gain_net').text("{{ '{:,.0f}'.format(summary_data['r_gain_net']) }}");
-          $('#r_tax').text("{{ '{:,.0f}'.format(summary_data['r_tax']) }}");
+          // Create an instance of Intl.NumberFormat for Indonesian locale
+          const formatter = new Intl.NumberFormat('id-ID', {
+            minimumFractionDigits: 0, // Adjust this value as needed
+            maximumFractionDigits: 0, // Adjust this value as needed
+          });
+  
+          // Use the formatter to format each number
+          $('#fiat').text(formatter.format(parseInt("{{ summary_data['fiat'] }}", 10)));
+          $('#crypto').text(formatter.format(parseFloat("{{ summary_data['crypto'] }}")));
+          $('#r_gain').text(formatter.format(parseInt("{{ summary_data['r_gain'] }}", 10)));
+          $('#r_gain_net').text(formatter.format(parseInt("{{ summary_data['r_gain_net'] }}", 10)));
+          $('#r_tax').text(formatter.format(parseInt("{{ summary_data['r_tax'] }}", 10)));
         }
       }
 
@@ -573,7 +605,33 @@
     }, function () {
         $('#tooltip').hide();
     });
-      
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Example data - replace these with the actual data from your server
+        var data = {
+            r_gain: {{ summary_data.r_gain }},
+            tax_disclos: {{ summary_data.tax_disclos |int}},
+            r_gain_net: {{ summary_data.r_gain - summary_data.tax_disclos |int}},
+            tax_discre: {{ summary_data.tax_discre }},
+            penalty: {{ summary_data.penalty }},
+            r_gain_final: {{ summary_data.r_gain_final }}
+        };
+
+        // Function to format number with dot as thousand separator
+        function formatNumberWithDot(number) {
+            return new Intl.NumberFormat('id-ID').format(number);
+        }
+
+        // Formatting and setting the values
+        document.getElementById("r_gain_displayed").innerText = formatNumberWithDot(data.r_gain);
+        document.getElementById("tax_disclos_displayed").innerText = formatNumberWithDot(data.tax_disclos);
+        document.getElementById("r_gain_net_displayed").innerText = formatNumberWithDot(data.r_gain_net);
+        document.getElementById("tax_discre_displayed").innerText = formatNumberWithDot(data.tax_discre);
+        document.getElementById("penalty_displayed").innerText = formatNumberWithDot(data.penalty);
+        document.getElementById("r_gain_final_displayed").innerText = formatNumberWithDot(data.r_gain_final);
+    });
+    
     </script>
 
   </body>

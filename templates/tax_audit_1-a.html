@@ -326,16 +326,41 @@
                               <div class="col-5 d-flex justify-content-center" 
                                 style="font-size: 11px; color: rgb(125, 125, 125);">
                                     <div>
-                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain) }}</span><br>
-                                    <span><u><i>f </i>{{'{:,.0f}'.format(summary_data.tax_disclos|int ) }}</u> _</span><br>
-                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain-summary_data.tax_disclos|int) }} </span><br>
-                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.tax_discre) }} </span><br>
-                                      <span><u><i>f </i>{{'{:,.0f}'.format(summary_data.penalty) }}</u>  _</span><br>
-                                    <span><i>f </i>{{'{:,.0f}'.format(summary_data.r_gain_final)}}</span>
+                                      <span><i>f </i> 
+                                        <span id ="r_gain_displayed">
+                                          '{:,.0f}'.format(summary_data.r_gain) }}
+                                        </span>
+                                      </span><br>
+                                      <span><u><i>f </i>
+                                        <span id="tax_disclos_displayed">
+                                          {{'{:,.0f}'.format(summary_data.tax_disclos |int) }}
+                                        </span>
+                                      </u> _</span><br>
+                                      <span><i>f </i>
+                                        <span id="r_gain_net_displayed">
+                                        {{'{:,.0f}'.format(summary_data.r_gain - summary_data.tax_disclos|int) }}
+                                        </span>
+                                      </span>
+                                        <br>
+                                      <span><i>f </i>
+                                        <span id= "tax_discre_displayed">
+                                        {{'{:,.0f}'.format(summary_data.tax_discre) }}
+                                        </span>
+                                      </span><br>
+                                        <span><u><i>f </i>
+                                          <span id="penalty_displayed">
+                                          {{'{:,.0f}'.format(summary_data.penalty) }}
+                                          </span>
+                                        </u> _</span><br>
+                                      <span><i>f </i>
+                                        <span id="r_gain_final_displayed">
+                                        {{'{:,.0f}'.format(summary_data.r_gain_final )  }}
+                                        </span>                                       
+                                      </span>
                                     </div>
                               </div>
                             </div>
-                            <p id="tooltip" style="font-size:8px; color:rgb(256,256,256);display:none;">(Real Gain < <i>f</i> 1 million: <b>A$ 20</b>; <i>f</i>1-5 million: <b>A$ 40</b>; > <i>f</i> 5 million: <b>A$ 80)</b></p>
+                            <p id="tooltip" style="font-size:8px; color:rgb(256,256,256);display:none;">(Keuntungan Bersih < <i>f</i> 1 juta: <b>Rp 50.000,-</b>; <i>f</i>1-5 juta: <b>Rp 100.000,-</b>; > <i>f</i> 5 juta: <b>Rp 200.000)</b></p>
                           </div>
                    </div>
 
@@ -429,151 +454,183 @@
     </div>
 
   <script>
-// Input Number Validation
-      function formatNumber(value) {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
-
-      function updateTextView(_obj) {
-        var num = getNumber(_obj.val());
-        if (num === 0) {
-          _obj.val('');
-        } else {
-          _obj.val(formatNumber(num));
-        }
-      }
-
-      function getNumber(_str) {
-        var arr = _str.replace(/,/g, '').split('');
-        var out = new Array();
-        for (var cnt = 0; cnt < arr.length && cnt < 7; cnt++) {
-          if (!isNaN(arr[cnt])) {
-            out.push(arr[cnt]);
+    // Input Number Validation
+          function formatNumber(value) {
+            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
           }
-        }
-        return out.join('');
-      }
 
- // Hide or Show Totals
-      
-      var showTotalsFlag = false;
-
-      function showTotals() {
-        if (!showTotalsFlag) {
-          $('#fiat').text("{{ '{:,.0f}'.format(summary_data['fiat']) }}");
-          $('#crypto').text("{{ summary_data['crypto'] }}");
-          $('#r_gain').text("{{ '{:,.0f}'.format(summary_data['r_gain']) }}");
-          $('#r_gain_net').text("{{ '{:,.0f}'.format(summary_data['r_gain_net']) }}");
-          $('#r_tax').text("{{ '{:,.0f}'.format(summary_data['r_tax']) }}");
-        }
-      }
-
-      function hideTotals() {
-        if (!showTotalsFlag) {
-          $('#fiat').text('');
-          $('#crypto').text('');
-          $('#r_gain').text('');
-          $('#r_gain_net').text('');
-          $('#r_tax').text('');
-        }
-      }
-
-// Enter Input to "Reporting Taxes" 
-      $(document).ready(function () {
-        $('input[type=text]').on('input', function () {
-          var maxDigits = 7;
-          var inputValue = $(this).val();
-          if (inputValue.length > maxDigits) {
-            $(this).val(inputValue.slice(0, maxDigits));
+          function updateTextView(_obj) {
+            var num = getNumber(_obj.val());
+            if (num === 0) {
+              _obj.val('');
+            } else {
+              _obj.val(formatNumber(num));
+            }
           }
-          updateTextView($(this));
+
+          function getNumber(_str) {
+            var arr = _str.replace(/,/g, '').split('');
+            var out = new Array();
+            for (var cnt = 0; cnt < arr.length && cnt < 7; cnt++) {
+              if (!isNaN(arr[cnt])) {
+                out.push(arr[cnt]);
+              }
+            }
+            return out.join('');
+          }
+
+     // Hide or Show Totals
+
+          var showTotalsFlag = false;
+
+          function showTotals() {
+            if (!showTotalsFlag) {
+              // Create an instance of Intl.NumberFormat for Indonesian locale
+              const formatter = new Intl.NumberFormat('id-ID', {
+                minimumFractionDigits: 0, // Adjust this value as needed
+                maximumFractionDigits: 0, // Adjust this value as needed
+              });
+
+              // Use the formatter to format each number
+              $('#fiat').text(formatter.format(parseInt("{{ summary_data['fiat'] }}", 10)));
+              $('#crypto').text(formatter.format(parseFloat("{{ summary_data['crypto'] }}")));
+              $('#r_gain').text(formatter.format(parseInt("{{ summary_data['r_gain'] }}", 10)));
+              $('#r_gain_net').text(formatter.format(parseInt("{{ summary_data['r_gain_net'] }}", 10)));
+              $('#r_tax').text(formatter.format(parseInt("{{ summary_data['r_tax'] }}", 10)));
+            }
+          }
+
+          function hideTotals() {
+            if (!showTotalsFlag) {
+              $('#fiat').text('');
+              $('#crypto').text('');
+              $('#r_gain').text('');
+              $('#r_gain_net').text('');
+              $('#r_tax').text('');
+            }
+          }
+
+    // Enter Input to "Reporting Taxes" 
+          $(document).ready(function () {
+            $('input[type=text]').on('input', function () {
+              var maxDigits = 7;
+              var inputValue = $(this).val();
+              if (inputValue.length > maxDigits) {
+                $(this).val(inputValue.slice(0, maxDigits));
+              }
+              updateTextView($(this));
+            });
+
+          document.getElementById("tax-input").addEventListener("input", function () {
+            var input = getNumber(this.value);
+            var expectedFiat = document.getElementById("expected_fiat");
+            var rGain = parseFloat("{{ summary_data['r_gain']|int }}");
+
+            if (input === "") {
+              expectedFiat.textContent = formatNumber(rGain);
+            } else {
+              var inputNumber = parseInt(input.substring(0, 6));
+              expectedFiat.textContent = formatNumber(rGain - inputNumber);
+            }
+
+            // Validate input
+            var inputLength = this.value.trim().replace(/,/g, '').length;
+            if (isNaN(inputNumber) || inputLength > 7) {
+              this.setCustomValidity("Please enter a valid number up to 6 digits.");
+            } else {
+              this.setCustomValidity("");
+            }
+          });
+
+
+
+    //Press "Report Taxes"
+
+         $('form').on('submit', function () {
+            var id = "{{ summary_data['id'] }}";
+            var taxInput = $('#tax-input').val();
+
+            $('#id').text(id);
+            $('#tax_disclos').text(taxInput);
+
+
+          // Include the "id" value in the form submission
+            $('form').append('<input type="hidden" name="id" value="' + id + '">');
+            $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">');
+
+
+
+    /*
+              var taxInput = $('#tax-input').val();
+              var rTax = {{ summary_data['r_tax'] }};
+              var taxDiscre = parseInt(taxInput.replace(/,/g, '')) - rTax;
+              var audit = Math.random() < 0.2 ? 1 : 0;
+              var penalty = audit === 1 ? 2 * taxDiscre : 0;
+              var rGain = {{ summary_data['r_gain'] }};
+              var rGainFinal = rGain - (taxDiscre + penalty);
+
+
+              summary_data['tax_disclos'] = taxInput;
+              summary_data['tax_discre'] = taxDiscre;
+              summary_data['audit'] = audit;
+              summary_data['penalty'] = penalty;
+              summary_data['r_gain_final'] = rGainFinal;
+    */
+              // Insert the code to send the updated summary_data to the database here
+
+              // Testing - Print the updated summary_data object in the console
+    //          console.log(summary_data);
+            });
+
+
+    //new
+              // Start the countdown timer when the page loads
+
+            //newend
+
+
+
+          });
+
+    //newstart
+
+
+
+          //newend
+
+        // Show tooltip on hover
+        $('#compensation').hover(function () {
+            $('#tooltip').show();
+        }, function () {
+            $('#tooltip').hide();
         });
 
-      document.getElementById("tax-input").addEventListener("input", function () {
-        var input = getNumber(this.value);
-        var expectedFiat = document.getElementById("expected_fiat");
-        var rGain = parseFloat("{{ summary_data['r_gain']|int }}");
 
-        if (input === "") {
-          expectedFiat.textContent = formatNumber(rGain);
-        } else {
-          var inputNumber = parseInt(input.substring(0, 6));
-          expectedFiat.textContent = formatNumber(rGain - inputNumber);
-        }
+        document.addEventListener("DOMContentLoaded", function() {
+            // Example data - replace these with the actual data from your server
+            var data = {
+                r_gain: {{ summary_data.r_gain }},
+                tax_disclos: {{ summary_data.tax_disclos |int}},
+                r_gain_net: {{ summary_data.r_gain - summary_data.tax_disclos |int}},
+                tax_discre: {{ summary_data.tax_discre }},
+                penalty: {{ summary_data.penalty }},
+                r_gain_final: {{ summary_data.r_gain_final }}
+            };
 
-        // Validate input
-        var inputLength = this.value.trim().replace(/,/g, '').length;
-        if (isNaN(inputNumber) || inputLength > 7) {
-          this.setCustomValidity("Please enter a valid number up to 6 digits.");
-        } else {
-          this.setCustomValidity("");
-        }
-      });
+            // Function to format number with dot as thousand separator
+            function formatNumberWithDot(number) {
+                return new Intl.NumberFormat('id-ID').format(number);
+            }
 
-
-
-//Press "Report Taxes"
-        
-     $('form').on('submit', function () {
-        var id = "{{ summary_data['id'] }}";
-        var taxInput = $('#tax-input').val();
-       
-        $('#id').text(id);
-        $('#tax_disclos').text(taxInput);
-
-        
-      // Include the "id" value in the form submission
-        $('form').append('<input type="hidden" name="id" value="' + id + '">');
-        $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">');
- 
-      
-       
-/*
-          var taxInput = $('#tax-input').val();
-          var rTax = {{ summary_data['r_tax'] }};
-          var taxDiscre = parseInt(taxInput.replace(/,/g, '')) - rTax;
-          var audit = Math.random() < 0.2 ? 1 : 0;
-          var penalty = audit === 1 ? 2 * taxDiscre : 0;
-          var rGain = {{ summary_data['r_gain'] }};
-          var rGainFinal = rGain - (taxDiscre + penalty);
-      
-      
-          summary_data['tax_disclos'] = taxInput;
-          summary_data['tax_discre'] = taxDiscre;
-          summary_data['audit'] = audit;
-          summary_data['penalty'] = penalty;
-          summary_data['r_gain_final'] = rGainFinal;
-*/
-          // Insert the code to send the updated summary_data to the database here
-
-          // Testing - Print the updated summary_data object in the console
-//          console.log(summary_data);
+            // Formatting and setting the values
+            document.getElementById("r_gain_displayed").innerText = formatNumberWithDot(data.r_gain);
+            document.getElementById("tax_disclos_displayed").innerText = formatNumberWithDot(data.tax_disclos);
+            document.getElementById("r_gain_net_displayed").innerText = formatNumberWithDot(data.r_gain_net);
+            document.getElementById("tax_discre_displayed").innerText = formatNumberWithDot(data.tax_discre);
+            document.getElementById("penalty_displayed").innerText = formatNumberWithDot(data.penalty);
+            document.getElementById("r_gain_final_displayed").innerText = formatNumberWithDot(data.r_gain_final);
         });
 
-
-//new
-          // Start the countdown timer when the page loads
-
-        //newend
-
-        
-        
-      });
-      
-//newstart
-
-
-      
-      //newend
-
-    // Show tooltip on hover
-    $('#compensation').hover(function () {
-        $('#tooltip').show();
-    }, function () {
-        $('#tooltip').hide();
-    });
-
-      
     </script>
 
   </body>

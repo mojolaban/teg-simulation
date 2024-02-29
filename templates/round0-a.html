@@ -174,7 +174,7 @@
                       <div class="col-4">
                       <p id="fiat" style="font-size:11px;line-height:2;
                         margin: 0;color: rgb(80,80,80);">
-                        {{data['fiat']}}</p>
+                        {{data['fiat']  | format_crypto(data['lang']) }}</p>
                       </div>
                       <div class="col-3">
                        <p style="font-size:11px;line-height:2;
@@ -412,7 +412,7 @@
                       Transaksi</p>
                     <p style="font-size:18px;line-height:1;
                       margin: 0;color: white;text-align: center;">
-                      <span id="trx">{{ data['trx'] }} </span> of 5</p>
+                      <span id="trx">{{ data['trx'] }} </span> dari 5</p>
                   </div>
                 </div>
                 <div class="col-3" style="margin-left: 30px;margin-top: 30px"> 

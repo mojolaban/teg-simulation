@@ -335,7 +335,7 @@
                                     </div>
                               </div>
                             </div>
-                            <p id="tooltip" style="font-size:8px; color:rgb(256,256,256);display:none;">(Real Gain < <i>f</i> 1 million: <b>A$ 20</b>; <i>f</i>1-5 million: <b>A$ 40</b>; > <i>f</i> 5 million: <b>A$ 80)</b></p>
+                            <p id="tooltip" style="font-size:8px; color:rgb(256,256,256);display:none;">(Real Gain < <i>f</i> 1 million: <b>A$ 15</b>; <i>f</i>1-5 million: <b>A$ 30</b>; > <i>f</i> 5 million: <b>A$ 60)</b></p>
                           </div>
                    </div>
 
@@ -359,11 +359,11 @@
               <button type="button" id="compensation" name="compensation" placeholder="compensation" style="height: 50px; width: 225px; text-align: center; border-radius: 10px; background:rgb(200,50,20);">
                   A$
                   {% if summary_data.r_gain_final < 1000000 %}
-                      20
+                      15
                   {% elif 1000000 <= summary_data.r_gain_final <= 5000000 %}
-                      40
+                      30
                   {% else %}
-                      80
+                      60
                   {% endif %}
               </button>
 
