@@ -372,6 +372,7 @@
   <form action="/next_round"> 
                   
   <input type="hidden" name="id" value= {{summary_data.id}}>
+  <input type="hidden" name="lang" value= {{summary_data.lang}}>
                   
             <div class="row justify-content-center" style="margin-left: 0px;">
               <div class="col-5 d-flex justify-content-center">
@@ -430,118 +431,150 @@
     </div>
 
   <script>
-// Input Number Validation
-      function formatNumber(value) {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-      }
-
-      function updateTextView(_obj) {
-        var num = getNumber(_obj.val());
-        if (num === 0) {
-          _obj.val('');
-        } else {
-          _obj.val(formatNumber(num));
-        }
-      }
-
-      function getNumber(_str) {
-        var arr = _str.replace(/,/g, '').split('');
-        var out = new Array();
-        for (var cnt = 0; cnt < arr.length && cnt < 7; cnt++) {
-          if (!isNaN(arr[cnt])) {
-            out.push(arr[cnt]);
+    // Input Number Validation
+          function formatNumber(value) {
+            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
           }
-        }
-        return out.join('');
-      }
 
- // Hide or Show Totals
-      
-      var showTotalsFlag = false;
+          function updateTextView(_obj) {
+            var num = getNumber(_obj.val());
+            if (num === 0) {
+              _obj.val('');
+            } else {
+              _obj.val(formatNumber(num));
+            }
+          }
 
-      function showTotals() {
-        if (!showTotalsFlag) {
-          $('#fiat').text("{{ '{:,.0f}'.format(summary_data['fiat']) }}");
-          $('#crypto').text("{{ summary_data['crypto'] }}");
-          $('#r_gain').text("{{ '{:,.0f}'.format(summary_data['r_gain']) }}");
-          $('#r_gain_net').text("{{ '{:,.0f}'.format(summary_data['r_gain_net']) }}");
-          $('#r_tax').text("{{ '{:,.0f}'.format(summary_data['r_tax']) }}");
-        }
-      }
+          function getNumber(_str) {
+            var arr = _str.replace(/,/g, '').split('');
+            var out = new Array();
+            for (var cnt = 0; cnt < arr.length && cnt < 7; cnt++) {
+              if (!isNaN(arr[cnt])) {
+                out.push(arr[cnt]);
+              }
+            }
+            return out.join('');
+          }
 
-      function hideTotals() {
-        if (!showTotalsFlag) {
-          $('#fiat').text('');
-          $('#crypto').text('');
-          $('#r_gain').text('');
-          $('#r_gain_net').text('');
-          $('#r_tax').text('');
-        }
-      }
+     // Hide or Show Totals
+
+          var showTotalsFlag = false;
+
+          function showTotals() {
+            if (!showTotalsFlag) {
+              $('#fiat').text("{{ '{:,.0f}'.format(summary_data['fiat']) }}");
+              $('#crypto').text("{{ summary_data['crypto'] }}");
+              $('#r_gain').text("{{ '{:,.0f}'.format(summary_data['r_gain']) }}");
+              $('#r_gain_net').text("{{ '{:,.0f}'.format(summary_data['r_gain_net']) }}");
+              $('#r_tax').text("{{ '{:,.0f}'.format(summary_data['r_tax']) }}");
+            }
+          }
+
+          function hideTotals() {
+            if (!showTotalsFlag) {
+              $('#fiat').text('');
+              $('#crypto').text('');
+              $('#r_gain').text('');
+              $('#r_gain_net').text('');
+              $('#r_tax').text('');
+            }
+          }
+
+    // Enter Input to "Reporting Taxes" 
+          $(document).ready(function () {
+            $('input[type=text]').on('input', function () {
+              var maxDigits = 7;
+              var inputValue = $(this).val();
+              if (inputValue.length > maxDigits) {
+                $(this).val(inputValue.slice(0, maxDigits));
+              }
+              updateTextView($(this));
+            });
+
+          document.getElementById("tax-input").addEventListener("input", function () {
+            var input = getNumber(this.value);
+            var expectedFiat = document.getElementById("expected_fiat");
+            var rGain = parseFloat("{{ summary_data['r_gain']|int }}");
+
+            if (input === "") {
+              expectedFiat.textContent = formatNumber(rGain);
+            } else {
+              var inputNumber = parseInt(input.substring(0, 6));
+              expectedFiat.textContent = formatNumber(rGain - inputNumber);
+            }
+
+            // Validate input
+            var inputLength = this.value.trim().replace(/,/g, '').length;
+            if (isNaN(inputNumber) || inputLength > 7) {
+              this.setCustomValidity("Please enter a valid number up to 6 digits.");
+            } else {
+              this.setCustomValidity("");
+            }
+          });
 
 
 
-//Press "Report Taxes"
-        
-     $('form').on('submit', function () {
-        var id = "{{ summary_data['id'] }}";
-        var taxInput = $('#tax-input').val();
-       
-        $('#id').text(id);
-        $('#tax_disclos').text(taxInput);
+    //Press "Report Taxes"
 
-        
-      // Include the "id" value in the form submission
-        $('form').append('<input type="hidden" name="id" value="' + id + '">');
-        $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">');
- 
-      
-       
-/*
-          var taxInput = $('#tax-input').val();
-          var rTax = {{ summary_data['r_tax'] }};
-          var taxDiscre = parseInt(taxInput.replace(/,/g, '')) - rTax;
-          var audit = Math.random() < 0.2 ? 1 : 0;
-          var penalty = audit === 1 ? 2 * taxDiscre : 0;
-          var rGain = {{ summary_data['r_gain'] }};
-          var rGainFinal = rGain - (taxDiscre + penalty);
-      
-      
-          summary_data['tax_disclos'] = taxInput;
-          summary_data['tax_discre'] = taxDiscre;
-          summary_data['audit'] = audit;
-          summary_data['penalty'] = penalty;
-          summary_data['r_gain_final'] = rGainFinal;
-*/
-          // Insert the code to send the updated summary_data to the database here
+         $('form').on('submit', function () {
+            var id = "{{ summary_data['id'] }}";
+            var taxInput = $('#tax-input').val();
 
-          // Testing - Print the updated summary_data object in the console
-//          console.log(summary_data);
+            $('#id').text(id);
+            $('#tax_disclos').text(taxInput);
+
+
+          // Include the "id" value in the form submission
+            $('form').append('<input type="hidden" name="id" value="' + id + '">');
+            $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">');
+
+
+
+    /*
+              var taxInput = $('#tax-input').val();
+              var rTax = {{ summary_data['r_tax'] }};
+              var taxDiscre = parseInt(taxInput.replace(/,/g, '')) - rTax;
+              var audit = Math.random() < 0.2 ? 1 : 0;
+              var penalty = audit === 1 ? 2 * taxDiscre : 0;
+              var rGain = {{ summary_data['r_gain'] }};
+              var rGainFinal = rGain - (taxDiscre + penalty);
+
+
+              summary_data['tax_disclos'] = taxInput;
+              summary_data['tax_discre'] = taxDiscre;
+              summary_data['audit'] = audit;
+              summary_data['penalty'] = penalty;
+              summary_data['r_gain_final'] = rGainFinal;
+    */
+              // Insert the code to send the updated summary_data to the database here
+
+              // Testing - Print the updated summary_data object in the console
+    //          console.log(summary_data);
+            });
+
+
+    //new
+              // Start the countdown timer when the page loads
+
+            //newend
+
+
+
+          });
+
+    //newstart
+
+
+
+          //newend
+
+        // Show tooltip on hover
+        $('#compensation').hover(function () {
+            $('#tooltip').show();
+        }, function () {
+            $('#tooltip').hide();
         });
 
-
-//new
-          // Start the countdown timer when the page loads
-
-        //newend
-
-        
-        
-      });
-      
-//newstart
-
-
-      
-      //newend
-
-    // Show tooltip on hover
-    $('#compensation').hover(function () {
-        $('#tooltip').show();
-    }, function () {
-        $('#tooltip').hide();
-    });
-      
     </script>
 
   </body>

@@ -567,43 +567,13 @@ def tax_disclosure():
     template_name = f"tax_audit_{'1' if latest_audit == 1 else '0'}{'-a' if lang == '1' else ''}.html"
     response_data = retrieve_data(userid).json
     return render_template(template_name, summary_data=response_data)
-        
 
-
-       
-
-#            select_statement_2 = text("""
-#                SELECT `round`, `r_gain_final`
-#                FROM `teg-simulation`.`responses`
-#                WHERE `id` = :user_id AND `trx` = 5
-#                ORDER BY `ts` DESC
-#             """)
-#            result_2 = conn.execute(select_statement_2, {"user_id": userid})
-#            records = result_2.fetchall()
-
-
-#            round_15, r_gain_final = result_2.fetchone()
-
-#            if r_gain_final < 0:
-#                r_gain_final = 100000
-
-#            response_data = {
-#                "round": round_15,
-#                "r_gain_final": r_gain_final
-#            }
-          
-#            response_data = []
-#            for record in records:
-#                round_15, r_gain_final = record
-#                if r_gain_final < 0:
-#                    r_gain_final = 100000
-#                response_data.append({"round": round_15, "r_gain_final": r_gain_final})
-
-#----Sending data from tax audit page to db, initiate new round then go to rounds
-@app.route("/next_round") #, methods=["POST"])
+#----Sending data from tax audit page to db, initiate new round then go to rounds 
+@app.route("/next_round") #, methods=["POST"]) 
 def next_round():
     data = request.args
     userid = (data['id'])
+    lang = (data['lang'])
     print("Next Round Data:")
     print(f"UserID: {userid}")
 
@@ -619,24 +589,26 @@ def next_round():
         latest_round, gr = result.fetchone()
 
         if latest_round < 15:
-            next_round = latest_round + 1
-            conn.execute(
-                text("INSERT INTO `teg-simulation-sandbox`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`, `r_gain`, `t_tax`, `tax_disclos`, `audit`, `t_gain_net`, `r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`, `buy_prev`, `r_gain_prev`,`r_tax_prev`)VALUES (:round, :gr, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0')"),
-                {"round": next_round, "gr": gr, "id": userid}
-            )
-            init_data = fetch_init_data({userid})
-        #       print("Init Data:", init_data)  # Debug statement
-            if init_data:
-                return render_template('rounds.html', data=init_data)      
+          next_round = latest_round + 1
+          conn.execute(
+              text("INSERT INTO `teg-simulation-sandbox`.`responses`(`round`,`gr`, `id`, `trx`, `crypto`, `fiat`, `buy`, `sell`, `pos`, `t_gain`, `r_gain`, `t_tax`, `tax_disclos`, `audit`, `t_gain_net`, `r_gain_net`,`r_tax`,`sec`,`price`,`crypto_prev`, `fiat_prev`, `buy_prev`, `r_gain_prev`,`r_tax_prev`, `lang`)VALUES (:round, :gr, :id, '0', '1.00', '0', '0', '0','s','0','0','0','0','0','0','0','0','0','0','0','0','0','0','0',:lang)"),
+              {"round": next_round, "gr": gr, "id": userid, "lang": lang}
+          )
+          init_data = fetch_init_data(userid) # Removed curly braces around userid for correct function call
+          if init_data:
+              # Check the lang value and return the appropriate template
+              if lang == '0':
+                  return render_template('rounds.html', data=init_data)
+              elif lang == '1':
+                  return render_template('rounds-a.html', data=init_data)
+    
         else:
             random_number = random.randint(1, 15)
 
             select_statement_2 = text("""
-                SELECT `id`, `gr`,`round`, CASE WHEN `r_gain_final` <= 0 THEN 100000 ELSE `r_gain_final` END AS `r_gain_final`
+                SELECT `id`, `gr`,`round`, `r_gain_final`, `lang`
                 FROM `teg-simulation-sandbox`.`responses`
                 WHERE `id` = :user_id AND `round` = :random_number
-                ORDER BY `trx` DESC
-                LIMIT 1
             """)
             result_2 = conn.execute(select_statement_2, {"user_id": userid, "random_number": random_number})
             result = result_2.fetchone()
@@ -647,55 +619,73 @@ def next_round():
                 print("No data found in select_statement_2")
                 return "No data found"
 
-            user_id, gr, comp_round, comp_amt = result
-            if comp_amt < 1000000:
-              comp_rgainfinal = 20
-            elif comp_amt >= 1000000 and comp_amt <= 5000000:
-              comp_rgainfinal = 40
-            else:
-              comp_rgainfinal = 80
-
-
+            user_id, gr, comp_round, comp_amt, lang = result
+            
+            # Modify compensation logic based on lang value
+            if lang == 0:
+                if comp_amt < 1000000:
+                    comp_rgainfinal = 15
+                elif 1000000 <= comp_amt <= 5000000:
+                    comp_rgainfinal = 30
+                else:
+                    comp_rgainfinal = 60
+            elif lang == 1:
+                if comp_amt < 1000000:
+                    comp_rgainfinal = 50000
+                elif 1000000 <= comp_amt <= 5000000:
+                    comp_rgainfinal = 100000
+                else:
+                    comp_rgainfinal = 200000
+            
             print("Compensation:")
             print(f"UserID: {user_id}")
             print(f"Group: {gr}")
             print(f"Round: {comp_round}")
             print(f"Round Gain Amount: {comp_amt}")
             print(f"Compensation Amount: {comp_rgainfinal}")
-
-            return render_template("the_random_picker.html", user_id=user_id, comp_round=comp_round, comp_amt=comp_amt, comp_rgainfinal=comp_rgainfinal, gr=gr)
-
+            print(f"Lang: {lang}")
+            
+            # Return the appropriate template based on lang value
+            if lang == 0:
+                return render_template("the_random_picker.html", user_id=user_id, comp_round=comp_round, comp_amt=comp_amt, comp_rgainfinal=comp_rgainfinal, gr=gr, lang=lang)
+            elif lang == 1:
+                return render_template("the_random_picker-a.html", user_id=user_id, comp_round=comp_round, comp_amt=comp_amt, comp_rgainfinal=comp_rgainfinal, gr=gr, lang=lang)
 
 
 
 
 @app.route('/survey', methods=['GET', 'POST'])
 def survey():
-    comp_amt = request.form.get('comp_amt')
-    comp_round = request.form.get('comp_round')
-    comp_rgainfinal = request.form.get('comp_rgainfinal')
-    user_id = request.form.get('user_id')
-    gr = str(request.form.get('gr')).replace('\n', '').strip()[:1]
+    if request.method == 'POST':
+      comp_amt = request.form.get('comp_amt')
+      comp_round = request.form.get('comp_round')
+      comp_rgainfinal = request.form.get('comp_rgainfinal')
+      user_id = request.form.get('user_id')
+      lang = request.form.get('lang')
+      gr = str(request.form.get('gr')).replace('\n', '').strip()[:1]
+  
+      # Process the data as needed
+      with engine.connect() as conn:
+          insert_statement = text("""
+              INSERT INTO compensation (comp_amt, id, comp_round, comp_rgainfinal, gr, lang)
+              VALUES (:comp_amt, :user_id, :comp_round, :comp_rgainfinal, :gr, :lang)
+          """)
+          conn.execute(
+              insert_statement,
+              {"comp_amt": comp_amt, "user_id": user_id, "comp_round": comp_round, "comp_rgainfinal": comp_rgainfinal, "gr": gr, "lang": lang}
+          )
 
+      
+      print("Recorded compensation:")
+      print(f"UserID: {user_id}")
+      print(f"Group: {gr}")
+      print(f"CompAmt: {comp_amt}")
+      print(f"CompRound: {comp_round}")
+      print(f"CompRoundGain: {comp_rgainfinal}")
+      print(f"Lang: {lang}")
+  
 
-    # Process the data as needed
-    with engine.connect() as conn:
-      insert_statement = text("""
-          INSERT INTO compensation (comp_amt, id, comp_round, comp_rgainfinal, gr)
-          VALUES (:comp_amt, :user_id, :comp_round,  :comp_rgainfinal, :gr)
-      """)
-      conn.execute(
-          insert_statement,
-          {"comp_amt": comp_amt, "user_id": user_id, "comp_round": comp_round,  "comp_rgainfinal": comp_rgainfinal, "gr": gr}
-      )
-
-    print("Recorded compensation:")
-    print(f"UserID: {user_id}")
-    print(f"Group: {gr}")
-    print(f"CompAmt: {comp_amt}")
-    print(f"CompRound: {comp_round}")
-    print(f"CompRoundGain: {comp_rgainfinal}")
-
+  
     questions = [
         ' ... because to me it’s obvious that this is what you do.',
         '... even if tax audits did not exist.',
@@ -761,8 +751,14 @@ def survey():
         'Sebagian besar wajib pajak lain membayar pajak sebagai cara untuk menutup kesenjangan antara kaya dan miskin.',
         'Seberapa mungkin Anda akan membayar pajak Anda untuk tahun ini secara benar dan penuh kepada otoritas pajak?'
   ]
-
-    return render_template('the_survey.html', id=user_id, gr=gr, questions=questions)
+    # Depending on the lang, choose the appropriate template and question set
+    if lang == '0':
+        return render_template('the_survey.html', id=user_id, gr=gr, lang=lang, questions=questions)
+    elif lang == '1':
+        return render_template('the_survey-a.html', id=user_id, gr=gr, lang=lang, questions=questindo)
+    else:
+        # Handle unexpected 'lang' value
+        return "Error: Invalid language selection"
 
 @app.route('/yes', methods=['GET', 'POST'])
 def yes():
@@ -776,6 +772,7 @@ def yes():
         id = form_data.get('id')
         comments = form_data.get('comments')
         followup = form_data.get('followup')
+        lang = form_data.get('lang')
 
         # Create a dictionary to map the question numbers to column names
         question_columns = {
@@ -823,16 +820,21 @@ def yes():
         insert_values['id'] = id
         insert_values['comments'] = comments
         insert_values['followup'] = followup
+        insert_values['lang'] = lang
 
         # Execute the insert statement
         with engine.connect() as conn:
             insert_statement = text("""
-                INSERT INTO survey (question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10,question11,question12, question13,question14,question15,question16,question17,question18,question19,question20,question21,question22,question23,question24,question25,question26,question27,question28,question29, email, gr, id, comments, followup)
-                VALUES (:question0, :question1, :question2,  :question3, :question4, :question5, :question6, :question7, :question8, :question9, :question10, :question11, :question12, :question13, :question14, :question15, :question16, :question17, :question18, :question19, :question20, :question21, :question22, :question23, :question24, :question25, :question26, :question27, :question28, :question29, :email, :gr, :id, :comments, :followup)
+                INSERT INTO survey (question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10,question11,question12, question13,question14,question15,question16,question17,question18,question19,question20,question21,question22,question23,question24,question25,question26,question27,question28,question29, email, gr, id, comments, followup, lang)
+                VALUES (:question0, :question1, :question2,  :question3, :question4, :question5, :question6, :question7, :question8, :question9, :question10, :question11, :question12, :question13, :question14, :question15, :question16, :question17, :question18, :question19, :question20, :question21, :question22, :question23, :question24, :question25, :question26, :question27, :question28, :question29, :email, :gr, :id, :comments, :followup, :lang)
             """)
             conn.execute(insert_statement, insert_values)
 
-        return render_template('the_survey_ends.html')
+        # Return the appropriate template based on the lang value
+        if lang == '1':
+            return render_template('the_survey_ends-a.html')
+        else:
+            return render_template('the_survey_ends.html')
     return "Invalid request method"
 
 

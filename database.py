@@ -16,22 +16,42 @@ engine = create_engine(db_connection_string,
 #----0.1 Assign treatment based on language selection
 def insert_group_lang(lang):
   with engine.connect() as conn:
-    # Generate a random 2-character ID
-    random_id = ''.join(random.choices(string.ascii_uppercase +
-                                       string.ascii_lowercase + string.digits,
-                                       k=2))
-    # Fetch the treatment value from the log table while handling the case when num is null
-    result = conn.execute(text("SELECT IFNULL((SELECT CASE WHEN num % 2 = 0 THEN 2 ELSE 1 END AS treatment FROM log ORDER BY num DESC LIMIT 1), 2) AS treatment;"))
-    data = result.fetchone()
-    treatment = data[0]
-    # Map language to the corresponding value
-    lang_value = 1 if lang == 'Indonesian' else 0
-    # Insert the counter, treatment, ID, and language values into the 'log' table
-    conn.execute(text("INSERT INTO `teg-simulation-sandbox`.`log` (`counter`, `gr`, `id`,`lang` ) VALUES ('1', :treatment, :id, :lang);"),
-                 {"treatment": treatment, "id": random_id, "lang": lang_value})
-    # Create a dictionary with the treatment, id, and lang values
-    treatment_dict = {"treatment": treatment, "id": random_id, "lang": lang_value}
-  
+      # Generate a random 2-character ID
+      random_id = ''.join(random.choices(string.ascii_uppercase +
+                                         string.ascii_lowercase + string.digits,
+                                         k=2))
+
+      # Convert lang to the expected format for comparison
+      lang_value = 1 if lang == 'Indonesian' else 0
+
+      # Attempt to fetch the last entry's treatment for the given lang
+      last_entry_for_lang_result = conn.execute(text("""
+          SELECT `gr`, `lang`
+          FROM `log`
+          WHERE `lang` = :lang
+          ORDER BY `num` DESC
+          LIMIT 1
+      """), {'lang': lang_value})
+      last_entry_data = last_entry_for_lang_result.fetchone()
+
+      # Determine treatment based on the last entry for the given lang
+      if last_entry_data:
+          last_treatment, _ = last_entry_data
+          # Toggle the treatment based on the last entry for the given lang
+          treatment = '2' if last_treatment == '1' else '1'
+      else:
+          # Default treatment if there's no previous entry for the given lang
+          treatment = '1'
+
+      # Insert the new record with the determined treatment
+      conn.execute(text("""
+          INSERT INTO `log` (`counter`, `gr`, `id`, `lang`)
+          VALUES ('1', :treatment, :id, :lang);
+      """), {"treatment": treatment, "id": random_id, "lang": lang_value})
+
+      # Create and return a dictionary with the treatment, id, and lang values
+      treatment_dict = {"treatment": treatment, "id": random_id, "lang": lang_value}
+
   return treatment_dict
   
 

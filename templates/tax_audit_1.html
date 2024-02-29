@@ -371,6 +371,7 @@
   <form action="/next_round"> 
                   
   <input type="hidden" name="id" value= {{summary_data.id}}>
+  <input type="hidden" name="lang" value= {{summary_data.lang}}>
                   
             <div class="row justify-content-center" style="margin-left: 0px;">
               <div class="col-5 d-flex justify-content-center">
@@ -524,7 +525,7 @@
         
       // Include the "id" value in the form submission
         $('form').append('<input type="hidden" name="id" value="' + id + '">');
-        $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">');
+        $('form').append('<input type="hidden" name="lang" value="' + lang + '">');
  
       
        

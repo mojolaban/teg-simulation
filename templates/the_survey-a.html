@@ -104,20 +104,21 @@
 
     <input type="hidden" name="gr" value="{{ gr }}">
     <input type="hidden" name="id" value="{{ id }}">
+    <input type="hidden" name="lang" value="{{ lang}}">
 
   <table>
     <tr>
       <th colspan="8"></th>
     </tr>
     <tr>
-      <th style="width: 500px;font-size:12px">When I pay my taxes as required by the regulations, I do so ... (1-3) </th>
+      <th style="width: 500px;font-size:12px">Saat saya membayar pajak sesuai peraturan, saya melakukannya ... (1-3) </th>
       <th class="likert-scale">Strongly Disagree</th>
-      <th class="likert-scale">Disagree</th>
-      <th class="likert-scale">Somewhat Disagree</th>
-      <th class="likert-scale">Somewhat Agree</th>
+      <th class="likert-scale">Moderately Disagree</th>
+      <th class="likert-scale">Slightly Disagree</th>
+      <th class="likert-scale">Slightly Agree</th>
+      <th class="likert-scale">Moderately Agree</th>
       <th class="likert-scale">Agree</th>
       <th class="likert-scale">Strongly Agree</th>
-      <th class="likert-scale">Not Applicable</th>
     </tr>
     {% for question_num in range(0, questions|length) %}
       <tr>
@@ -134,7 +135,7 @@
           <label><input type="radio" name="question{{ question_num }}" value=5 required></label></td>
         <td class="radio-bg">        
           <label><input type="radio" name="question{{ question_num }}" value=6 required></label></td>
-        <td style="background-color: rgb(200,200,200);text-align: center">
+        <td class="radio-bg">
           <label><input type="radio" name="question{{ question_num }}" value=7 required></label></td>
         
       </tr>
@@ -152,13 +153,13 @@
   </div>
   
   <div class="col-9 col-sm-4" style="margin-top: 15px;">
-    <input type="email" class="form-control form-control-sm" id="colFormLabelSm" placeholder="email" style="font-size: 12px; text-align: center;"  name="email" required>
+    <input type="email" class="form-control form-control-sm" id="colFormLabelSm" placeholder="email" style="font-size: 12px; text-align: center; background-color: #f5f5f5;"  name="email" required>
 
-    <label for="comments" style="font-size: 12px; margin-top: 20px;">Silakan berikan pendapat Anda mengenai eksperimen daring ini</label>
-    <textarea id="comments" name="comments" rows="5" style="font-size: 12px;width: 100%;border: 1px solid #ccc;" required></textarea>
+    <label for="comments" style="font-size: 12px; margin-top: 20px;">Silakan berikan pendapat Anda mengenai eksperimen daring ini:</label>
+    <textarea id="comments" name="comments" rows="5" style="font-size: 12px;width: 100%;border: 1px solid #ccc; background-color: #f5f5f5;" required></textarea>
 
     <label for="followup" style="font-size: 12px; margin-top: 20px;">Tertarik untuk mengikuti wawancara lanjutan?</label>
-    <select id="followup" name="followup" class="form-control form-control-sm" style="font-size: 12px;margin-bottom:20px;" required>
+    <select id="followup" name="followup" class="form-control form-control-sm" style="font-size: 12px;margin-bottom:20px; background-color: #f5f5f5;" required>
         <option value="">Pilih</option>
         <option value="Yes">Ya</option>
         <option value="No">Tidak</option>

@@ -305,7 +305,7 @@
         Terima kasih atas partisipasi Anda dalam studi ini.
       </p>
       <p class="text-center" id="thanks-word" style="font-size:24px;line-height:1;margin:auto;color:rgb(256,256,256)">
-        Sebagai bentuk penghargaan atas waktu Anda <br> Anda berhak menerima e-gift voucher senilai
+        Sebagai bentuk penghargaan <br> Anda berhak menerima e-gift voucher senilai
       </p>
     </div>
   </div>
@@ -325,13 +325,9 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;">
-    <button type="text" 
-      name="compensation-amt" style="height: 50px; width: 240px; margin-top:0px;
-      text-align: center;border-radius: 10px;color:white;background:rgb(40, 180, 120);border: none;"> 
-<span  id="compensation-amt"
-  style="visibility: hidden";>A$ {{ '{:,.0f}'.format ( comp_rgainfinal ) }}</span>
-      
-    </button>
+    <button type="text" name="compensation-amt" style="height: 50px; width: 240px; margin-top:0px; text-align: center;border-radius: 10px;color:white;background:rgb(40, 180, 120);border: none;"> 
+      <span id="compensation-amt" style="visibility: hidden";></span>
+    </button>    
   </div>
 
   <div class="row justify-content-center" style="margin: auto;">
@@ -350,13 +346,14 @@
           color: grey;"
           onmouseover="this.style.backgroundColor = 'rgb(10,10,10)'"
           onmouseout="this.style.backgroundColor = 'white'">
-          Next
+          Lanjutkan
         </button>   
                         <input type="hidden" name="comp_amt" value= {{comp_rgainfinal}}>
                         <input type="hidden" name="comp_round" value= {{comp_round}}>
                         <input type="hidden" name="user_id" value= {{user_id}}> 
                         <input type="hidden" name="gr" value= {{gr}}> 
                         <input type="hidden" name="comp_rgainfinal" value= {{comp_amt}}> 
+                        <input type="hidden" name="lang" value= {{lang}}>
       </form>   
     </div>
   </div>
@@ -451,11 +448,24 @@
 
     animateNumber(); // Start the animation
 
-    // Delay showing the compensation amount
+    // Assuming comp_rgainfinal is a variable holding the compensation amount
+    var comp_rgainfinal = {{ comp_rgainfinal }}; // This should be a numeric value
+
+    // Format the compensation amount in Indonesian locale
+    var formattedCompensation = new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0 // Adjust as necessary
+    }).format(comp_rgainfinal);
+
+    // Delay showing the formatted compensation amount
     setTimeout(function() {
       var compensationAmtElement = document.getElementById('compensation-amt');
+      compensationAmtElement.innerHTML = formattedCompensation; // Use innerHTML to insert formatted string
       compensationAmtElement.style.visibility = 'visible';
     }, 5000); // Delay of 5 seconds
+
+    
   });
 </script>
 

@@ -309,10 +309,10 @@
                                 color: rgb(125, 125, 125);">
                                 <p style="margin: auto;">
                                   Total Keuntungan <br>
-                                  <u>Pajak Diungkapkan</u><br>
+                                  <u>Pajak Diungkapkan</u><span style="color:black;">_</span>_<br>
                                   Keuntungan setelah Pajak<br>
                                   Pajak Tak Diungkapkan<br>
-                                  <u>Denda</u><br>
+                                  <u>Denda</u><span style="color:black;">_</span>_<br>
                                   Keuntungan Riil<br> </p>
                               </div>
                               
@@ -335,7 +335,7 @@
                                         <span id="tax_disclos_displayed">
                                           {{'{:,.0f}'.format(summary_data.tax_disclos |int) }}
                                         </span>
-                                      </u> _</span><br>
+                                      </u> <span style="color:black;">_</span>_</span> <br>
                                       <span><i>f </i>
                                         <span id="r_gain_net_displayed">
                                         {{'{:,.0f}'.format(summary_data.r_gain - summary_data.tax_disclos|int) }}
@@ -351,7 +351,7 @@
                                           <span id="penalty_displayed">
                                           {{'{:,.0f}'.format(summary_data.penalty) }}
                                           </span>
-                                        </u> _</span><br>
+                                        </u><span style="color:black;">_</span>_</span><br>
                                       <span><i>f </i>
                                         <span id="r_gain_final_displayed">
                                         {{'{:,.0f}'.format(summary_data.r_gain_final )  }}
@@ -360,7 +360,7 @@
                                     </div>
                               </div>
                             </div>
-                            <p id="tooltip" style="font-size:8px; color:rgb(256,256,256);display:none;">(Keuntungan Bersih < <i>f</i> 1 juta: <b>Rp 50.000,-</b>; <i>f</i>1-5 juta: <b>Rp 100.000,-</b>; > <i>f</i> 5 juta: <b>Rp 200.000)</b></p>
+                            <p id="tooltip" style="font-size:8px; color:rgb(256,256,256);display:none;">(Keuntungan Riil < <i>f</i> 1 juta: <b>Rp 50.000,-</b>; <i>f</i>1-5 juta: <b>Rp 100.000,-</b>; > <i>f</i> 5 juta: <b>Rp 200.000)</b></p>
                           </div>
                    </div>
 
@@ -396,6 +396,7 @@
   <form action="/next_round"> 
                   
   <input type="hidden" name="id" value= {{summary_data.id}}>
+  <input type="hidden" name="lang" value= {{summary_data.lang}}>
                   
             <div class="row justify-content-center" style="margin-left: 0px;">
               <div class="col-5 d-flex justify-content-center">
