@@ -4,6 +4,7 @@
 </div>
 
 <script>
+  var lang = {{ data['lang'] }}; 
 
         // Disable page refresh
         function disableRefresh() {
@@ -46,6 +47,24 @@
       title: {
         text: null
       },
+      toolTip: {
+          // Use contentFormatter for dynamic tooltip content formatting
+          contentFormatter: function(e) {
+              var value = e.entries[0].dataPoint.y;
+              var formattedValue = "";
+
+              // Check the lang value and format accordingly
+              if (lang === 1) {
+                  // Assuming lang=1 means we want to use dot as thousand separator
+                  formattedValue = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+              } else {
+                  // Default behavior (assuming lang is not 1)
+                  formattedValue = value.toLocaleString('en-US');
+              }
+
+              return "Value: " + formattedValue;
+          }
+      },
       axisX: {
         minimum: 0.1,
         maximum: 60.9,
@@ -73,7 +92,6 @@
         markerType: "circle",
         markerBorderColor: "rgb(180, 120, 70)",
         markerBorderThickness: 1,
-        toolTipContent: "Value: {y}",
         dataPoints: dataPoints
       }]
     });
@@ -83,7 +101,7 @@
     var updateCount = 0;
     var updateInterval;
     var round = {{ data['round'] }};
-    var lang = {{ data['lang'] }}; 
+
 
     function addData(data) {
       for (var i = 0; i < data.length; i++) {
