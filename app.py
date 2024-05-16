@@ -776,6 +776,8 @@ def yes():
         veteran = form_data.get('veteran')
         cryptorisk = form_data.get('cryptorisk')
         trustpower = form_data.get('trustpower')
+        comments_a = form_data.get('comments_a')
+        comments_b = form_data.get('comments_b')
 
         # Create a dictionary to map the question numbers to column names
         question_columns = {
@@ -827,12 +829,14 @@ def yes():
         insert_values['veteran'] = veteran
         insert_values['cryptorisk'] = cryptorisk
         insert_values['trustpower'] = trustpower
+        insert_values['comments_a'] = comments_a
+        insert_values['comments_b'] = comments_b
 
         # Execute the insert statement
         with engine.connect() as conn:
             insert_statement = text("""
-                INSERT INTO survey (question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10,question11,question12, question13,question14,question15,question16,question17,question18,question19,question20,question21,question22,question23,question24,question25,question26,question27,question28,question29, email, gr, id, comments, followup, lang, veteran, cryptorisk, trustpower)
-                VALUES (:question0, :question1, :question2,  :question3, :question4, :question5, :question6, :question7, :question8, :question9, :question10, :question11, :question12, :question13, :question14, :question15, :question16, :question17, :question18, :question19, :question20, :question21, :question22, :question23, :question24, :question25, :question26, :question27, :question28, :question29, :email, :gr, :id, :comments, :followup, :lang, :veteran, :cryptorisk, :trustpower)
+                INSERT INTO survey (question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10,question11,question12, question13,question14,question15,question16,question17,question18,question19,question20,question21,question22,question23,question24,question25,question26,question27,question28,question29, email, gr, id, comments, followup, lang, veteran, cryptorisk, trustpower, comments_a, comments_b)
+                VALUES (:question0, :question1, :question2,  :question3, :question4, :question5, :question6, :question7, :question8, :question9, :question10, :question11, :question12, :question13, :question14, :question15, :question16, :question17, :question18, :question19, :question20, :question21, :question22, :question23, :question24, :question25, :question26, :question27, :question28, :question29, :email, :gr, :id, :comments, :followup, :lang, :veteran, :cryptorisk, :trustpower, :comments_a, :comments_b)
             """)
             conn.execute(insert_statement, insert_values)
 
