@@ -149,15 +149,27 @@
     
         <div class="row justify-content-center">
           
-   <div class="col-9 col-sm-5" style="margin-top: 20px;">
-    <p style="font-size: 12px; text-align: center;">Enter your email to receive the e-gift voucher:</p>
+  <div class="col-9 col-sm-4" style="margin-top: 20px;">
+    <label for="email" style="font-size: 12px; margin-top: 18px;">Your email to receive the e-gift voucher:</label>
+    <input type="email" class="form-control form-control-sm" id="colFormLabelSm" style="font-size: 12px; text-align: left;background-color: #f5f5f5;margin-top:0px"  name="email" required>
   </div>
   
-  <div class="col-9 col-sm-4" style="margin-top: 15px;">
-    <input type="email" class="form-control form-control-sm" id="colFormLabelSm" placeholder="email" style="font-size: 12px; text-align: center;background-color: #f5f5f5"  name="email" required>
-
+  <div class="col-12 col-sm-7" style="margin-top: 15px;">
     <label for="comments" style="font-size: 12px; margin-top: 20px;">Any comments on the online experiment?</label>
-    <textarea id="comments" name="comments" rows="5" style="font-size: 12px;width: 100%;border: 1px solid #ccc;background-color: #f5f5f5" required></textarea>
+    <textarea id="comments" name="comments" rows="3" style="font-size: 12px;width: 100%;border: 1px solid #ccc;background-color: #f5f5f5" required></textarea>
+
+     <label for="cryptorisk" style="font-size: 12px; margin-top: 20px;">Do you think crypto assets pose a greater risk of tax evasion compared to other assets like stocks?</label>
+     <textarea id="cryptorisk" name="cryptorisk" rows="3" style="font-size: 12px;width: 100%;border: 1px solid #ccc;background-color: #f5f5f5" required></textarea>
+
+      <label for="trustpower" style="font-size: 12px; margin-top: 20px;">Do you believe that tax authorities have the capability to detect tax non-compliance with crypto-assets, even for transactions performed in decentralised exchanges?</label>
+      <textarea id="trustpower" name="trustpower" rows="3" style="font-size: 12px;width: 100%;border: 1px solid #ccc;background-color: #f5f5f5" required></textarea>
+
+     <label for="veteran" style="font-size: 12px; margin-top: 20px;">Have you participated in an online/lab experiment before?</label>
+     <select id="veteran" name="veteran" class="form-control form-control-sm" style="font-size: 12px;margin-bottom:20px;background-color: #f5f5f5" required>
+         <option value="">Select</option>
+         <option value="Yes">Yes</option>
+         <option value="No">No</option>
+     </select>
 
     <label for="followup" style="font-size: 12px; margin-top: 20px;">Interested in participating in the follow-up interview?</label>
     <select id="followup" name="followup" class="form-control form-control-sm" style="font-size: 12px;margin-bottom:20px;background-color: #f5f5f5" required>

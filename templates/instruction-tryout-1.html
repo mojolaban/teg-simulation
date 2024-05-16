@@ -44,7 +44,7 @@
       .fixed-box-2 {
       font-family: Arial;
       color: rgb(80,80,80);
-      height: 400px; 
+      height: 470px; 
       max-width: 100%;
       overflow: auto; 
       border: 0px solid #ccc; 
@@ -55,6 +55,23 @@
       }
   
     </style>
+
+    <script>
+
+      document.addEventListener('DOMContentLoaded', (event) => {
+          const video = document.getElementById('tutorialVideo');
+          const nextButton = document.getElementById('nextButton'); 
+
+          // Disable the button initially
+          nextButton.disabled = true;
+
+          video.addEventListener('ended', () => {
+              // Enable the button only after the video has finished playing
+              nextButton.disabled = false;
+          });
+      });
+
+    </script>
     
   </head>
   
@@ -69,7 +86,7 @@
   </p>
   
   <div class="fixed-box-1">
-    Before starting, you have the chance to take part in a single trial round (Round 0). Please take a moment to familiarise yourself with the information displayed on the screenshots below. Following the trial round, you will proceed to the main rounds (Round 1 - Round 15).
+    Before starting, you have the chance to take part in a single trial round (Round 0). Take a moment to familiarise yourself with the information presented in the screenshots and video below. This will prepare you for the main rounds (Round 1 - Round 15).
     <span id="id" style="color:rgb(256,256,256);font-size:2px;"> 
        {{ id }}</span>
 <hr>
@@ -84,6 +101,12 @@
 
      <img src="{{ url_for('static', filename='04.jpg') }}"style="max-width:900px;margin-top:20px;margin-left:20px;">
 
+    <div style="margin-top: 20px; margin-left: 20px; text-align: center;">  
+        <video id="tutorialVideo" width="900" controls style="max-width: 100%; max-height: calc(900px * 9 / 16);">
+            <source src="{{ url_for('static', filename='video_explanation.mp4') }}" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
     
   </div>
 
