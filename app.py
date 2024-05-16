@@ -624,11 +624,11 @@ def next_round():
             # Modify compensation logic based on lang value
             if lang == 0:
                 if comp_amt < 1000000:
-                    comp_rgainfinal = 15
+                    comp_rgainfinal = 5
                 elif 1000000 <= comp_amt <= 5000000:
-                    comp_rgainfinal = 30
+                    comp_rgainfinal = 10
                 else:
-                    comp_rgainfinal = 60
+                    comp_rgainfinal = 20
             elif lang == 1:
                 if comp_amt < 1000000:
                     comp_rgainfinal = 50000
