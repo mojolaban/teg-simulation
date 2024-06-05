@@ -42,10 +42,16 @@
           font-weight: bold;
           font-size: 16px;
         }
+          .fixed-dimensions {
+            width: 32.5cm;
+            height: 18.3cm;
+            margin: 0 auto; /* Center the content */
+          }
     </style>
   
 </head>
 <body>
+    <div class="fixed-dimensions">
     <h2>Current Country of Residence<br>
       <i>(Negara Tinggal Saat Ini)</i>:</h2>
     <form action="/select_language" method="POST">
@@ -55,6 +61,7 @@
         </select>
         <button id="nextButton" type="submit">Submit</button>
     </form>
-  <p style="margin-top:35px;color:grey;">Best viewed on desktop/laptop.</p>
-</body>
+  <p style="margin-top:35px;color:grey;text-align: center">Best viewed on desktop/laptop.</p>
+    </div>
+    </body>
 </html>
