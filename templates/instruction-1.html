@@ -54,7 +54,23 @@
       }
 
     </style>
-    
+
+      <script>
+
+        document.addEventListener('DOMContentLoaded', (event) => {
+            const video = document.getElementById('tutorialVideo');
+            const nextButton = document.getElementById('nextButton'); 
+
+            // Disable the button initially
+            nextButton.disabled = true;
+
+            video.addEventListener('ended', () => {
+                // Enable the button only after the video has finished playing
+                nextButton.disabled = false;
+            });
+        });
+
+      </script>
   </head>
   
 <body>
@@ -104,6 +120,15 @@
 
 <hr>
 
+      <div style="margin-top: 20px; margin-left: 20px; text-align: center;">  
+          <video id="tutorialVideo" width="900" controls style="max-width: 100%; max-height: calc(900px * 9 / 16);">
+              <source src="{{ url_for('static', filename='introductory_video-Stock.mp4') }}" type="video/mp4">
+              Your browser does not support the video tag.
+          </video>
+      </div>
+
+      <hr>
+      
     <div class="fixed-box-2" style="background-color: lightgray;">
       
     <p>To ensure your comprehension of the instructions, please answer the following questions correctly:</p>
