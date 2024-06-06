@@ -59,16 +59,18 @@
     <script>
 
       document.addEventListener('DOMContentLoaded', (event) => {
-          const video = document.getElementById('tutorialVideo');
-          const nextButton = document.getElementById('nextButton'); 
+        const video = document.getElementById('tutorialVideo');
+        const nextButton = document.getElementById('nextButton');
+        const checkBox = document.getElementById('confirmationCheck');
 
-          // Disable the button initially
-          nextButton.disabled = true;
+        // Disable the button initially
+        nextButton.disabled = true;
 
-          video.addEventListener('ended', () => {
-              // Enable the button only after the video has finished playing
-              nextButton.disabled = false;
-          });
+        video.addEventListener('ended', () => {
+          // Enable the button and check the checkbox after the video has finished playing
+          nextButton.disabled = false;
+          checkBox.checked = true;
+        });
       });
 
     </script>
@@ -86,7 +88,7 @@
   </p>
   
   <div class="fixed-box-1">
-    Sebelum memulai, Anda memiliki kesempatan untuk mengikuti satu ronde percobaan (Ronde 0). Silakan luangkan waktu sejenak untuk mengenali informasi-informasi yang akan Anda temui pada tangkapan layar di bawah ini. Setelah ronde percobaan, Anda akan melanjutkan ke ronde utama (Ronde 1 - Ronde 15).
+    Sebelum memulai, Anda memiliki kesempatan untuk mengikuti satu ronde percobaan (Ronde 0). Silakan luangkan waktu sejenak untuk mengenali informasi-informasi yang akan Anda temui pada tangkapan layar dan video di bawah ini. Setelah ronde percobaan, Anda akan melanjutkan ke ronde utama (Ronde 1 - Ronde 15).
     <span id="id" style="color:rgb(256,256,256);font-size:2px;"> 
        {{ id }}</span>
 <hr>
@@ -114,6 +116,14 @@
 
   </div>
 
+
+
+    <div style="margin-left: 20px; margin-top: 20px;">
+      <input type="checkbox" id="confirmationCheck" disabled>
+      <label for="confirmationCheck">Saya telah mereviu tangkapan layar dan video di atas.</label>
+    </div>
+
+    
   <h4 style="margin-left: 20px; 
   margin-bottom: 5px;
   font-family: Arial;
