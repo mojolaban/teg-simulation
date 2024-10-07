@@ -107,7 +107,7 @@
       <li>Memaksimalkan keuntungan Anda sangat penting karena kompensasi dari studi ini berbasis kinerja.</li>
       <li>Undian: Dengan berpartisipasi, Anda secara otomatis terdaftar. Pada akhir keseluruhan ronde, satu ronde akan dipilih secara acak oleh sistem, dan Anda akan menerima e-gift voucher berdasarkan keuntungan yang Anda peroleh di ronde tersebut. Jika keuntungan Anda kurang dari <i>f</i> 1 juta, Anda akan menerima voucher Rp 50.000,-. Untuk keuntungan antara <i>f</i> 1-5 juta, hadiahnya meningkat menjadi Rp 100.000,-. Melampaui <i>f</i> 5 juta akan memberikan Anda Rp 200.000,-.</li>
       <li>Jika terjadi audit, pajak yang tidak dilaporkan pada suatu ronde akan menjadi dasar pengenaan denda sebesar 200% dari jumlah pajak yang tidak dilaporkan tersebut. Denda ini, ditambah dengan pajak yang seharusnya dilaporkan, akan dikurangi dari total keuntungan Anda.</li>
-      <li>Kemungkinan untuk terkena audit adalah 20%, tetapi perdagangan di bursa terdesentralisasi (di mana transaksi terjadi antar pihak, tanpa perlu perantara/broker) dapat mengurangi kemungkinan ini hingga setengah atau lebih karena akses terbatas otoritas atas informasi.
+      <li>Kemungkinan untuk terkena audit pajak adalah 20%{{ ", tetapi karena perdagangan terjadi di bursa terdesentralisasi, kemungkinan terkena audit bisa lebih rendah hingga setengahnya atau bahkan lebih. Hal ini karena transaksi terjadi antar pihak, tanpa perlu perantara/broker, sehingga otoritas memiliki akses terbatas atas informasi ini" if au == "1" else "" if au == "0" }}.
       </li>
     </ul>
     <p><b>Strategi dan Umpan Balik</b></p>
@@ -158,7 +158,7 @@
               <input type="radio" name="q3" value="A broker"> Broker<br>
               <p id="q3-warning" style="color: red;"></p></p>
 
-              <p>4. Berapa kemungkinan otoritas mengaudit transaksi Anda ketika Anda tidak beroperasi di bursa terdesentralisasi?<br>
+              <p>4. Berapa persentase kemungkinan otoritas mengaudit pajak atas transaksi Anda{{ " ketika Anda tidak beroperasi di bursa terdesentralisasi" if au == "1" else "" if au == "0" }}?<br>
               <input type="radio" name="q4" value="10%"> 10%<br>
               <input type="radio" name="q4" value="0%"> 0%<br>
               <input type="radio" name="q4" value="20%"> 20%<br>
@@ -186,7 +186,7 @@
               <input type="radio" name="q7" value="f 1,500"> <i>f</i> 1.500<br>
               <p id="q7-warning" style="color: red;"></p></p>
 
-              <p>8. Dalam satu ronde acak, Anda melaporkan pajak sebesar <i>f</i> 100.000, sementara keuntungan Anda adalah <i>f</i> 1.100.000, dan pajak yang tidak dilaporkan adalah <i>f</i> 120.000. Dalam ronde ini, Anda tidak diaudit oleh otoritas. Berapa nilai e-gift voucher yang berhak Anda terima apabila ronde ini terpilih dalam undian?<br>
+              <p>8. Dalam satu ronde acak, Anda melaporkan pajak sebesar <i>f</i> 50.000, sementara keuntungan Anda adalah <i>f</i> 1.100.000, dan pajak yang tidak dilaporkan adalah <i>f</i> 170.000. Dalam ronde ini, Anda tidak diaudit oleh otoritas. Berapa nilai e-gift voucher yang berhak Anda terima apabila ronde ini terpilih dalam undian?<br>
               <input type="radio" name="q8" value="AUD 20">  Rp 200.000,-<br>
               <input type="radio" name="q8" value="A percentage amount of 10,000"> Rp 50.000,-<br>
               <input type="radio" name="q8" value="A percentage dollar amount of f 5,000"> Rp 100.000,-<br>

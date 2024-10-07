@@ -21,13 +21,14 @@ def select_language():
     id=treatment_dict["id"]
     treatment=treatment_dict["treatment"]
     lang=treatment_dict["lang"]
+    au=treatment_dict["au"]
     if language == 'English':
         # Pass the treatment dictionary to the render_template function
         print(treatment_dict["id"])
-        return render_template('home.html', id=id, treatment=treatment, lang=lang)
+        return render_template('home.html', id=id, treatment=treatment, lang=lang, au=au)
     elif language == 'Indonesian':
         # Pass the treatment dictionary to the render_template function
-        return render_template('home-a.html', id=id, treatment=treatment, lang=lang)
+        return render_template('home-a.html', id=id, treatment=treatment, lang=lang, au=au)
     # If somehow an invalid option is submitted, reload the page
     return render_template('index.html')
 
@@ -41,28 +42,30 @@ def form_demog():
         lang_value = request.form.get('lang')
         treatment_value = request.form.get('treatment')
         id_value = request.form.get('id')
+        au_value = request.form.get('au')
     else:  # GET method
         lang_value = request.args.get('lang')
         treatment_value = request.args.get('treatment')
         id_value = request.args.get('id')
+        au_value = request.args.get('au')
 
 
   # Debug statement to print the values in the server console
-    print("Debug - ID:", id_value, "Treatment:", treatment_value, "Language:", lang_value)
+    print("Debug - ID:", id_value, "Treatment:", treatment_value, "Language:", lang_value, "AU:", au_value)
 
 
     if treatment_value == "1" and lang_value == "1":
         asset_type = 'stock'
-        return render_template('form_demog-a.html', id=id_value, asset_type=asset_type, lang=lang_value)
+        return render_template('form_demog-a.html', id=id_value, asset_type=asset_type, lang=lang_value, au=au_value)
     elif treatment_value == "1" and lang_value == "0":
         asset_type = 'stock'
-        return render_template('form_demog.html', id=id_value, asset_type=asset_type, lang=lang_value)
+        return render_template('form_demog.html', id=id_value, asset_type=asset_type, lang=lang_value, au=au_value)
     elif treatment_value == "2" and lang_value == "1":
         asset_type = 'crypto'
-        return render_template('form_demog-a.html', id=id_value, asset_type=asset_type, lang=lang_value)
+        return render_template('form_demog-a.html', id=id_value, asset_type=asset_type, lang=lang_value, au=au_value)
     elif treatment_value == "2" and lang_value == "0":
         asset_type = 'crypto'
-        return render_template('form_demog.html', id=id_value, asset_type=asset_type, lang=lang_value)
+        return render_template('form_demog.html', id=id_value, asset_type=asset_type, lang=lang_value, au=au_value)
     else:
         # You might want to return a proper error response here
         return "Error"
@@ -84,28 +87,33 @@ def instructions():
         id = request.form['id']
         asset_type = request.form['asset_type']
         lang = request.form['lang']
+        au = request.form['au']
 
         insert_demog(gender, age, education_level, current_education, country_residence, citizenship, asset_experience, tax_experience, description, id)
         if 'stock' in asset_type and lang == "0":
           print("ID:", id)  # Debug statement
           print("asset_type:", asset_type)  # Debug statement
           print("language:", lang)  # Debug statement
-          return render_template('instruction-1.html', id=id, asset_type=asset_type, lang=lang)
+          print("au:", au) # Debug statement
+          return render_template('instruction-1.html', id=id, asset_type=asset_type, lang=lang, au=au)
         elif 'stock' in asset_type and lang == "1":
           print("ID:", id)  # Debug statement
           print("asset_type:", asset_type)  # Debug statement
           print("language:", lang)  # Debug statement
-          return render_template('instruction-1-a.html', id=id, asset_type=asset_type, lang=lang)
+          print("au:", au) # Debug statement
+          return render_template('instruction-1-a.html', id=id, asset_type=asset_type, lang=lang, au=au)
         elif 'crypto' in asset_type and lang == "0":
           print("ID:", id)  # Debug statement
           print("asset_type:", asset_type)  # Debug statement
           print("language:", lang)  # Debug statement
-          return render_template('instruction-2.html', id=id, asset_type=asset_type, lang=lang)
+          print("au:", au) # Debug statement
+          return render_template('instruction-2.html', id=id, asset_type=asset_type, lang=lang, au=au)
         elif 'crypto' in asset_type and lang =="1":
           print("ID:", id)  # Debug statement
           print("asset_type:", asset_type)  # Debug statement
           print("language:", lang)  # Debug statement
-          return render_template('instruction-2-a.html', id=id, asset_type=asset_type, lang=lang)
+          print("au:", au) # Debug statement
+          return render_template('instruction-2-a.html', id=id, asset_type=asset_type, lang=lang, au=au)
 
 
     elif request.method == 'GET':
@@ -121,18 +129,19 @@ def instructions():
         id = request.args.get('id')
         asset_type = request.args.get('asset_type')
         lang = request.args.get('lang')
+        au = request.args.get('au')
 
         if gender and age and education_level and current_education and country_residence and citizenship and asset_experience and tax_experience and description and id and asset_type:
             insert_demog(gender, age, education_level, current_education, country_residence, citizenship, asset_experience, tax_experience, description, id)
 
             if 'stock' in asset_type and lang == "1":
-                return render_template('instruction-1.html', id=id, asset_type=asset_type, lang=lang)
+                return render_template('instruction-1.html', id=id, asset_type=asset_type, lang=lang, au=au)
             elif 'stock' in asset_type and lang =="0":
-                return render_template('instruction-1-a.html', id=id, asset_type=asset_type, lang=lang)
+                return render_template('instruction-1-a.html', id=id, asset_type=asset_type, lang=lang, au=au)
             elif 'crypto' in asset_type and lang == "1":
-                return render_template('instruction-2.html', id=id, asset_type=asset_type, lang=lang)
+                return render_template('instruction-2.html', id=id, asset_type=asset_type, lang=lang, au=au)
             elif 'crypto' in asset_type and lang =="0":
-                return render_template('instruction-2-a.html', id=id, asset_type=asset_type, lang=lang)
+                return render_template('instruction-2-a.html', id=id, asset_type=asset_type, lang=lang, au=au)
             else:
                 # Handle other cases if needed
                 pass
@@ -609,6 +618,8 @@ def next_round():
                 SELECT `id`, `gr`,`round`, `r_gain_final`, `lang`
                 FROM `teg-simulation-sandbox`.`responses`
                 WHERE `id` = :user_id AND `round` = :random_number
+                ORDER BY `ts` DESC
+                LIMIT 1
             """)
             result_2 = conn.execute(select_statement_2, {"user_id": userid, "random_number": random_number})
             result = result_2.fetchone()
@@ -690,13 +701,13 @@ def survey():
         ' ... because to me it’s obvious that this is what you do.',
         '... even if tax audits did not exist.',
         '... without spending a long time thinking how I could reduce them.',
-        'I feel that I am forced to pay my taxes.',        
-        'I pay my taxes because the risk of being checked is too high.',     
-        'I pay taxes for I don`t know how to evade taxes without attracting attention.',  
+        'I feel that I am forced to pay my crypto taxes.',        
+        'I pay my crypto taxes because the risk of being checked is too high.',     
+        'I pay my crypto taxes for I don`t know how to evade taxes without attracting attention.',  
         'Tax officers pass information in an understandable way.',        
-        'Tax officers know exactly how a correct tax file should look like.',        
-        'Tax officers inform and advise taxpayers how to pay taxes correctly.',      
-        'Tax officers have the legal right to collect taxes.',       
+        'Tax officers know exactly how a correct crypto tax report should look like.',        
+        'Tax officers inform and advise taxpayers how to pay crypto taxes correctly.',      
+        'Tax officers have the legal right to collect crypto taxes.',       
         'Tax officers apply severe punishments.',        
         'Tax officers prosecute taxpayers mainly with audits and fines.',   
         'Tax officers enforce compliance through audits and fines.',
@@ -709,18 +720,25 @@ def survey():
         'I trust the tax officers because the tax officers pursue important goals for the country.',        
         'Most other taxpayers are paying their taxes correctly without thinking about it.',    
         'Most other taxpayers automatically pay their taxes.',        
-        'Most other taxpayers pay their taxes honestly without dealing with it deeply.',       
-        'Most other taxpayers pay their taxes honestly because of audits and fines.',        
-        'Most other taxpayers pay their taxes honestly because they respect the law.',        
-        'Most other taxpayers pay their taxes honestly because they love their country.',      
-        'Most other taxpayers pay taxes because they get something in exchange.',        
-        ' Most other taxpayers pay taxes because taxes are used for public interests such as education & health.',        
-        'Most other taxpayers pay taxes because its a way to close the gap between rich and poor.',        
-        'How likley will you pay your taxes for the current year correctly and in full extent to the tax authority?'
+        'Most other taxpayers pay their crypto taxes honestly without dealing with it deeply.',       
+        'Most other taxpayers pay their crypto taxes honestly because of audits and fines.',        
+        'Most other taxpayers pay their crypto taxes honestly because they respect the law.',        
+        'Most other taxpayers pay their crypto taxes honestly because they love their country.',      
+        'Most other taxpayers pay crypto taxes because they get something in exchange.',        
+        ' Most other taxpayers pay crypto taxes because taxes are used for public interests such as education & health.',        
+        'Most other taxpayers pay crypto taxes because its a way to close the gap between rich and poor.',    
+        'I trust the crypto-intermediaries without thinking about it.',
+        'I trust the crypto-intermediaries automatically.',
+        'I trust crypto-intermediaries usually without dealing with it deeply.',
+        'I trust crypto intermediaries because the regulatory environment allows them to operate transparently and professionally.',
+        'I trust crypto intermediaries because they execute transactions efficiently and competently.',
+        "I trust crypto intermediaries because they demonstrate a commitment to protecting their users' interests.",
+        'I trust crypto intermediaries because they are aligned with important goals, such as enhancing financial security and innovation.',
+        'How likley will you pay your crypto taxes for the current year correctly and in full extent to the tax authority?'
         ]
 
     questindo = [
-        '... karena bagi saya jelas ini yang harus Anda lakukan.',
+        '... karena bagi saya jelas ini yang harus saya lakukan.',
         '... bahkan jika audit pajak tidak ada.',
         '... tanpa menghabiskan waktu lama memikirkan bagaimana saya bisa menguranginya.',
         'Saya merasa bahwa saya dipaksa untuk membayar pajak.',
@@ -733,7 +751,7 @@ def survey():
         'Petugas pajak menerapkan hukuman yang berat.',
         'Petugas pajak memprosekusi wajib pajak terutama dengan audit dan denda.',
         'Petugas pajak memaksa wajib pajak patuh melalui audit dan denda.',
-        'Saya mempercayai petugas pajak tanpa memikirkannya.',
+        'Saya mempercayai petugas pajak tanpa berpikir panjang.',
         'Saya secara otomatis mempercayai petugas pajak.',
         'Biasanya saya mempercayai petugas pajak tanpa memikirkannya secara mendalam.',
         'Saya mempercayai petugas pajak karena situasi politik dan ekonomi memungkinkan mereka bekerja secara profesional.',
@@ -749,7 +767,14 @@ def survey():
         'Sebagian besar wajib pajak lain membayar pajak karena mereka mendapatkan sesuatu sebagai imbalannya.',
         'Sebagian besar wajib pajak lain membayar pajak karena pajak digunakan untuk kepentingan publik seperti pendidikan & kesehatan.',
         'Sebagian besar wajib pajak lain membayar pajak sebagai cara untuk menutup kesenjangan antara kaya dan miskin.',
-        'Seberapa mungkin Anda akan membayar pajak Anda untuk tahun ini secara benar dan penuh kepada otoritas pajak?'
+        'Saya percaya kepada para perantara kripto tanpa berpikir panjang.',
+        'Saya secara otomatis mempercayai para perantara kripto.',
+        'Saya biasanya percaya kepada perantara kripto tanpa memikirkannya secara mendalam.',
+        'Saya percaya kepada perantara kripto karena lingkungan regulasi memungkinkan mereka beroperasi secara transparan dan profesional.',
+        'Saya percaya kepada perantara kripto karena mereka mengeksekusi transaksi secara efisien dan kompeten.',
+        'Saya percaya kepada perantara kripto karena mereka menunjukkan komitmen untuk melindungi kepentingan penggunanya.',
+        'Saya percaya kepada perantara kripto karena visi mereka selaras dengan tujuan-tujuan penting, seperti meningkatkan keamanan keuangan dan inovasi.',
+        'Seberapa mungkin Anda akan membayar pajak kripto Anda untuk tahun ini secara benar dan penuh kepada otoritas pajak?'
   ]
     # Depending on the lang, choose the appropriate template and question set
     if lang == '0':
@@ -810,7 +835,14 @@ def yes():
             'question26': 'question26',
             'question27': 'question27',
             'question28': 'question28',
-            'question29': 'question29'
+            'question29': 'question29',
+            'question30': 'question30',
+            'question31': 'question31',
+            'question32': 'question32',
+            'question33': 'question33',
+            'question34': 'question34',
+            'question35': 'question35',
+            'question36': 'question36'
          }
 
         # Prepare the insert statement
@@ -835,8 +867,8 @@ def yes():
         # Execute the insert statement
         with engine.connect() as conn:
             insert_statement = text("""
-                INSERT INTO survey (question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10,question11,question12, question13,question14,question15,question16,question17,question18,question19,question20,question21,question22,question23,question24,question25,question26,question27,question28,question29, email, gr, id, comments, followup, lang, veteran, cryptorisk, trustpower, comments_a, comments_b)
-                VALUES (:question0, :question1, :question2,  :question3, :question4, :question5, :question6, :question7, :question8, :question9, :question10, :question11, :question12, :question13, :question14, :question15, :question16, :question17, :question18, :question19, :question20, :question21, :question22, :question23, :question24, :question25, :question26, :question27, :question28, :question29, :email, :gr, :id, :comments, :followup, :lang, :veteran, :cryptorisk, :trustpower, :comments_a, :comments_b)
+                INSERT INTO survey (question0, question1, question2, question3, question4, question5, question6, question7, question8, question9, question10,question11,question12, question13,question14,question15,question16,question17,question18,question19,question20,question21,question22,question23,question24,question25,question26,question27,question28,question29,question30,question31,question32,question33,question34,question35,question36, email, gr, id, comments, followup, lang, veteran, cryptorisk, trustpower, comments_a, comments_b)
+                VALUES (:question0, :question1, :question2,  :question3, :question4, :question5, :question6, :question7, :question8, :question9, :question10, :question11, :question12, :question13, :question14, :question15, :question16, :question17, :question18, :question19, :question20, :question21, :question22, :question23, :question24, :question25, :question26, :question27, :question28, :question29,:question30,:question31,:question32,:question33,:question34, :question35, :question36, :email, :gr, :id, :comments, :followup, :lang, :veteran, :cryptorisk, :trustpower, :comments_a, :comments_b)
             """)
             conn.execute(insert_statement, insert_values)
 

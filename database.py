@@ -15,44 +15,64 @@ engine = create_engine(db_connection_string,
 
 #----0.1 Assign treatment based on language selection
 def insert_group_lang(lang):
-  with engine.connect() as conn:
-      # Generate a random 2-character ID
-      random_id = ''.join(random.choices(string.ascii_uppercase +
-                                         string.ascii_lowercase + string.digits,
-                                         k=2))
+    with engine.connect() as conn:
+        # Generate a random 2-character ID
+        random_id = ''.join(random.choices(string.ascii_uppercase +
+                                           string.ascii_lowercase + string.digits,
+                                           k=2))
 
-      # Convert lang to the expected format for comparison
-      lang_value = 1 if lang == 'Indonesian' else 0
+        # Convert lang to the expected format for comparison
+        lang_value = 1 if lang == 'Indonesian' else 0
 
-      # Attempt to fetch the last entry's treatment for the given lang
-      last_entry_for_lang_result = conn.execute(text("""
-          SELECT `gr`, `lang`
-          FROM `log`
-          WHERE `lang` = :lang
-          ORDER BY `num` DESC
-          LIMIT 1
-      """), {'lang': lang_value})
-      last_entry_data = last_entry_for_lang_result.fetchone()
+        # Attempt to fetch the last entry's treatment for the given lang
+        last_entry_for_lang_result = conn.execute(text("""
+            SELECT `gr`, `lang`
+            FROM `log`
+            WHERE `lang` = :lang
+            ORDER BY `num` DESC
+            LIMIT 1
+        """), {'lang': lang_value})
+        last_entry_data = last_entry_for_lang_result.fetchone()
 
-      # Determine treatment based on the last entry for the given lang
-      if last_entry_data:
-          last_treatment, _ = last_entry_data
-          # Toggle the treatment based on the last entry for the given lang
-          treatment = '2' if last_treatment == '1' else '1'
-      else:
-          # Default treatment if there's no previous entry for the given lang
-          treatment = '1'
+        # Determine treatment based on the last entry for the given lang
+        if last_entry_data:
+            last_treatment, _ = last_entry_data
+            # Toggle the treatment based on the last entry for the given lang
+            treatment = '2' if last_treatment == '1' else '1'
+        else:
+            # Default treatment if there's no previous entry for the given lang
+            treatment = '1'
 
-      # Insert the new record with the determined treatment
-      conn.execute(text("""
-          INSERT INTO `log` (`counter`, `gr`, `id`, `lang`)
-          VALUES ('1', :treatment, :id, :lang);
-      """), {"treatment": treatment, "id": random_id, "lang": lang_value})
+        # Now, fetch the last entry with the same treatment to determine 'au' value
+        last_entry_for_treatment_result = conn.execute(text("""
+            SELECT `au`
+            FROM `log`
+            WHERE `gr` = :treatment
+            ORDER BY `num` DESC
+            LIMIT 1
+        """), {'treatment': treatment})
+        last_au_data = last_entry_for_treatment_result.fetchone()
 
-      # Create and return a dictionary with the treatment, id, and lang values
-      treatment_dict = {"treatment": treatment, "id": random_id, "lang": lang_value}
+        # Determine the 'au' value to alternate (0 or 1)
+        if last_au_data:
+            last_au = last_au_data[0]
+            # Toggle 'au' value based on the last entry's 'au'
+            au_value = 1 if last_au == 0 else 0
+        else:
+            # Default 'au' if there's no previous entry for the treatment
+            au_value = 0
 
-  return treatment_dict
+        # Insert the new record with the determined treatment and 'au'
+        conn.execute(text("""
+            INSERT INTO `log` (`counter`, `gr`, `id`, `lang`, `au`)
+            VALUES ('1', :treatment, :id, :lang, :au);
+        """), {"treatment": treatment, "id": random_id, "lang": lang_value, "au": au_value})
+
+        # Create and return a dictionary with the treatment, id, lang, and au values
+        treatment_dict = {"treatment": treatment, "id": random_id, "lang": lang_value, "au": au_value}
+
+    return treatment_dict
+
   
 
 
