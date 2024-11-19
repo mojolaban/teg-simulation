@@ -3,249 +3,494 @@
 <head>
     {% include 'bootstrap.html' %}
     <title>TEG</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    
     <style>
-      p, h1, form, label {
-        font-family: Arial;
-        color: rgb(80,80,80);
-      }
-      h1 {
-        font-size: 40px;
-        margin-bottom: 20px;
-      }
-      #container {
-        max-width: 70%;
-        margin: 10px auto;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
-      .fixed-box-0, .fixed-box-1, .fixed-box-2 {
-        overflow: auto; 
-        border: 3px grooved solid #ccc; 
-        padding: 10px; 
-        position: relative;
-        margin-top: 20px;
-        border-radius: 10px;
-      }
-      .fixed-box-0 {
-        height: 600px;
-      }
-      .fixed-box-1 {
-        height: 440px; 
-        margin-left: 20px;
-      }
-      .fixed-box-2 {
-        height: auto;
-        background-color: #f0f0f0;
-      }
-      form {
-        display: flex;
-        flex-direction: column;
-      }
-      input, select {
-        margin-bottom: 10px;
-        padding: 8px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-      }
-      button {
-        margin-top: 20px; /* Updated to move the button to the top */
-        background-color: rgb(10, 103, 173, 0.9);
-        color: white;
-        padding: 10px 30px;
-        border: none;
-        border-radius: 4px;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        align-self: flex-start; /* Added to align button to the left */
-      }
-      button:hover {
-        background-color: rgb(10, 103, 173, 0.7);
-      }
-      .error {
-        color: red;
-        margin-top: 0px; /* Reduced space between error message and question */
-        margin-bottom: 10px; /* Reduced space between error message and next question */
-      }
+        :root {
+            --primary-color: rgb(80,80,80);
+            --accent-color: rgb(10, 103, 173);
+            --accent-light: rgba(10, 103, 173, 0.05);
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+            --transition-speed: 0.3s;
+            --border-radius: 16px;
+            --spacing-unit: clamp(0.5rem, 2vw, 1rem);
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: var(--primary-color);
+            line-height: 1.7;
+            background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+            padding: var(--spacing-unit);
+            user-select: none;
+        }
+
+        #container {
+            width: min(95%, 1200px);
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 2);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            background: linear-gradient(45deg, var(--accent-color), #2c5282);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+
+        .fixed-box-0, .fixed-box-1, .fixed-box-2 {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            overflow: auto;
+        }
+
+        .fixed-box-0 {
+            padding: calc(var(--spacing-unit) * 2.5);
+            height: auto;
+            max-height: 90vh;
+        }
+
+        .fixed-box-1 {
+            margin: calc(var(--spacing-unit) * 1.5);
+            padding: calc(var(--spacing-unit) * 1.5);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .fixed-box-2 {
+            margin: calc(var(--spacing-unit) * 1.2);
+            padding: calc(var(--spacing-unit) * 1.8);
+            background: rgba(248, 249, 250, 0.5);
+        }
+
+        /* Form Elements */
+        .question-group {
+            margin-bottom: calc(var(--spacing-unit) * 3.5);
+        }
+
+        .question-label {
+            font-size: clamp(1rem, 1.5vw, 1.125rem);
+            font-weight: 500;
+            margin-bottom: calc(var(--spacing-unit)* 1.2);
+            display: block;
+            width: 100%;
+        }
+
+        select, input[type="number"] {
+            width: 95%;
+            padding: calc(var(--spacing-unit));
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: calc(var(--border-radius) - 8px);
+            font-size: clamp(0.875rem, 1.2vw, 1rem);
+            margin-bottom: calc(var(--spacing-unit) * 0.5);
+            background-color: white;
+        }
+
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: calc(var(--spacing-unit) * 0.8);
+            margin-left: calc(var(--spacing-unit) * 1.5);
+        }
+
+        .options-wrapper {
+            margin-top: calc(var(--spacing-unit) * 1.2);
+            margin-bottom: calc(var(--spacing-unit) * 1.5);
+        }
+        
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: calc(var(--spacing-unit) * 1);
+            padding-left: calc(var(--spacing-unit) * 1.5);
+        }
+
+        input[type="checkbox"], input[type="radio"] {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin-right: calc(var(--spacing-unit) * 0.5);
+        }
+
+        button {
+            background: linear-gradient(45deg, var(--accent-color), #2c5282);
+            color: white;
+            padding: calc(var(--spacing-unit)) calc(var(--spacing-unit) * 2);
+            border: none;
+            border-radius: calc(var(--border-radius) - 8px);
+            font-size: clamp(1rem, 1.2vw, 1.125rem);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            margin-top: calc(var(--spacing-unit) * 2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(10, 103, 173, 0.2);
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: clamp(0.75rem, 1vw, 0.875rem);
+            margin-top: calc(var(--spacing-unit) * 0.5);
+            margin-bottom: calc(var(--spacing-unit) * 1.5);
+            display: none;
+        }
+
+        button[type="submit"] {
+            margin-top: calc(var(--spacing-unit) * 4); /* Increased top margin for button */
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            :root {
+                --border-radius: 12px;
+            }
+
+            #container {
+                width: 100%;
+                padding: var(--spacing-unit);
+            }
+
+            .fixed-box-1, .fixed-box-2 {
+                margin: calc(var(--spacing-unit));
+                padding: calc(var(--spacing-unit));
+            }
+
+            select, input[type="number"] {
+                width: 100%;
+            }
+
+            .option-group {
+                margin-left: calc(var(--spacing-unit));
+            }
+        }
+
+        /* Warning Message Style */
+        .warning-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 69, 0, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            display: none;
+            text-align: center;
+            white-space: nowrap;
+        }
     </style>
 </head>
-<body>
+    <body>
+        <!-- Warning Message Container -->
+        <div id="warningMessage" class="warning-message"></div>
 
-<div id="container">
-    <div class="fixed-box-0">
-        <h1>Profil Partisipan</h1>
-        <div class="fixed-box-1" 
-          style="box-shadow: inset 0 0 4px #555;">
-            <p style="margin-top:10px;">Sebelum memulai eksperimen daring, mohon untuk melengkapi pertanyaan-pertanyaan berikut. Kami menjamin kerahasiaan data Anda sesuai dengan yang diuraikan dalam pernyataan penjelasan.</p>
-            <div class="fixed-box-2">
-                <form action="/instructions" method="post" onsubmit="return validateForm()">
-                    <div id="error-message" class="error" style="display:none;"></div> <!-- General error message -->
-                    
-                    <label>1. Jenis kelamin</label>
-                    <select name="gender" id="gender">
-                        <option value="">Pilih</option>
-                        <option value="male">Laki-laki</option>
-                        <option value="female">Perempuan</option>
-                        <option value="third">Gender Ketiga/Non-Binari</option>
-                        <option value="prefer_not_to_answer">Tidak ingin menjawab</option>
-                    </select>
-                    <div id="gender-error" class="error" style="display:none;">Masukkan jawaban.</div>
+        <div id="container">
+            <div class="fixed-box-0">
+                <h1>Profil Partisipan</h1>
+                <div class="fixed-box-1">
+                    <p>Sebelum memulai eksperimen daring, mohon untuk melengkapi pertanyaan-pertanyaan berikut. Kami menjamin kerahasiaan data Anda sesuai dengan yang diuraikan dalam pernyataan penjelasan.</p>
+                    <div class="fixed-box-2">
+                        <form action="{{ url_for('index') }}" method="post" onsubmit="return validateForm()">
+                            <div id="error-message" class="error" style="display:none;"></div>
 
-                    <label>2. Umur (Tahun)</label>
-                    <input type="number" name="age" id="age" min="18" max="100" value="">
-                    <div id="age-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            <div class="question-group">
+                                <label class="question-label">1. Jenis kelamin</label>
+                                <select name="gender" id="gender">
+                                    <option value="">Pilih</option>
+                                    <option value="male">Laki-laki</option>
+                                    <option value="female">Perempuan</option>
+                                    <option value="third">Gender Ketiga/Non-Binari</option>
+                                    <option value="prefer_not_to_answer">Tidak ingin menjawab</option>
+                                </select>
+                                <div id="gender-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            </div>
 
-                    <label>3. Pendidikan formal tertinggi yang diraih</label>
-                    <select name="education_level" id="education_level">
-                        <option value="">Pilih</option>
-                      <option value="pre_high_school">Lulusan Pra Sekolah Menengah Atas/Tidak Memiliki Pendidikan Formal</option>
-                      <option value="high_school">Lulusan Sekolah Menengah Atas</option>
-                        <option value="bachelor">Gelar Sarjana</option>
-                        <option value="master">Gelar Magister</option>
-                        <option value="doctoral">Gelar Doktoral</option>
-                    </select>
-                    <div id="education_level-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            <div class="question-group">
+                                <label class="question-label">2. Umur (Tahun)</label>
+                                <input type="number" name="age" id="age" min="18" max="100" value="">
+                                <div id="age-error" class="error" style="display:none;">Nilai harus lebih besar atau sama dengan 18.</div>
+                            </div>
 
-                    <label>4. Status terkini dalam pendidikan formal</label>
-                    <select name="current_education" id="current_education">
-                        <option value="">Pilih</option>
-                        <option value="not_enrolled">Tidak terdaftar dalam tingkat pendidikan apapun</option>
-                        <option value="high_school">Sekolah Menengah Atas</option>
-                      <option value="bachelor">Gelar Sarjana</option>
-                      <option value="master">Gelar Magister</option>
-                      <option value="doctoral">Gelar Doktoral</option>
-                    </select>
-                    <div id="current_education-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            <div class="question-group">
+                                <label class="question-label">3. Pendidikan formal tertinggi yang diraih</label>
+                                <select name="education_level" id="education_level">
+                                    <option value="">Pilih</option>
+                                    <option value="pre_high_school">Lulusan Pra Sekolah Menengah Atas/Tidak Memiliki Pendidikan Formal</option>
+                                    <option value="high_school">Lulusan Sekolah Menengah Atas</option>
+                                    <option value="bachelor">Gelar Sarjana</option>
+                                    <option value="master">Gelar Magister</option>
+                                    <option value="doctoral">Gelar Doktoral</option>
+                                </select>
+                                <div id="education_level-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            </div>
 
-                    <label>5. Negara tempat tinggal</label>
-                    <select name="country_residence" id="country_residence">
-                        <option value="">Pilih</option>
-                        <option value="australia">Australia</option>
-                        <option value="indonesia">Indonesia</option>
-                    </select>
-                    <div id="country_residence-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            <div class="question-group">
+                                <label class="question-label">4. Status terkini dalam pendidikan formal</label>
+                                <select name="current_education" id="current_education">
+                                    <option value="">Pilih</option>
+                                    <option value="not_enrolled">Tidak terdaftar dalam tingkat pendidikan apapun</option>
+                                    <option value="high_school">Sekolah Menengah Atas</option>
+                                    <option value="bachelor">Gelar Sarjana</option>
+                                    <option value="master">Gelar Magister</option>
+                                    <option value="doctoral">Gelar Doktoral</option>
+                                </select>
+                                <div id="current_education-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            </div>
 
-                    <label>6. Kewarganegaraan</label>
-                    <select name="citizenship" id="citizenship">
-                        <option value="">Pilih</option>
-                        <option value="australia">Australia</option>
-                        <option value="indonesia">Indonesia</option>
-                    </select>
-                    <div id="citizenship-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            <!-- Hidden fields -->
+                            <input type="hidden" name="country_residence" id="country_residence" value="indonesia">
+                            <input type="hidden" name="citizenship" id="citizenship" value="indonesia">
 
-                    <!-- Additional questions -->
-                    <label>7. Pengalaman Anda dengan investasi aset? (pilih semua yang berlaku)</label>
-                    <label style="margin-left:25px;"><input type="checkbox" name="asset_experience[]" value="crypto"> Saya berinvestasi dalam aset kripto</label>
-                    <label style="margin-left:25px;"><input type="checkbox" name="asset_experience[]" value="securities"> Saya berinvestasi dalam saham, obligasi, atau sekuritas lainnya</label>
-                    <label style="margin-left:25px;"><input type="checkbox" name="asset_experience[]" value="commodities"> Saya berinvestasi dalam komoditas, real estat, atau logam mulia.</label>
-                    <div id="asset_experience-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            <div class="question-group">
+                                <label class="question-label">5. Pengalaman Anda dengan investasi aset? (pilih semua yang berlaku)</label>
+                                <div class="options-wrapper">
+                                    <label class="option-label">
+                                        <input type="checkbox" name="asset_experience[]" value="crypto"> 
+                                        Saya berinvestasi dalam aset kripto
+                                    </label>
+                                    <label class="option-label">
+                                        <input type="checkbox" name="asset_experience[]" value="securities"> 
+                                        Saya berinvestasi dalam saham, obligasi, atau sekuritas lainnya
+                                    </label>
+                                    <label class="option-label">
+                                        <input type="checkbox" name="asset_experience[]" value="commodities"> 
+                                        Saya berinvestasi dalam komoditas, real estat, atau logam mulia.
+                                    </label>
+                                </div>
+                                <div id="asset_experience-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            </div>
 
-                    <label>8. Pengalaman Anda dengan perpajakan?</label>
-                    <label style="margin-left:25px;"><input type="radio" name="tax_experience" id="tax_self" value="self"> Saya memenuhi kewajiban pajak saya sendiri</label>
-                    <label style="margin-left:25px;"><input type="radio" name="tax_experience" id="tax_intermediaries" value="intermediaries"> Saya memenuhi kewajiban pajak melalui perantara (misalkan konsultan pajak atau akuntan pajak)</label>
-                    <div id="tax_experience-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            <div class="question-group">
+                                <label class="question-label">6. Pengalaman Anda dengan perpajakan?</label>
+                                <div class="options-wrapper">
+                                    <label class="option-label">
+                                        <input type="radio" name="tax_experience" id="tax_self" value="self"> 
+                                        Saya memenuhi kewajiban pajak saya sendiri
+                                    </label>
+                                    <label class="option-label">
+                                        <input type="radio" name="tax_experience" id="tax_intermediaries" value="intermediaries"> 
+                                        Saya memenuhi kewajiban pajak melalui perantara (misalkan konsultan pajak atau akuntan pajak)
+                                    </label>
+                                </div>
+                                <div id="tax_experience-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            </div>
 
-                    <label>9. Pilih deskripsi yang paling mendekati aktivitas investasi kripto Anda:</label>
-                    <label style="margin-left:25px;"><input type="radio" name="description" id="desc_one_off" value="one-off"> Saya dulu pernah menjadi investor kripto.</label>
-                    <label style="margin-left:25px;"><input type="radio" name="description" id="desc_favourable" value="favourable"> Saya berdagang kripto hanya ketika situasi tampak menguntungkan</label>
-                    <label style="margin-left:25px;"><input type="radio" name="description" id="desc_frequent" value="frequent"> Saya adalah pedagang aset kripto aktif yang sering bertransaksi. </label>
-                    <div id="description-error" class="error" style="display:none;">Masukkan jawaban.</div>
-<input type="hidden" name="lang" id="lang" value={{lang}}>
-<input type="hidden" name="id" id="id" value={{id}}>
-<input type="hidden" name="au" id="au" value={{au}}>
-<input type="hidden" name="asset_type" id="asset_type" value={{asset_type}}>
+                            <div class="question-group">
+                                <label class="question-label">7. Pilih deskripsi yang paling mendekati aktivitas investasi kripto Anda:</label>
+                                <div class="options-wrapper">
+                                    <label class="option-label">
+                                        <input type="radio" name="description" id="desc_one_off" value="one-off"> 
+                                        Saya dulu pernah menjadi investor kripto.
+                                    </label>
+                                    <label class="option-label">
+                                        <input type="radio" name="description" id="desc_favourable" value="favourable"> 
+                                        Saya berdagang kripto hanya ketika situasi tampak menguntungkan
+                                    </label>
+                                    <label class="option-label">
+                                        <input type="radio" name="description" id="desc_frequent" value="frequent"> 
+                                        Saya adalah pedagang aset kripto aktif yang sering bertransaksi.
+                                    </label>
+                                </div>
+                                <div id="description-error" class="error" style="display:none;">Masukkan jawaban.</div>
+                            </div>
 
+                            <!-- Hidden form fields -->
+                            <input type="hidden" name="form_type" value="demographic">
+                            <input type="hidden" name="lang" value="{{ lang }}">
+                            <input type="hidden" name="treatment" value="{{ treatment }}">
+                            <input type="hidden" name="id" value="{{ id }}">
+                            <input type="hidden" name="au" value="{{ au }}">
 
-                    <button type="submit">Next</button>
-
-                </form>
+                            <button type="submit">Lanjut</button>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
 
-<script>
-    function validateForm() {
-        var gender = document.getElementById("gender").value;
-        var age = document.getElementById("age").value;
-        var educationLevel = document.getElementById("education_level").value;
-        var currentEducation = document.getElementById("current_education").value;
-        var countryResidence = document.getElementById("country_residence").value;
-        var citizenship = document.getElementById("citizenship").value;
-        var assetExperience = document.querySelectorAll('input[name="asset_experience[]"]:checked').length;
-        var taxSelf = document.getElementById("tax_self").checked;
-        var taxIntermediaries = document.getElementById("tax_intermediaries").checked;
-        var description = document.querySelectorAll('input[name="description"]:checked').length;
+        <script>
+            (function() {
+                // Show warning message in Indonesian
+                function showWarning(message) {
+                    const warningDiv = document.getElementById('warningMessage');
+                    warningDiv.textContent = message;
+                    warningDiv.style.display = 'block';
 
-        // Check if any of the required fields are empty or unchecked
-        var isValid = true;
-        if (gender === "") {
-            document.getElementById("gender-error").style.display = "block";
-            isValid = false;
-        } else {
-            document.getElementById("gender-error").style.display = "none";
-        }
-        if (age === "" || age < 18) {
-            document.getElementById("age-error").style.display = "block";
-            isValid = false;
-        } else {
-            document.getElementById("age-error").style.display = "none";
-        }
-        if (educationLevel === "") {
-            document.getElementById("education_level-error").style.display = "block";
-            isValid = false;
-        } else {
-            document.getElementById("education_level-error").style.display = "none";
-        }
-        if (currentEducation === "") {
-            document.getElementById("current_education-error").style.display = "block";
-            isValid = false;
-        } else {
-            document.getElementById("current_education-error").style.display = "none";
-        }
-        if (countryResidence === "") {
-            document.getElementById("country_residence-error").style.display = "block";
-            isValid = false;
-        } else {
-            document.getElementById("country_residence-error").style.display = "none";
-        }
-        if (citizenship === "") {
-            document.getElementById("citizenship-error").style.display = "block";
-            isValid = false;
-        } else {
-            document.getElementById("citizenship-error").style.display = "none";
-        }
-        if (assetExperience === 0) {
-            document.getElementById("asset_experience-error").style.display = "block";
-            isValid = false;
-        } else {
-            document.getElementById("asset_experience-error").style.display = "none";
-        }
-        if (!taxSelf && !taxIntermediaries) {
-            document.getElementById("tax_experience-error").style.display = "block";
-            isValid = false;
-        } else {
-            document.getElementById("tax_experience-error").style.display = "none";
-        }
-        if (description === 0) {
-            document.getElementById("description-error").style.display = "block";
-            isValid = false;
-        } else {
-            document.getElementById("description-error").style.display = "none";
-        }
+                    setTimeout(() => {
+                        warningDiv.style.display = 'none';
+                    }, 3000);
+                }
 
-        // Check if the form is valid
-        if (!isValid) {
-            document.getElementById("error-message").style.display = "block";
-            return false;
-        } else {
-            document.getElementById("error-message").style.display = "none";
-            return true;
-        }
-    }
-</script>
+                // Prevent navigation and reload
+                function preventBackNavigation() {
+                    window.history.pushState(null, null, window.location.href);
+                    showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                }
 
-</body>
+                function preventUnload(e) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                }
+
+                function isFormInput(element) {
+                    if (!element) return false;
+                    const formTags = ['INPUT', 'TEXTAREA', 'SELECT'];
+                    return formTags.includes(element.tagName);
+                }
+
+                function initializeProtection() {
+                    // Block back navigation
+                    window.addEventListener('popstate', preventBackNavigation);
+
+                    // Block reloads and closing
+                    window.addEventListener('beforeunload', preventUnload);
+
+                    // Block keyboard shortcuts
+                    document.addEventListener('keydown', function(e) {
+                        const blockedKeys = [
+                            { key: 'Backspace', condition: !isFormInput(document.activeElement) },
+                            { key: 'r', condition: e.ctrlKey || e.metaKey },
+                            { key: 'F5', condition: true },
+                            { key: 'ArrowLeft', condition: e.altKey },
+                            { key: 'ArrowRight', condition: e.altKey },
+                            { key: 'w', condition: e.ctrlKey || e.metaKey },
+                            { key: 'u', condition: e.ctrlKey || e.metaKey },
+                            { key: 's', condition: e.ctrlKey || e.metaKey },
+                        ];
+
+                        for (let combo of blockedKeys) {
+                            if (e.key === combo.key && combo.condition) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                                return false;
+                            }
+                        }
+                    }, true);
+
+                    // Prevent right-click
+                    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+                    // Prevent drag and drop
+                    document.addEventListener('dragstart', (e) => e.preventDefault());
+                    document.addEventListener('drop', (e) => e.preventDefault());
+
+                    // Disable selection on non-form elements
+                    document.addEventListener('selectstart', (e) => {
+                        if (!isFormInput(e.target)) e.preventDefault();
+                    });
+
+                    // Continuous history push
+                    setInterval(() => {
+                        window.history.pushState(null, null, window.location.href);
+                    }, 100);
+                }
+
+                // Initialize protection
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', initializeProtection);
+                } else {
+                    initializeProtection();
+                }
+
+                // Remove beforeunload listener on form submission
+                document.addEventListener('DOMContentLoaded', function() {
+                    const form = document.querySelector('form');
+                    if (form) {
+                        form.addEventListener('submit', function(e) {
+                            if (validateForm()) {
+                                window.removeEventListener('beforeunload', preventUnload);
+                            } else {
+                                e.preventDefault();
+                            }
+                        });
+                    }
+                });
+            })();
+
+            function validateForm() {
+                var gender = document.getElementById("gender").value;
+                var age = document.getElementById("age").value;
+                var educationLevel = document.getElementById("education_level").value;
+                var currentEducation = document.getElementById("current_education").value;
+                var countryResidence = document.getElementById("country_residence").value;
+                var citizenship = document.getElementById("citizenship").value;
+                var assetExperience = document.querySelectorAll('input[name="asset_experience[]"]:checked').length;
+                var taxSelf = document.getElementById("tax_self").checked;
+                var taxIntermediaries = document.getElementById("tax_intermediaries").checked;
+                var description = document.querySelectorAll('input[name="description"]:checked').length;
+
+                // Check if any of the required fields are empty or unchecked
+                var isValid = true;
+                if (gender === "") {
+                    document.getElementById("gender-error").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("gender-error").style.display = "none";
+                }
+                if (age === "" || age < 18) {
+                    document.getElementById("age-error").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("age-error").style.display = "none";
+                }
+                if (educationLevel === "") {
+                    document.getElementById("education_level-error").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("education_level-error").style.display = "none";
+                }
+                if (currentEducation === "") {
+                    document.getElementById("current_education-error").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("current_education-error").style.display = "none";
+                }
+                if (assetExperience === 0) {
+                    document.getElementById("asset_experience-error").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("asset_experience-error").style.display = "none";
+                }
+                if (!taxSelf && !taxIntermediaries) {
+                    document.getElementById("tax_experience-error").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("tax_experience-error").style.display = "none";
+                }
+                if (description === 0) {
+                    document.getElementById("description-error").style.display = "block";
+                    isValid = false;
+                } else {
+                    document.getElementById("description-error").style.display = "none";
+                }
+
+                // Check if the form is valid
+                if (!isValid) {
+                    document.getElementById("error-message").style.display = "block";
+                    return false;
+                } else {
+                    document.getElementById("error-message").style.display = "none";
+                    return true;
+                }
+            }
+        </script>
+    </body>
 </html>

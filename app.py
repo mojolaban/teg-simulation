@@ -8,67 +8,57 @@ import random
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html')
-
-@app.route('/select_language', methods=['POST'])
-def select_language():
-    language = request.form.get('language')
-    # Call insert_group_treatment function to insert the language into the database
-    # and retrieve the treatment dictionary
-    treatment_dict = insert_group_lang(language)
-    id=treatment_dict["id"]
-    treatment=treatment_dict["treatment"]
-    lang=treatment_dict["lang"]
-    au=treatment_dict["au"]
-    if language == 'English':
-        # Pass the treatment dictionary to the render_template function
-        print(treatment_dict["id"])
-        return render_template('home.html', id=id, treatment=treatment, lang=lang, au=au)
-    elif language == 'Indonesian':
-        # Pass the treatment dictionary to the render_template function
-        return render_template('home-a.html', id=id, treatment=treatment, lang=lang, au=au)
-    # If somehow an invalid option is submitted, reload the page
-    return render_template('index.html')
-
-  
-
-#-----After home page, assign group and insert init data
-@app.route("/form_demog", methods=['GET', 'POST'])
-def form_demog():
-    # Determine the method and retrieve parameters accordingly
     if request.method == 'POST':
-        lang_value = request.form.get('lang')
-        treatment_value = request.form.get('treatment')
-        id_value = request.form.get('id')
-        au_value = request.form.get('au')
-    else:  # GET method
-        lang_value = request.args.get('lang')
-        treatment_value = request.args.get('treatment')
-        id_value = request.args.get('id')
-        au_value = request.args.get('au')
+        if 'language' in request.form:  # Initial form submission from index.html
+            treatment_dict = insert_group_lang('Indonesian')
+            id = treatment_dict["id"]
+            treatment = treatment_dict["treatment"]
+            lang = treatment_dict["lang"]
+            au = treatment_dict["au"]
+            return render_template('home-a.html', id=id, treatment=treatment, lang=lang, au=au)
 
+        elif 'form_type' in request.form and request.form['form_type'] == 'home':  # Submission from home-a.html
+            # Get the values from home-a.html form
+            id = request.form.get('id')
+            treatment = request.form.get('treatment')
+            lang = request.form.get('lang')
+            au = request.form.get('au')
+            return render_template('form_demog-a.html', id=id, treatment=treatment, lang=lang, au=au)
 
-  # Debug statement to print the values in the server console
-    print("Debug - ID:", id_value, "Treatment:", treatment_value, "Language:", lang_value, "AU:", au_value)
+        elif 'form_type' in request.form and request.form['form_type'] == 'demographic':  # Submission from form_demog-a.html
+            # Handle demographic form submission
+            gender = request.form.get('gender')
+            age = request.form.get('age')
+            education_level = request.form.get('education_level')
+            current_education = request.form.get('current_education')
+            country_residence = request.form.get('country_residence', 'indonesia')
+            citizenship = request.form.get('citizenship', 'indonesia')
+            asset_experience = ','.join(request.form.getlist('asset_experience[]'))
+            tax_experience = request.form.get('tax_experience')
+            description = request.form.get('description')
+            id = request.form.get('id')
+            lang = request.form.get('lang')
+            au = request.form.get('au')
+            treatment = request.form.get('treatment')
 
+            # Debug prints
+            print(f"Debug - Form Data Received:")
+            print(f"ID: {id}, Lang: {lang}, Treatment: {treatment}, AU: {au}")
 
-    if treatment_value == "1" and lang_value == "1":
-        asset_type = 'stock'
-        return render_template('form_demog-a.html', id=id_value, asset_type=asset_type, lang=lang_value, au=au_value)
-    elif treatment_value == "1" and lang_value == "0":
-        asset_type = 'stock'
-        return render_template('form_demog.html', id=id_value, asset_type=asset_type, lang=lang_value, au=au_value)
-    elif treatment_value == "2" and lang_value == "1":
-        asset_type = 'crypto'
-        return render_template('form_demog-a.html', id=id_value, asset_type=asset_type, lang=lang_value, au=au_value)
-    elif treatment_value == "2" and lang_value == "0":
-        asset_type = 'crypto'
-        return render_template('form_demog.html', id=id_value, asset_type=asset_type, lang=lang_value, au=au_value)
-    else:
-        # You might want to return a proper error response here
-        return "Error"
+            # Insert demographic data
+            insert_demog(gender, age, education_level, current_education, country_residence, 
+                        citizenship, asset_experience, tax_experience, description, id)
+
+            # Determine which instruction template to show
+            if treatment == "1":  # stock
+                return render_template('instruction-1-a.html', id=id, asset_type='stock', lang=lang, au=au)
+            elif treatment == "2":  # crypto
+                return render_template('instruction-2-a.html', id=id, asset_type='crypto', lang=lang, au=au)
+
+    # For GET requests, show index page
+    return render_template('index.html')
 
 
 #----Insert into instructions page
