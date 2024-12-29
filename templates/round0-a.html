@@ -33,12 +33,6 @@
       flex-direction: column;
       position: relative; /* Added */
     }
-    .disable-selection {
-        user-select: none;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-    }
     .header {
       display: flex;
       justify-content: space-between;
@@ -254,14 +248,14 @@
     /* Add this to force landscape on mobile */
     @media screen and (orientation: portrait) {
       body {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        }
-
-        .main-content {
-        flex-direction: column;
-        }
+        transform: rotate(-90deg);
+        transform-origin: left top;
+        width: 100vh;
+        height: 100vw;
+        position: absolute;
+        top: 100%;
+        left: 0;
+      }
     }
   </style>
 </head>
@@ -551,12 +545,7 @@
                 showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
             });
 
-            // Prevent selection
-            document.addEventListener('selectstart', function(e) { 
-                e.preventDefault();
-                return false;
-            });
-          }; 
+
         // Initialize protection methods
         const initializeProtection = () => {
             overrideNavigationMethods();
