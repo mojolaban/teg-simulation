@@ -1,511 +1,524 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    {% include 'bootstrap.html' %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<head>
+  {% include 'bootstrap.html' %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TEG</title>
 
-    <title>TEG</title>
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    <style>
-      p {
-        font-family: Arial;
-        color: rgb(80, 80, 80);
-        margin-bottom: 20px;
-      }
-      h1 {
-        font-size: 40px;
-        font-family: Arial;
-        color: rgb(80, 80, 80);
-      }
+    html, body {
+      height: 100vh;
+      width: 100vw;
+      overflow: auto;
+      background-color: rgb(0, 0, 0);
+      color: white;
+      font-family: Arial, sans-serif;
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #container {
+      max-width: 95%;
+      margin: 10px auto;
+      background-color: black;
+      border: 1px solid black;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Header Area */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      height: 4rem;
+      background-color: white;
+      border-radius: 0.5rem;
+      margin: 0;
+      max-width: 100%;
+    }
+
+    .round-display {
+      color: rgb(80, 80, 80);
+      font-size: 2.5rem;
+      margin-left: 2rem;
+    }
+
+    .timer-display {
+      background: transparent;
+      border: 1px solid red;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      color: rgb(80, 80, 80);
+      font-size: 2rem;
+      margin-right: 2rem;
+      width: 20rem;
+      height: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Main Content */
+    .main-content {
+      display: flex;
+      gap: 1rem;
+      height: calc(100vh - 5rem);
+      padding: 1rem;
+    }
+
+    /* Left Panel */
+    .left-panel {
+      width: 15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .info-box {
+      background: rgb(10, 10, 10);
+      border: 1px solid rgb(40, 40, 40);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    /* Middle Panel */
+    .middle-panel {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      margin: 0 1rem;
+      position: relative;
+    }
+
+    .report-section {
+      text-align: center;
+      margin-top: 4rem;
+    }
+
+    .report-title {
+      color: white;
+      font-size: 2rem;
+      margin-bottom: 0.2 rem;
+    }
+
+    .report-subtitle {
+      color: white;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .input-container {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    /* Right Panel */
+    .right-panel {
+      width: 12rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Common Elements */
+    input[type="text"] {
+      height: 3rem;
+      width: 25rem;
+      text-align: center;
+      border-radius: 0.5rem;
+      font-size: 1.2rem;
+    }
+
+    .action-button {
+      width: 12rem;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      background-color: white;
+      color: rgb(80, 80, 80);
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .action-button:hover {
+      background-color: rgb(10, 10, 10);
+      color: white;
+    }
+
+    /* Asset Info Styles */
+    .asset-info {
+      margin-bottom: 1rem;
+    }
+
+    .asset-title {
+      color: rgb(130, 130, 130);
+      font-size: 0.9rem;
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .asset-value {
+      color: rgb(80, 80, 80);
+      font-size: 1.1rem;
+      display: flex;
+      justify-content: space-between;
+      line-height: 1;
+    }
+
+    .warning-message {
+        position: fixed;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(255, 69, 0, 0.9);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        z-index: 10000;
+        display: none;
+        text-align: center;
+        white-space: nowrap;
+    }
+    /* Responsive Design */
+    @media (max-width: 1200px), (max-height: 750px) {
       #container {
-        max-width: 75%;
-        margin: 10px auto;
-        justify-content: center;
-        align-items: center;
-        background-color: black;
-        border: 1px solid white;
-        
-      }
-      .fixed-box-0 {
-        height: 85px;
-        max-width: 95%;
-        border: 1px solid #ccc;
-        padding: 10px;
-        position: relative;
-        margin-left: 20px;
-        margin-right: 20px;
-        margin-top: 20px;
-        background-color: white;
-      }
-      .fixed-box-1 {
-        font-family: Arial;
-        color: rgb(80, 80, 80);
-        height: 450px;
-        overflow: auto;
-        border: 1px solid black;
-        padding: 10px;
-        position: relative;
-        margin-left: 20px;
-        margin-right: 20px;
-        margin-top: 20px;
-      }
-      .fixed-box-2 {
-        font-family: Arial;
-        font-size: 25px;
-        color: rgb(80, 80, 80);
-        height: 60px;
-        overflow: auto;
-        border: 1px solid red;
-        padding: 10px;
-        border-radius: 10px;
-        margin-left: 40px;
-        margin-right: 0px;
-        display: flex;
-        justify-content: center;
-      }
-
-      .fixed-box-2 span {
-        margin-left: 5px;
-      }
-      /* Remove up and down arrow from input[type="number"] */
-      input[type="number"]::-webkit-inner-spin-button,
-      input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
-      
-    </style>
-  </head>
-
-  <body>
-    <div id="container">
-      <!-- Round and Timer -->
-      <div class="fixed-box-0">
-        <div class='row'>
-          <!-- Round -->
-          <div class="col-md-7" style="margin-left: 20px;">
-            <h1>Akhir Ronde {{ summary_data['round'] }}<span id="round"> </span></h1>
-          </div>
-          <!-- Timer -->
-          <div class="col-md-4">
-            <div class="fixed-box-2">
-              Waktu:
-              <span id="countdown">0</span>s
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="fixed-box-1">
-        <div class='row'>
-          
-          <!-- This is the Totals Pane -->
-          <div id="left-pane" class="col-2" style="margin-left: 30px;">
-            <!-- Start of Left Pane -->
-            
-            <!-- Your Total Asset -->
-            <div id="total-asset-box" style="height: 60px; width: 200px;
-              background-color: black;
-              border: 1px solid #222222;
-              border-radius: 10px;
-              padding: 10px;
-              margin-bottom: 20px;">
-              <div>
-                <div style="text-align: center;">
-                  <p style="line-height:1;
-                    margin: 0;color: rgb(130,130,130);font-size:12px">
-                    <b>Total Aset</b>
-                  </p>
-                </div>
-                <div class="row justify-content-evenly">
-                  <div class="col-2">
-                    <p style="font-size:12px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
-                      Fiat
-                    </p>
-                  </div>
-                  <div class="col-4">
-                    <p id="fiat" style="font-size:12px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
-                      <!-- {{ "{:,.0f}".format(summary_data['fiat']) }} -->
-                    </p>
-                  </div>
-                  <div class="col-3">
-                    <p style="font-size:12px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
-                      {{ summary_data['asset_type'] }}
-                    </p>
-                  </div>
-                  <div class="col-3">
-                    <p id="crypto" style="font-size:12px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
-                      <!-- {{ summary_data['crypto'] }} -->
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            
-
-            <!-- TOTAL GAIN -->
-            <div id="total-gain-box" style="height: 60px; width: 200px;
-              background-color: black;
-              border: 1px solid #111111;
-              border-radius: 10px;
-              padding: 5px;
-              margin-left: 0px;
-              margin-top:5px;
-              margin-bottom:10px;">
-              <div>
-                <div style="text-align: center;">
-                  <p style="line-height:2;
-                    margin: 0;color: rgb(130,130,130);font-size:12px">
-                    <b>Total Keuntungan</b>
-                  </p>
-                </div>
-                <div class="row justify-content-center">
-                  <div class="col-5">
-                    <p style="font-size:12px;line-height:1.5;
-                      margin-left: 0;color: rgb(80,80,80);" class="text-center">
-                      <i>f</i>
-                    </p>
-                  </div>
-                  <div class="col">
-                    <p id="r_gain" style="font-size:12px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
-                      <!-- {{ "{:,.0f}".format(summary_data['r_gain'])  }} -->
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- TOTAL TAX -->
-            <div id="total-tax-box" style="height: 60px; width: 200px;
-              background-color: black;
-              border: 1px solid #111111;
-              border-radius: 10px;
-              padding: 5px;
-              margin-left: 0px;
-              margin-top:0px;
-              margin-bottom:10px;">
-              <div>
-                <div style="text-align: center;">
-                  <p style="line-height:2;
-                    margin: 0;color: rgb(130,130,130);font-size:12px">
-                    <b>Total Pajak</b>
-                  </p>
-                </div>
-                <div class="row justify-content-evenly">
-                  <div class="col-5">
-                    <p style="font-size:12px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
-                      <i>f</i>
-                    </p>
-                  </div>
-                  <div class="col">
-                    <p id="r_tax" style="font-size:12px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
-                      <!-- {{ "{:,.0f}".format(summary_data['t_tax']) }} -->
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- TOTAL NET GAIN -->
-            <div id="total-net-gain-box" style="height: 75px; width: 200px;
-              background-color: black;
-              border: 1px solid #111111;
-              border-radius: 10px;
-              padding: 10px;
-              margin-left: 0px;
-              margin-top:20px;
-              margin-bottom:10px;">
-              <div>
-                <div style="text-align: center;">
-                  <p style="line-height:2;
-                    margin: 0;color: rgb(130,130,130);font-size:12px">
-                    <b>Total Keuntungan Bersih</b>
-                  </p>
-                </div>
-                <div class="row justify-content-evenly">
-                  <div class="col-5">
-                    <p style="font-size:12px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
-                      <i>f</i>
-                    </p>
-                  </div>
-                  <div class="col">
-                    <p id="r_gain_net" style="font-size:12px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
-                      <!-- {{ "{:,.0f}".format(summary_data['r_gain_net']) }} -->
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Position Tax Reporting -->
-            <div style="height: 33px; width: 200px;
-              background-color: black;
-              border: 1px solid #111111;
-              border-radius: 10px;
-              padding: 5px;
-              margin-left: 0px;
-              margin-top:20px;              display: flex;               align-items: center;
-              justify-content: center;
-              text-align: right;">
-              <div class="row">
-                <div id="img-star" class="col-2 d-flex justify-content-center align-items-center">
-                  <img src="{{ url_for('static', filename='star.png') }}" alt="Small Image"
-                    style="width: 13px; height: 13px;">
-                </div>
-                <div id="text-star" class="col-10">
-                  <span style="line-height:2;
-                      margin: 0;color: rgb(130,130,130);font-size:11px; text-align: center;">
-                    <b>PELAPORAN PAJAK</b></span>
-                </div>
-              </div>
-            </div>
-
-          </div> <!-- End of left pane  -->
-
-
-
-          
-
-          <!-- This is middle section -->
-          <div id="middle-pane" class="col-md-6 offset-md-1" style="margin-left: 0px;margin-right: 0px;border: 1px solid  rgba(0, 0, 0, 0)">
-            <!-- The Text -->
-            <div class="mx-auto" style="height: 80px;
-            background-color: black;
-            border: 1px solid black;
-            border-radius: 1px;
-            padding: 0px;
-            margin-left: 0px;
-            margin-top:60px;
-            margin-bottom:0px;">
-              <div>
-                <p class="text-center" style="line-height:1.5;margin-bottom:0px;color:rgb(256,256,256);">
-                  Jumlah pajak yang ingin saya laporkan
-                </p>
-                <p class="text-center" style="font-size:30px;line-height:1;margin-bottom:0px;color:rgb(256,256,256)">
-                  pada ronde ini:
-                </p>
-              </div>
-            </div>
-            <!-- The Submit Button -->
-                <form action="/tax_disclosure" method="POST"> <!-- method="POST" -->
-            <div id="reporting-box" class="mx-auto" style="height: 100px; width: 400px;
-            background-color: black;
-            border: 1px solid black;
-            border-radius: 1px;
-            padding: 0px;
-            margin-left: 0px;
-            margin-top:0px;
-            margin-bottom:20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;">
-    
-                  <span id="id"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-                   {{ summary_data['id'] }}</span>
-                  <span id="tax_disclos"  style="color:rgba(0,0,0,0);font-size:1px;"> 
-                   </span>
-  
-              <input type="text" required id="tax-input" name="tax_disclos" placeholder="Pelaporan pajak" style="height: 50px; width: 400px; text-align: center;border-radius: 10px;"> </input>
-
-
-            </div>
-
-            <div class="row justify-content-center" style="margin-left: 0px;">
-              <div class="col-5 d-flex justify-content-center">
-                <button type="button" id="showTotalsButton"
-                  style="margin-right: 0px;
-                  width: 190px;
-                  padding: 10px 30px;
-                  border: none;
-                  border-radius: 4px;
-                  font-size: 16px;
-                  font-weight: bold;
-                  background-color:  white;
-                  color: grey ;"
-                  onmouseover="showTotals() ; this.style.backgroundColor = 'rgb(10,10,10)'"
-                  onmouseout="hideTotals();this.style.backgroundColor = 'white'">
-                  Tampilkan Total
-                 </button>
-              </div>
-              <div class="col-5 d-flex justify-content-center">
-
-
-                <input type="hidden" name="id" value= {{summary_data.id}}>
-                <input type="hidden" name="lang" value= {{summary_data.lang}}>
-             
-                <button type="submit" id="reportTaxesButton"
-                  style="margin-left: 0px;
-                  width: 190px;
-                  padding: 10px 30px;
-                  border: none;
-                  border-radius: 4px;
-                  font-size: 16px;
-                  font-weight: bold;
-                  background-color: white;
-                  color: grey;"
-                  onmouseover="this.style.backgroundColor = 'rgb(10,10,10)'"
-                  onmouseout="this.style.backgroundColor = 'white'">
-                  Lanjut
-                </button>     
-                
-                </form>   
-              
-              </div>
-            </div>
-          </div> <!-- End of middle section  -->
-
-     
-          <!-- This is the right section -->
-          <div id="right-pane" class="col-md-1 offset-md-1" style="margin-left: 0px;">
-            <div class='row'>
-              <div class="col-3" style="margin-top: 120px;margin-left: 0px;">
-
-                <div style="height: 50px; width:250px;
-                  background-color: black;
-                  border: 1px solid black; margin-top:40px;
-                  padding: 10px;">
-                  <p style="line-height:0.5;font-size:40px;
-                    margin: 0;color: rgb(40, 180, 120);text-align: left;">
-                    <i>f</i> <span id="expected_fiat">{{"{:,.0f}".format(summary_data['r_gain'])|replace(",", "X")|replace(".", ",")|replace("X", ".") }}</span></p>
-
-                </div>
-
-                <div style="height: 50px; width:220px;
-                  background-color: black;
-                  border: 1px solid rgb(10,10,10)
-                  border-radius: 10px;
-                  padding: 10px;">
-                  <p style="line-height:1;font-size:11px;
-                    margin: 0;color: rgb(256,256,256);text-align: left;">
-                    (Fiat dari ronde ini setelah pajak)</p>
-                </div>
-
-              </div>
-            </div>
-          </div> <!-- End of right pane   -->
-        </div>
-      </div>
-    </div>
-
-  <script>
-// Input Number Validation
-      function formatNumber(value) {
-        return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-      }
-
-      function updateTextView(_obj) {
-        var num = getNumber(_obj.val());
-        if (num === 0) {
-          _obj.val('');
-        } else {
-          _obj.val(formatNumber(num));
-        }
-      }
-
-      function getNumber(_str) {
-        var arr = _str.replace(/,/g, '').split('');
-        var out = new Array();
-        for (var cnt = 0; cnt < arr.length && cnt < 9; cnt++) {
-          if (!isNaN(arr[cnt])) {
-            out.push(arr[cnt]);
-          }
-        }
-        return out.join('');
-      } //Limit the number of characters in the input field to 4. (if 7, then 7, if 8 then 7)
-
- // Hide or Show Totals
-      
-      var showTotalsFlag = false;
-
-    function showTotals() {
-      if (!showTotalsFlag) {
-        // Create a formatter for Indonesian locale
-        var formatter = new Intl.NumberFormat('id-ID', {
-          minimumFractionDigits: 0, // Adjust as necessary for decimal places
-          maximumFractionDigits: 2, // Adjust as necessary for decimal places
-        });
-
-        // Format each number and update the text content
-        $('#fiat').text(formatter.format({{ summary_data['fiat'] }}));
-        $('#crypto').text(formatter.format({{ summary_data['crypto'] }}));
-        $('#r_gain').text(formatter.format({{ summary_data['r_gain'] }}));
-        $('#r_gain_net').text(formatter.format({{ summary_data['r_gain_net'] }}));
-        $('#r_tax').text(formatter.format({{ summary_data['r_tax'] }}));
+        transform: scale(0.88);
+        transform-origin: center top;
+        min-width: 1200px;
       }
     }
 
-
-      function hideTotals() {
-        if (!showTotalsFlag) {
-          $('#fiat').text('');
-          $('#crypto').text('');
-          $('#r_gain').text('');
-          $('#r_gain_net').text('');
-          $('#r_tax').text('');
-        }
+    @media screen and (orientation: portrait) {
+      body {
+        transform: rotate(-90deg);
+        transform-origin: left top;
+        width: 100vh;
+        height: 100vw;
+        position: absolute;
+        top: 100%;
+        left: 0;
       }
+    }
+  </style>
+</head>
 
-// Enter Input to "Reporting Taxes" 
-      $(document).ready(function () {
-        $('input[type=text]').on('input', function () {
+<body class="disable-selection">
+  <div id="container">
+    <!-- Header Section -->
+    <div class="header">
+      <div class="round-display">
+        Akhir Ronde {{ summary_data['round'] }}
+      </div>
+      <div class="timer-display">
+        <span style="margin-right: 1rem; font-size: 2rem;">Waktu:</span>
+        <span id="countdown" style="font-size: 2rem;margin-right: 1rem;margin-left:1rem;">0</span><span style="font-size: 2rem;margin-left:1rem;">s</span>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <!-- Left Panel -->
+      <div class="left-panel">
+        <!-- Total Asset -->
+        <div class="info-box">
+          <div class="asset-title" style="color: rgb(130,130,130); font-size: 1.1rem; margin-bottom: 0rem;">
+            <b>Total Aset</b>
+          </div>
+          <div class="asset-value">
+            <span>Fiat</span>
+            <span id="fiat"></span>
+          </div>
+          <div class="asset-value">
+            <span>{{ summary_data['asset_type'] }}</span>
+            <span id="crypto"></span>
+          </div>
+        </div>
+
+        <!-- Total Gain -->
+        <div class="info-box">
+          <div class="asset-title" style="color: rgb(130,130,130); font-size: 1.1rem; margin-bottom: 0rem;">
+            <b>Total Keuntungan</b>
+          </div>
+          <div class="asset-value">
+            <span><i>f</i></span>
+            <span id="r_gain"></span>
+          </div>
+        </div>
+
+        <!-- Total Tax -->
+        <div class="info-box">
+          <div class="asset-title" style="color: rgb(130,130,130); font-size: 1.1rem; margin-bottom: 0rem;">
+            <b>Total Pajak</b>
+          </div>
+          <div class="asset-value">
+            <span><i>f</i></span>
+            <span id="r_tax"></span>
+          </div>
+        </div>
+
+        <!-- Total Net Gain -->
+        <div class="info-box">
+          <div class="asset-title" style="color: rgb(130,130,130); font-size: 1.1rem; margin-bottom: 0rem;">
+            <b>Total Keuntungan Bersih</b>
+          </div>
+          <div class="asset-value">
+            <span><i>f</i></span>
+            <span id="r_gain_net"></span>
+          </div>
+        </div>
+
+        <!-- Position Indicator -->
+        <div class="info-box" style="display: flex; align-items: center; justify-content: center; height: 3rem; padding: 0 1rem;">
+          <img src="{{ url_for('static', filename='star.png') }}" alt="Star" style="width: 1rem; height: 1rem; margin-right: 0.5rem;">
+          <span style="color: white; font-size: 0.9rem;">
+            <b>PELAPORAN PAJAK</b>
+          </span>
+        </div>
+      </div>
+
+      <!-- Middle Panel -->
+      <div class="middle-panel">
+        <div class="report-section">
+          <div class="report-title">Jumlah pajak yang ingin saya laporkan</div>
+          <div class="report-subtitle">pada ronde ini:</div>
+          
+
+          <form action="{{ url_for('index') }}" method="POST">
+
+
+              <div class="input-container">
+                  <input type="text" 
+                         required 
+                         id="tax-input" 
+                         name="tax_disclos" 
+                         placeholder="Pelaporan pajak"
+                         autocomplete="off"
+                         oninvalid="this.setCustomValidity('Mohon isi kolom ini')"
+                         oninput="this.setCustomValidity('')">
+              </div>
+
+              <div style="display: flex; justify-content: center; gap: 2rem;">
+                  <button type="button" id="showTotalsButton" class="action-button">
+                      Tampilkan Total
+                  </button>
+                  <input type="hidden" name="id" value="{{summary_data.id}}">
+                  <input type="hidden" name="lang" value="{{summary_data.lang}}">
+                  <input type="hidden" name="form_type" value="tax_disclosure">
+                  <button type="submit" id="reportTaxesButton" class="action-button">
+                      Lanjut
+                  </button>
+              </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="right-panel">
+        <div style="margin-top: 10rem;">
+          <div style="font-size: 2rem; color: rgb(40, 180, 120); margin-bottom: 0.5rem;">
+            <i>f</i> <span id="expected_fiat">{{"{:,.0f}".format(summary_data['r_gain'])|replace(",", "X")|replace(".", ",")|replace("X", ".")}}</span>
+          </div>
+          <div style="font-size: 0.8rem; color: white;">
+            (Fiat dari ronde ini setelah pajak)
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Prevent text selection
+  document.addEventListener('selectstart', function(e) { 
+      e.preventDefault(); 
+  });
+
+  // Navigation protection variables
+  let allowNavigation = false;
+
+  // Warning message function (single version)
+  function showWarning(message) {
+      const warningDiv = document.getElementById('warningMessage');
+      warningDiv.textContent = message;
+      warningDiv.style.display = 'block';
+      setTimeout(() => {
+          warningDiv.style.display = 'none';
+      }, 3000);
+  }
+
+  // Number formatting functions
+  function formatNumber(value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  }
+
+  function getNumber(str) {
+      var arr = str.replace(/[.,]/g, '').split('');
+      var out = [];
+      for (var cnt = 0; cnt < arr.length && cnt < 9; cnt++) {
+          if (!isNaN(arr[cnt])) {
+              out.push(arr[cnt]);
+          }
+      }
+      return out.join('');
+  }
+
+  function updateTextView(_obj) {
+      var num = getNumber(_obj.val());
+      if (num === 0) {
+          _obj.val('');
+      } else {
+          _obj.val(formatNumber(num));
+      }
+  }
+
+  // Tax input validation
+  function validateTaxInput(tax, totalGain) {
+      if (tax > totalGain) {
+          showWarning('Pajak tidak boleh lebih besar dari keuntungan');
+          return false;
+      }
+      return true;
+  }
+
+  // Total display management
+  function showTotals() {
+      var formatter = new Intl.NumberFormat('id-ID', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 2
+      });
+
+      $('#fiat').text(formatter.format({{ summary_data['fiat'] }}));
+      $('#crypto').text(formatter.format({{ summary_data['crypto'] }}));
+      $('#r_gain').text(formatter.format({{ summary_data['r_gain'] }}));
+      $('#r_gain_net').text(formatter.format({{ summary_data['r_gain_net'] }}));
+      $('#r_tax').text(formatter.format({{ summary_data['r_tax'] }}));
+  }
+
+  function hideTotals() {
+      $('#fiat').text('');
+      $('#crypto').text('');
+      $('#r_gain').text('');
+      $('#r_gain_net').text('');
+      $('#r_tax').text('');
+  }
+
+  // Document ready handlers
+  $(document).ready(function() {
+      // Input validation and formatting
+      $('input[type=text]').on('input', function() {
           var maxDigits = 9;
           var inputValue = $(this).val();
           if (inputValue.length > maxDigits) {
-            $(this).val(inputValue.slice(0, maxDigits+1));
+              $(this).val(inputValue.slice(0, maxDigits+1));
           }
           updateTextView($(this));
-        });
-
-      document.getElementById("tax-input").addEventListener("input", function () {
-        var input = getNumber(this.value);
-        var expectedFiat = document.getElementById("expected_fiat");
-        var rGain = parseFloat("{{ summary_data['r_gain']|int }}");
-
-        if (input === "") {
-          expectedFiat.textContent = formatNumber(rGain);
-        } else {
-          var inputNumber = parseInt(input.substring(0, 9));
-          expectedFiat.textContent = formatNumber(rGain - inputNumber);
-        }
-
-
       });
 
-        //Press "Report Taxes"
+      // Tax input change handler
+      document.getElementById("tax-input").addEventListener("input", function() {
+          var input = getNumber(this.value);
+          var expectedFiat = document.getElementById("expected_fiat");
+          var rGain = parseFloat("{{ summary_data['r_gain']|int }}");
 
-        // Handle form submission
-        $('form').on('submit', function (e) {
-          e.preventDefault(); // Prevent the form from submitting immediately
-
-          // Prepare the data correctly
-          var id = "{{ summary_data['id'] }}";
-          var lang = "{{ summary_data['lang'] }}";
-          var taxInput = $('#tax-input').val().replace(/\./g, ''); // Remove dots for correct numeric value
-
-          // Append hidden inputs or set their values if they already exist
-          var $form = $(this);
-          $form.find('input[name="id"]').val(id);
-          $form.find('input[name="lang"]').val(lang);
-          $form.find('input[name="tax_disclos"]').val(taxInput);
-
-          this.submit(); // Submit the form after setting the hidden input values
-        });
-
-
-
-        
+          if (input === "") {
+              expectedFiat.textContent = formatNumber(rGain);
+          } else {
+              var inputNumber = parseInt(input.substring(0, 9));
+              expectedFiat.textContent = formatNumber(rGain - inputNumber);
+          }
       });
-      
-    </script>
 
-  </body>
+      // Form submission handler
+      $('form').on('submit', function(e) {
+          e.preventDefault();
+
+          // Get and validate tax input
+          var taxInput = getNumber($('#tax-input').val());
+          var totalGain = {{ summary_data['r_gain']|int }};
+
+          // Check if input exists
+          if (!taxInput) {
+              showWarning('Mohon masukkan jumlah pajak');
+              return false;
+          }
+
+          // Validate tax amount
+          if (!validateTaxInput(parseInt(taxInput), totalGain)) {
+              return false;
+          }
+
+
+
+          // Allow navigation before submitting
+          allowNavigation = true;
+
+          // Submit form
+          this.submit();
+      });
+
+      // Show totals button handlers
+      $('#showTotalsButton').on({
+          mouseenter: showTotals,
+          mouseleave: hideTotals
+      });
+
+      // Security measures
+      document.addEventListener('contextmenu', function(e) {
+          e.preventDefault();
+      });
+
+      document.addEventListener('keydown', function(e) {
+          if ((e.ctrlKey || e.metaKey) && 
+              (e.key === 'c' || e.key === 'v' || e.key === 'u' || 
+               e.key === 's' || e.key === 'p' || e.key === 'a')) {
+              e.preventDefault();
+          }
+      });
+
+      // Prevent zoom on mobile
+      document.addEventListener('gesturestart', function(e) {
+          e.preventDefault();
+      });
+
+      document.addEventListener('touchmove', function(e) {
+          if (e.scale && e.scale !== 1) {
+              e.preventDefault();
+          }
+      }, { passive: false });
+  });
+
+  // Navigation protection
+  window.addEventListener('popstate', function() {
+      if (!allowNavigation) {
+          window.history.pushState(null, null, window.location.href);
+          showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+      }
+  });
+
+  // Keep pushing state to prevent back navigation
+  setInterval(() => {
+      if (!allowNavigation) {
+          window.history.pushState(null, null, window.location.href);
+      }
+  }, 100);
+
+  // Add warning message div if it doesn't exist
+  if (!document.getElementById('warningMessage')) {
+      document.body.insertAdjacentHTML('beforeend', '<div id="warningMessage" class="warning-message"></div>');
+  }
+  </script>
+</body>
 </html>

@@ -144,7 +144,11 @@ def fetch_init_data(id):
                 pos_value = "BUY"
             elif pos_value == "b" and lang==1:
                 pos_value = "BELI"
-
+            # Format crypto value for Indonesian number formatting
+            if lang == 1:  # Indonesian
+                crypto_value = "{:,.2f}".format(row[4]).replace(",", "X").replace(".", ",").replace("X", ".")
+            else:
+                crypto_value = str(row[4])
             init_data = {
                 "round": round_value,
                 "gr": gr_value,

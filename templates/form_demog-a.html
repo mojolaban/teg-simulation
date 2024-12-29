@@ -20,12 +20,21 @@
             --spacing-unit: clamp(0.5rem, 2vw, 1rem);
         }
 
+        /* Override Bootstrap's default behaviors */
+        *, 
+        *::before, 
+        *::after {
+            cursor: default;
+        }
+
+        /* Basic reset */
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
         }
 
+        /* Base styles */
         body {
             min-height: 100vh;
             font-family: Arial, sans-serif;
@@ -79,10 +88,10 @@
 
         /* Form Elements */
         .question-group {
-            margin-bottom: calc(var(--spacing-unit) * 3.5);
+            margin-bottom: calc(var(--spacing-unit) * 1);
         }
 
-        .question-label {
+        p, .question-label {
             font-size: clamp(1rem, 1.5vw, 1.125rem);
             font-weight: 500;
             margin-bottom: calc(var(--spacing-unit)* 1.2);
@@ -90,7 +99,8 @@
             width: 100%;
         }
 
-        select, input[type="number"] {
+        select, 
+        input[type="number"] {
             width: 95%;
             padding: calc(var(--spacing-unit));
             border: 1px solid rgba(0, 0, 0, 0.1);
@@ -108,10 +118,10 @@
         }
 
         .options-wrapper {
-            margin-top: calc(var(--spacing-unit) * 1.2);
-            margin-bottom: calc(var(--spacing-unit) * 1.5);
+            margin-top: calc(var(--spacing-unit) * 0.5);
+            margin-bottom: calc(var(--spacing-unit) * 0.5);
         }
-        
+
         .option-label {
             display: flex;
             align-items: flex-start;
@@ -119,7 +129,8 @@
             padding-left: calc(var(--spacing-unit) * 1.5);
         }
 
-        input[type="checkbox"], input[type="radio"] {
+        input[type="checkbox"], 
+        input[type="radio"] {
             width: 1.2rem;
             height: 1.2rem;
             margin-right: calc(var(--spacing-unit) * 0.5);
@@ -133,7 +144,6 @@
             border-radius: calc(var(--border-radius) - 8px);
             font-size: clamp(1rem, 1.2vw, 1.125rem);
             font-weight: 500;
-            cursor: pointer;
             transition: all var(--transition-speed);
             margin-top: calc(var(--spacing-unit) * 2);
         }
@@ -152,7 +162,51 @@
         }
 
         button[type="submit"] {
-            margin-top: calc(var(--spacing-unit) * 4); /* Increased top margin for button */
+            margin-top: calc(var(--spacing-unit) * 4);
+        }
+
+        /* Warning Message Style */
+        .warning-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 69, 0, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            display: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Cursor control - This must be at the end to override Bootstrap */
+        .fixed-box-2 form {
+            position: relative;
+            z-index: 2;
+        }
+
+        .fixed-box-2 form select,
+        .fixed-box-2 form input[type="number"],
+        .fixed-box-2 form button,
+        .fixed-box-2 form .option-label,
+        .fixed-box-2 form input[type="radio"],
+        .fixed-box-2 form input[type="checkbox"] {
+            position: relative;
+            z-index: 3;
+        }
+
+        .fixed-box-2 form select,
+        .fixed-box-2 form button,
+        .fixed-box-2 form .option-label,
+        .fixed-box-2 form input[type="radio"],
+        .fixed-box-2 form input[type="checkbox"] {
+            cursor: pointer !important;
+        }
+
+        .fixed-box-2 form input[type="number"] {
+            cursor: text !important;
         }
 
         /* Responsive Design */
@@ -178,22 +232,6 @@
             .option-group {
                 margin-left: calc(var(--spacing-unit));
             }
-        }
-
-        /* Warning Message Style */
-        .warning-message {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: rgba(255, 69, 0, 0.9);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 8px;
-            z-index: 10000;
-            display: none;
-            text-align: center;
-            white-space: nowrap;
         }
     </style>
 </head>

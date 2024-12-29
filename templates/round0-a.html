@@ -1,540 +1,619 @@
 <!DOCTYPE html>
-
 <html>
-  <head>
-    {% include 'bootstrap.html' %}
-    <title>TEG</title>
-    
-    <style>
-      p {
-        font-family: Arial;
-        color: rgb(80,80,80);
-        margin-bottom: 20px;
-        }
-      h1{
-        font-size: 40px;
-        font-family: Arial;
-        color: rgb(80,80,80);
+<head>
+  
+  {% include 'bootstrap.html' %}
+  <title>TEG</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100vh;
+      width: 100vw;
+      overflow: auto;
+      background-color: rgb(0, 0, 0);
+      color: white;
+      font-family: Arial, sans-serif;
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #container {
+      max-width: 95%;
+      margin: 10px auto;
+      background-color: black;
+      border: 1px solid black;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      position: relative; /* Added */
+    }
+    .disable-selection {
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      height: 4rem;
+      background-color: white;
+      border-radius: 0.5rem;
+      margin: 0; /* Match the screenshot margins */
+      max-width: 100%;    /* Match the container max-width */
+    }
+
+    .round-display {
+        color: rgb(80, 80, 80);
+        font-size: 2.5rem;
+        margin-left: 2rem;
       }
-      #container {
-        max-width: 85%;
-        margin: 10px auto;
+
+    .timer-display {
+        background: transparent;
+        border: 1px solid red;  /* Changed to red border */
+        border-radius: 0.5rem;
+        padding: 0.5rem 1rem;
+        color: rgb(80, 80, 80);  /* Changed to dark gray */
+        font-size: 2rem;        /* Increased font size */
+        margin-right: 2rem;     /* Added right margin */
+        width: 20rem;          /* Fixed width */
+        height: 3rem;          /* Fixed height */
+        display: flex;
         justify-content: center;
         align-items: center;
-        background-color: black;
-        border: 1px solid white;
       }
-      .fixed-box-0 {
-      height: 85px; 
-      max-width:95%;
-      border: 1px solid #ccc; 
-      padding: 10px; 
-      position: relative;
-      margin-left:20px;
-      margin-right:20px;
-      margin-top:20px;
-      background-color: white;
-        
-    }
-      .fixed-box-1 {
-      font-family: Arial;
-      color: rgb(80,80,80);
-      height: 450px; 
-      overflow: auto; 
-      border: 1px solid black; 
-      padding: 10px; 
-      position: relative;
-      margin-left:20px;
-      margin-right:20px;
-      margin-top:20px;
-    }
-      .fixed-box-2 {
-      font-family: Arial;
-      font-size: 25px;
-      color: rgb(80,80,80);
-      height: 60px; 
-      overflow: auto; 
-      border: 1px solid red;
-      padding: 10px; 
-      border-radius: 10px;
-      margin-left:40px;
-      margin-right:0px;
-      display: flex;
-      justify-content: center;
-      
-    }
 
-    .fixed-box-2 span {
-      margin-left: 5px; 
-    }
-      .custom-button {
-      margin-left: 20px;
-      width: 225px;
-      padding: 10px 30px; 
-      border: none; 
-      border-radius: 4px; 
-      font-size: 16px; 
-      font-weight: bold;
+    .timer-display span {
+      margin-left: 1rem;  /* Add space between "Waktu:" and the number */
+      font-size: 2rem;
     }
     
-    /* Pressed state */
-    .custom-button:active {
+    .main-content {
+      display: flex;
+      gap: 1rem;
+      height: calc(100vh - 5rem);
+    }
+
+    .left-panel {
+      width: 15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+
+    .price-display {
+      color: white;
+      padding: 0.5rem;
+    }
+
+    .price-value {
+      font-size: 1.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .info-box {
+      background: rgb(10, 10, 10);
+      border: 1px solid rgb(40, 40, 40);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .transaction-box {
+      background: rgb(10, 10, 10);
+      border: 1px solid rgb(40, 40, 40);
+      border-radius: 0.5rem;
+      padding: 1rem;
+    }
+
+    .transaction-box-title {
+      text-align: center;
+      color: rgb(130, 130, 130);
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .transaction-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 0.3rem 0;
+      color: rgb(80, 80, 80);
+    }
+
+    .chart-container {
+      background: rgb(0, 0, 0);
+      border: 1px solid rgb(40, 40, 40);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      height: calc(100vh - 15rem);
+      width: 100%;
+      margin-bottom: 0.5rem; /* Space between chart and buttons */
+      position: relative; /* Added */
+
+    }
+    #chartContainer {
+      width: 100% !important;  
+      height: 100% !important; 
+      margin: auto !important;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -45%);
+      pointer-events: none;  /* Add this */
+    }
+    #chartContainer canvas {
+      pointer-events: auto;  /* Add this */
+    }
+    .middle-panel {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      margin: 0 1 rem;   /* Center the panel */
+      position: relative; /* Added */
+    }
+    .right-panel {
+      width: 12rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .transaction-count {
+      background: transparent;
+      border: 1px solid black;
+      border-radius: 0.5rem;
+      padding: 1rem;
+      color: white;
+      text-align: center;
+    }
+
+    .stat-box {
+      background: rgb(10, 10, 10);
+      border: 1px solid rgb(40, 40, 40);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      color: rgb(40, 180, 120);
+      text-align: center; 
+      align-items: center; 
+    }
+
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      padding: 0 2rem;
+      width: 100%; /* Make buttons take full width */
+      z-index: 1;  /* Add this line */
+      position: relative;  /* Add this line */
+    }
+
+    .btn-action {
+      flex: 1;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-buy {
+      background: white;
+      color: black;
+    }
+
+    .btn-sell {
+      background: rgb(40, 180, 120);
+      color: white;
+    }
+
+    .btn-action:active {
       background-color: rgb(20, 140, 80);
-      /* Add any additional styles you want for the pressed state */
-      /* For example, you can change the color or add a box shadow */
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
+    /* Specific active states for buy and sell buttons */
+    .btn-buy:active {
+      background-color: rgb(200, 200, 200); /* Lighter white when pressed */
+    }
 
-    </style>
-  
+    .btn-sell:active {
+      background-color: rgb(20, 140, 80); /* Darker green when pressed */
+    }
+    
+    .position-indicator {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: rgb(10, 10, 10);
+      border: 1px solid rgb(40, 40, 40);
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+    }
 
-  </head>
-  
-<body>
-  
+    /* Replace your existing media query */
+    @media (max-width: 1200px), (max-height: 750px) {
+      #container {
+        transform: scale(0.88);  /* Match your screenshot's 88% scale */
+        transform-origin: center top;
+        min-width: 1200px;      /* Match the width */
+      }
+    }
+
+    /* Add this to force landscape on mobile */
+    @media screen and (orientation: portrait) {
+      body {
+        transform: rotate(-90deg);
+        transform-origin: left top;
+        width: 100vh;
+        height: 100vw;
+        position: absolute;
+        top: 100%;
+        left: 0;
+      }
+    }
+  </style>
+</head>
+
+<body class="disable-selection">
   <div id="container">
-
-<!-- Round and Timer -->
-
-  <div class="fixed-box-0">
-    
-    
-    
-    <div class='row'>
-
-<!-- Round -->
-      <div class="col-md-7" 
-        style="margin-left: 20px;"><h1>
-      Ronde <span id="round">{{ data['round'] }}</span> </h1>
+    <div class="header">
+      <div class="round-display">
+        Ronde <span id="round">{{ data['round'] }}</span>
       </div>
-
-<!-- Timer -->
-      <div class="col-md-4">
-         <div class="fixed-box-2">
-          Waktu:
-           <span id="countdown">60</span>s
-        </div class="fixed-box-2">
+      <div class="timer-display">
+        <span style="margin-right: 1rem; font-size: 2rem;">Waktu:</span>
+        <span id="countdown" style="font-size: 2rem;">40</span><span style="font-size: 2rem;">s</span>
       </div>
     </div>
-    </h1>
+
+    <div class="main-content">
+      <div class="left-panel">
+        <div class="price-display">
+          <div>Harga <span id="asset_type">{{ "Kripto" if data['asset_type'] == "Crypto" else "Saham" }}</span></div>
+          <div class="price-value">
+            <span><i>f</i></span>
+            <span id="pricePoint"></span>
+            <span id="percPoint" style="font-size: 0.8rem"></span>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <div style="text-align: center; margin-bottom: 0.5rem;">
+            <strong>Total Aset</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <div>Fiat</div>
+            <div id="fiat">{{ data['fiat'] }}</div>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <div>{{ data['asset_type'] }}</div>
+            <div id="crypto">{{ data['crypto']}}</div>
+          </div>
+        </div>
+
+        <div class="transaction-box">
+          <div class="transaction-box-title">
+            <strong>Transaksi {{ "Kripto" if data['asset_type'] == "Crypto" else "Saham" }} Terkini</strong>
+          </div>
+          <div class="transaction-row">
+            <div>Harga Jual</div>
+            <div><span><i>f</i> </span><span id="sell">{{ data.sell }}</span></div>
+          </div>
+          <div class="transaction-row">
+            <div>Harga Beli</div>
+            <div><span><i>f</i> </span><span id="buy">{{ data.buy }}</span></div>
+          </div>
+          <div class="transaction-row" style="margin-top: 0.8rem;">
+            <div>Keuntungan</div>
+            <div><span><i>f</i> </span><span id="t_gain">{{ data.t_gain }}</span></div>
+          </div>
+        </div>
+
+        <div class="transaction-box">
+          <div class="transaction-row" style="color: rgb(200,50,20);">
+            <div>Pajak (20%)</div>
+            <div><span><i>f</i> </span><span id="t_tax">{{ data.t_tax }}</span></div>
+          </div>
+          <div class="transaction-row" style="color: rgb(40, 180, 120);">
+            <div>Keuntungan Bersih</div>
+            <div><span><i>f</i> </span><span id="t_gain_net">{{ data.t_gain_net }}</span></div>
+          </div>
+        </div>
+
+        <div class="position-indicator">
+          <img src="{{ url_for('static', filename='star.png') }}" alt="Star" style="width: 1rem; height: 1rem;">
+          <span>POSISI: <span id="pos" style="color: white;">{{ "BELI" if data.pos == "BUY" else "JUAL" }}</span></span>
+        </div>
+      </div>
+
+      <div class="middle-panel">
+        <div class="chart-container" style="pointer-events: none;">
+          <div id="chartContainer" style="width: 100%; height: 100%; pointer-events: auto;"></div>
+        </div>
+
+        <div class="action-buttons">
+          <button type="button" id="buyButton" class="btn-action btn-buy" style="pointer-events: auto;">Beli</button>
+          <button type="button" id="sellButton" class="btn-action btn-sell" style="pointer-events: auto;">Jual</button>
+        </div>
+        
+      </div>
+
+      <div class="right-panel">
+        <div class="transaction-count">
+          Transaksi
+          <div style="font-size: 1.5rem;">
+            <span id="trx">{{ data['trx'] }}</span> dari 5
+          </div>
+        </div>
+
+        <div class="stat-box">
+          Total Keuntungan
+          <div style="display: flex; align-items: center; justify-content: center; gap: 0.25rem;">
+            <span><i>f</i></span>
+            <span id="r_gain">{{ data.r_gain }}</span>
+          </div>
+        </div>
+
+        <div class="stat-box" style="color: rgb(200,50,20);">
+          Total Pajak
+          <div style="display: flex; align-items: center; justify-content: center;gap: 0.25rem;">
+            <span><i>f</i></span>
+            <span id="r_tax">{{ data.r_tax }}</span>
+          </div>
+        </div>
+
+        <div class="stat-box">
+          Total Keuntungan Bersih
+          <div style="display: flex; align-items: center; justify-content: center;gap: 0.25rem;">
+            <span><i>f</i></span>
+            <span id="r_gain_net">{{ data.r_gain_net }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
   </div>
-  
-  <div class="fixed-box-1">
-     <div class='row'>
 
-<!-- This is the transaction stats / Start of Left Pane-->
-<!-- Crypto/Stock Price -->
-       <div class="col-3"  
-        style="margin-left: 0px;"> 
-            
-            <div style="height: 80px; font-size:25px; margin-left:20px;
-              background-color: black; 
-              border: 0px solid black; 
-              padding: 3px;">
-              <p style="line-height:1.5;
-                margin: 0;color: white;">
-                Harga <span id="asset_type"> {{ "Kripto" if data['asset_type'] == "Crypto" else "Saham" if data['asset_type'] == "Stock" else data['asset_type'] }} </span>
-                </p>
-              <p style="font-size:28px;line-height:1;
-                margin: 0;color: white;">
-                <i>f </i>
-              <span id="pricePoint" 
-                style="font-size:30px;line-height:1;
-                margin: 0;color: white;">
-                </span>
-                <span id="percPoint"
-                  style="font-size:12px; 
-                  color: rgb(40, 180, 120);" class="blink">  
-                  </span>
-              </p>
-              
-            </div>
-
-<!-- Your Total Asset -->
-            <div style="height: 50px; width: 197px; margin-left:40px;  margin-top:15px;
-              background-color: black; 
-              border: 1px solid #222222; 
-              border-radius: 10px;
-              padding: 10px;
-              margin-bottom: 10px;">
-
-                <div>
-                  <div style="text-align: center;">
-                    <p style="line-height:1;
-                      margin: 0;color: rgb(130,130,130);font-size:11px">
-                      <b>Total Aset</b>
-                    </p>
-                  </div>
-                  <div class="row justify-content-evenly">
-                      <div class="col-2">
-                      <p style="font-size:11px;line-height:2;
-                        margin: 0;color: rgb(80,80,80);">
-                        Fiat</p>
-                      </div>
-                      <div class="col-4">
-                      <p id="fiat" style="font-size:11px;line-height:2;
-                        margin: 0;color: rgb(80,80,80);">
-                        {{data['fiat']  | format_crypto(data['lang']) }}</p>
-                      </div>
-                      <div class="col-3">
-                       <p style="font-size:11px;line-height:2;
-                        margin: 0;color: rgb(80,80,80);">
-                         {{ data['asset_type'] }} </p>
-                      </div>
-                    <div class="col-3">
-                     <p id="crypto" style="font-size:11px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
-                       {{ data['crypto'] | format_crypto(data['lang']) }}</p>
-                    </div>
-                  </div>
-                </div>
-            </div>
-
-<!-- Current Crypto Transaction -->
-            <div style="height: 90px; width: 200px; margin-left:40px;
-              background-color: black; 
-              border: 1px solid #111111; 
-              border-radius: 10px;
-              padding: 10px;
-              margin-top:0px;
-              margin-bottom:10px;">
-
-              <div>
-                  <div style="text-align: center;">
-                    <p style="line-height:2;
-                      margin: 0;color: rgb(130,130,130);font-size:11px">
-                      <b>Transaksi {{ "Kripto" if data['asset_type'] == "Crypto" else "Saham" if data['asset_type'] == "Stock" else data['asset_type'] }} Terkini</b>
-                    </p>
-                  </div>
-                  <div class="row justify-content-evenly">
-                    <div class="col">
-                        <p style="font-size:11px;line-height:1.5;
-                        margin: 0;color: rgb(80,80,80);" class="text-center">
-                        Harga Jual</p>
-                    </div>
-                    <div class="col">
-                        <p style="font-size:11px;line-height:1.5;
-                          margin: 0;color: rgb(80,80,80);" class="text-center">
-                          Harga Beli</p>
-                    </div>
-                  </div>
-                  <div class="row justify-content-evenly">
-                    <div class="col-1">
-                        <p style="font-size:11px;line-height:1;
-                          margin: 0;color: rgb(80,80,80);" class="text-center">
-                          <i>f</i></p>
-                    </div>
-                    <div class="col-4">
-                        <p id="sell" style="font-size:11px;line-height:1;
-                        margin: 0;color: rgb(80,80,80);"class="text-center">
-                        {{ data.sell }}</p>
-                    </div>
-                    <div class="col-1">
-                        <p style="font-size:11px;line-height:1;
-                        margin: 0;color: rgb(80,80,80);"class="text-center">
-                        <i>f</i></p>
-                    </div>  
-                    <div class="col-4">
-                        <p id="buy" style="font-size:11px;line-height:1;
-                          margin: 0;color: rgb(80,80,80);"class="text-center">
-                          {{ data.buy }}</p>
-                    </div>
-                  </div>
-                  <div class="row justify-content-center">
-                    <div class="col-6">
-                        <p style="font-size:11px;line-height:3;
-                          margin: 0;color: rgb(130,130,130);" class="text-center">
-                          Keuntungan</p>
-                    </div>
-                    <div class="col-1 d-flex align-items-center">
-                        <p style="font-size:11px;line-height:2;
-                          margin: 0;color: rgb(130,130,130);">
-                          <i>f</i></p>
-                    </div>
-                    <div class="col-4 d-flex align-items-center">
-                        <p id="t_gain" style="font-size:11px;line-height:2;
-                          margin: 0;color: rgb(130,130,130);">
-                          {{ data.t_gain }}</p>
-                    </div>
-
-                    
-
-                    
-                  </div>
-              </div>
-            </div>
-<!-- Tax and Net Gain -->
-    <!-- Tax  -->
-              <div style="height: 90px; width: 200px; margin-left:40px;
-              background-color: black; 
-              border: 1px solid #111111; 
-              border-radius: 10px;
-              padding: 10px;
-              margin-top:0px;
-              margin-bottom:0px;">
-                
-                <div class="row align-items-center">
-                  <div class="col-7">
-                     <p style="font-size:10px;line-height:3;
-                      margin: 0;color: rgb(200,50,20);">
-                       Pajak (20%)</p>
-                  </div>
-                  <div class="col-1 d-flex align-items-center">
-                     <p style="font-size:11px;line-height:2;
-                      margin: 0;color: rgb(200,50,20);">
-                      <i>f</i></p>
-                  </div>
-                  <div class="col-3">
-                     <p id="t_tax" style="font-size:10px;line-height:2;
-                      margin: 0;color: rgb(200,50,20);" class="text-center">
-                       {{data.t_tax }}
-                       </p>
-                  </div>
-                </div>
-    <!-- Net Gain  -->
-
-                
-                <div class="row align-items-center">
-                  <div class="col-7">
-                     <p style="font-size:11px;line-height:3;
-                      margin: 0;color: rgb(40, 180, 120);">
-                       Keuntungan Bersih</p>
-                  </div>
-                  <div class="col-1 d-flex align-items-center">
-                     <p style="font-size:11px;line-height:2;
-                      margin: 0;color: rgb(40, 180, 120);">
-                      <i>f</i></p>
-                  </div>
-                  <div class="col-3">
-                     <p id="t_gain_net" style="font-size:10px;line-height:2;
-                      margin: 0;color: rgb(40, 180, 120);" class="text-center">
-                       {{data.t_gain_net}}
-                       </p>
-                  </div>
-                </div>
-                
- 
-                
-              </div>
-<!-- Position  -->       
-            
-         
-                     <div style="height: 40px; width: 200px; margin-left:40px;
-              background-color: black;
-              border: 1px solid #111111;
-              border-radius: 10px;
-              padding: 0px;
-              margin-top:10px;              display: flex;               align-items: center;
-              justify-content: center;
-              align-items: center; /* Vertically align items to the center */
-              text-align: right;">
-              <div class="row">
-                <div id="img-star" class="col-12 d-flex justify-content-center align-items-center">
-                  <img src="{{ url_for('static', filename='star.png') }}" alt="Small Image"
-                    style="width: 12px; height: 12px;margin-right: 15px;">  <span style="line-height:2;
-                      margin: 0;color: rgb(130,130,130);font-size:12px; text-align: center;">
-                    <b>POSISI :       </b>
-                      <b> <span id="pos" style="color:white;">  {{ "BELI" if data.pos == "BUY" else "JUAL" if data.pos == "SELL" else data.pos }}
-</span> </b> </span>
-                </div>
-              </div>
-            </div><!-- End of Position  --> 
-              
-        </div> 
-       
-       
-       <!-- End of left pane  --> 
-         
-<!-- This is the price chart area -->
-       <div class="col-md-6 offset-md-1" 
-        style="margin-left: 0px;">
-<!-- Price chart -->
-          <div style="height: 310px; width: 600px;
-          background-color: black; 
-          border: 10px solid black; 
-          border-radius: 20px;
-          padding: 0px;
-          margin-left: 0px;
-          margin-top:10px;
-          margin-bottom:20px; overflow: hidden;">
-            <div id="chartContainer" style="height: 120%;position: relative;">
-    <div id="overlay" style="position: absolute; bottom: 0; left: 0; width: 100%; height: 10%; background-color: black; z-index: 1;"></div>
-            </div>
-          </div>
-<!-- Buy and Sell Button -->
-          <div class="row justify-content-evenly" style="margin-left: 0px;margin-top: 20px;">
-             <div class="col-6">
-                 <button type="button" id="buyButton"  class="custom-button"
-                  style="margin-left: 20px;
-                  width: 225px;
-                  padding: 10px 30px; 
-                  border: none; 
-                  border-radius: 4px; 
-                  font-size: 16px; 
-                  font-weight: bold;" >
-                  Beli
-                </button>
-             </div>
-             <div class="col-6">
-               <button type="button" id="sellButton"  class="custom-button"
-                  style="margin-left: 20px;
-                  width: 225px; 
-                  padding: 10px 30px; 
-                  border: none; 
-                  border-radius: 4px; 
-                  font-size: 16px; 
-                  font-weight: bold;
-                  color: white;
-                  background-color: rgb(40, 180, 120);">
-                  Jual
-                </button>
+  <!-- Hidden fields -->
+  <div style="display: none;">
+    <span id="gr">{{ data.gr }}</span>
+    <span id="id">{{ data.id }}</span>
+    <span id="crypto_prev">{{ data.crypto_prev }}</span>
+    <span id="fiat_prev">{{ data.fiat_prev }}</span>
+    <span id="buy_prev">{{ data.buy_prev }}</span>
+    <span id="r_gain_prev">{{ data.r_gain_prev }}</span>
+    <span id="r_tax_prev">{{ data.r_tax_prev }}</span>
+    <span id="r_gain_net_prev">{{ data.r_gain_net_prev }}</span>
+    <span id="tax_disclos">{{ data.tax_disclos }}</span>
+    <span id="tax_discre">{{ data.tax_discre }}</span>
+    <span id="audit">{{ data.audit }}</span>
+    <span id="penalty">{{ data.penalty }}</span>
+    <span id="r_gain_final">{{ data.r_gain_final }}</span>
+    <span id="lang">{{ data.lang }}</span>
+    <form id="navigationForm" action="{{ url_for('dev_view', template_name='tax_reporting-a.html') if data.is_dev else url_for('index') }}" method="POST">
+        <input type="hidden" name="form_type" value="tax_reporting">
+        <input type="hidden" name="id" value="{{ data.id }}">
+        <input type="hidden" name="lang" value="{{ data.lang }}">
+    </form>
+  </div>
 
 
+  <script>
+    (function() {
+        let allowNavigation = false;
+        let navigationBlocked = false;
+
+        // Warning Message Function
+        function showWarning(message) {
+            console.log('Showing warning message:', message);
+            const existingWarning = document.getElementById('warningMessage');
+            if (existingWarning) {
+                existingWarning.textContent = message;
+                existingWarning.style.display = 'block';
+                setTimeout(() => {
+                    existingWarning.style.display = 'none';
+                }, 3000);
+            } else {
+                const warningDiv = document.createElement('div');
+                warningDiv.id = 'warningMessage';
+                warningDiv.textContent = message;
+                warningDiv.style.position = 'fixed';
+                warningDiv.style.bottom = '20px';
+                warningDiv.style.left = '50%';
+                warningDiv.style.transform = 'translateX(-50%)';
+                warningDiv.style.backgroundColor = 'rgba(255, 69, 0, 0.9)';
+                warningDiv.style.color = 'white';
+                warningDiv.style.padding = '10px 20px';
+                warningDiv.style.borderRadius = '8px';
+                warningDiv.style.zIndex = '10000';
+                warningDiv.style.textAlign = 'center';
+                document.body.appendChild(warningDiv);
+                setTimeout(() => {
+                    warningDiv.remove();
+                }, 3000);
+            }
+        }
+
+        // Override navigation methods more comprehensively
+        const overrideNavigationMethods = () => {
+            // Override form submission
+            const originalSubmit = HTMLFormElement.prototype.submit;
+            HTMLFormElement.prototype.submit = function() {
+                allowNavigation = true;
+                navigationBlocked = false;
+                originalSubmit.call(this);
+            };
+
+            // Override location changes
+            const originalAssign = window.location.assign;
+            window.location.assign = function(url) {
+                if (!allowNavigation) {
+                    navigationBlocked = true;
+                    showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                    return;
+                }
+                navigationBlocked = false;
+                originalAssign.call(window.location, url);
+            };
+
+            const originalReplace = window.location.replace;
+            window.location.replace = function(url) {
+                if (!allowNavigation) {
+                    navigationBlocked = true;
+                    showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                    return;
+                }
+                navigationBlocked = false;
+                originalReplace.call(window.location, url);
+            };
+
+            // Override href assignment
+            Object.defineProperty(window.location, 'href', {
+                set: function(value) {
+                    if (!allowNavigation) {
+                        navigationBlocked = true;
+                        showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                        return;
+                    }
+                    navigationBlocked = false;
+                    window.location.assign(value);
+                }
+            });
+        };
+
+        // Enhanced navigation protection
+        const enhanceNavigationProtection = () => {
+            // Prevent browser back/forward
+            window.addEventListener('popstate', function(event) {
+                if (!allowNavigation) {
+                    navigationBlocked = true;
+                    window.history.pushState(null, null, window.location.href);
+                    showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                    navigationBlocked = false;
+                }
+            });
+
+            // Prevent page reload and navigation
+            window.addEventListener('beforeunload', function(e) {
+                if (!allowNavigation) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                    showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                    return '';
+                }
+            });
+
+            // Continuous history state management
+            setInterval(() => {
+                if (!allowNavigation) {
+                    window.history.pushState(null, null, window.location.href);
+                }
+            }, 100);
+
+            // Block specific keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                const blockedKeys = [
+                    { key: 'F5', condition: true },
+                    { key: 'r', condition: e.ctrlKey || e.metaKey },
+                    { key: 'ArrowLeft', condition: e.altKey },
+                    { key: 'ArrowRight', condition: e.altKey },
+                    { key: 'w', condition: e.ctrlKey || e.metaKey },
+                    { key: 'u', condition: e.ctrlKey || e.metaKey },
+                    { key: 's', condition: e.ctrlKey || e.metaKey }
+                ];
+
+                for (let combo of blockedKeys) {
+                    if (e.key === combo.key && combo.condition) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                        return false;
+                    }
+                }
+            }, true);
+
+            // Prevent right-click context menu
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+            });
+
+            // Prevent selection
+            document.addEventListener('selectstart', function(e) { 
+                e.preventDefault();
+                return false;
+            });
+
+            // Prevent zoom on mobile
+            document.addEventListener('gesturestart', function(e) {
+                e.preventDefault();
+            });
+
+            document.addEventListener('touchmove', function(e) {
+                if (e.scale && e.scale !== 1) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+        };
+
+        // Initialize protection methods
+        const initializeProtection = () => {
+            overrideNavigationMethods();
+            enhanceNavigationProtection();
+
+            // Allow navigation for specific actions
+            try {
+                document.getElementById('navigationForm')?.addEventListener('submit', function() {
+                    allowNavigation = true;
+                    navigationBlocked = false;
+                });
+
+                document.getElementById('buyButton')?.addEventListener('click', function() {
+                    allowNavigation = true;
+                    navigationBlocked = false;
+                });
+
+                document.getElementById('sellButton')?.addEventListener('click', function() {
+                    allowNavigation = true;
+                    navigationBlocked = false;
+                });
+            } catch (error) {
+                console.error('Error setting up navigation event listeners:', error);
+            }
+
+            // Prevent text selection
+            document.body.style.userSelect = 'none';
+            document.body.style.webkitUserSelect = 'none'; 
+            document.body.style.msUserSelect = 'none';
+            document.body.style.mozUserSelect = 'none';
+        };
+
+        // Run initialization when DOM is fully loaded
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeProtection);
+        } else {
+            initializeProtection();
+        }
+    })();
+  </script>
+
+  {% include 'chartscript.html' %}
+  {% include 'capture-timer.html' %}
 
 
-               
-             </div>
-          </div>
-       </div> <!-- End of middle pane  --> 
-
-
-<!-- This is the accumulative stats -->
-         <div class="col-md-1 offset-md-11"
-           style="margin-left: 5px;">
-              <div class='row'>
-                <div class="col-3" style="margin-left: 30px;margin-top: 30px"> 
-                  <div style="height: 50px; width:150px;
-                    background-color: black; 
-                    border: 1px solid black; 
-                    padding: 10px;">
-                    <p style="line-height:1;
-                      margin: 0;color: white;text-align: center;">
-                      Transaksi</p>
-                    <p style="font-size:18px;line-height:1;
-                      margin: 0;color: white;text-align: center;">
-                      <span id="trx">{{ data['trx'] }} </span> dari 5</p>
-                  </div>
-                </div>
-                <div class="col-3" style="margin-left: 30px;margin-top: 30px"> 
-                  <div style="height: 50px; width:150px;
-                    background-color: black; 
-                    border: 1px solid black; 
-                    padding: 10px;">
-                    <p style="line-height:1;
-                      margin: 0;color: rgb(40, 180, 120);text-align: center;font-size:14px;">
-                      Total Keuntungan</p>
-                      <div class="row justify-content-center">
-                          <div class="col-2">
-                            <p style="font-size:14px;line-height:2;
-                              margin: 0;color: rgb(40, 180, 120);text-align: center;">
-                              <i>f</i></p>
-                          </div>
-                          <div class="col-5">
-                              <p id="r_gain" style="font-size:14px;line-height:2;
-                              margin: 0;color: rgb(40, 180, 120);text-align: right;">
-                              {{ data.r_gain }}</p>
-                          </div>
-                      </div>
-                     </div>
-                  </div>
-                
-                  <div class="col-3" style="margin-left: 30px;margin-top: 30px"> 
-                    <div style="height: 50px; width:150px;
-                      background-color: black; 
-                      border: 1px solid black; 
-                      padding: 10px;">
-                      <p style="line-height:1;
-                        margin: 0;color: rgb(200,50,20);text-align: center;font-size:14px;">
-                        Total Pajak</p>
-                        <div class="row justify-content-center">
-                          <div class="col-2">
-                            <p style="font-size:14px;line-height:2;
-                              margin: 0;color: rgb(200,50,20);text-align: center;">
-                              <i>f</i></p>
-                          </div>
-                          <div class="col-5">
-                              <p id="r_tax" style="font-size:14px;line-height:2;
-                              margin: 0;color: rgb(200,50,20);text-align: right;">
-                              {{ data.r_tax }}</p>
-                          </div>
-                      </div>
-                     </div>
-                  </div>
-
-                  <div class="col-3" style="margin-left: 30px;margin-top: 30px"> 
-                    <div style="height: 50px; width:150px;
-                      background-color: black; 
-                      border: 1px solid black; 
-                      padding: 10px;">
-                      <p style="line-height:1;
-                        margin: 0;color: rgb(40, 180, 120);text-align: center;font-size:14px;">
-                        Total Keuntungan Bersih</p>
-                        <div class="row justify-content-center">
-                          <div class="col-2">
-                            <p style="font-size:14px;line-height:2;
-                              margin: 0;color: rgb(40, 180, 120);text-align: center;">
-                              <i>f</i></p>
-                          </div>
-                          <div class="col-5">
-                              <p id="r_gain_net" style="font-size:14px;line-height:2;
-                              margin: 0;color: rgb(40, 180, 120);text-align: right;">
-                              {{ data.r_gain_net }}</p>
-                          </div>
-                      </div>
-                     </div>
-                  </div>
-
-                
-              </div>
-
-
-         
-       </div> <!-- End of right pane   -->
-       
-        <div >
-         <span id="gr"  style="color:rgb(0,0,0);font-size:2px;"> 
-           {{ data.gr }}
-         </span>
-          <span id="id" style="color:rgb(10,10,10);font-size:2px;"> 
-           {{ data.id }}</span>
-          <span id="crypto_prev" style="color:rgb(0,0,0);
-            font-size:2px;">{{ data.crypto_prev }}</span>
-          <span id="fiat_prev"  style="color:rgb(0,0,0);
-            font-size:2px;">{{ data.fiat_prev }}</span>
-          <span id="buy_prev"  style="color:rgb(0,0,0);
-            font-size:2px;">{{ data.buy_prev }}</span>
-          <span id="r_gain_prev"  style="color:rgb(0,0,0);
-            font-size:2px;">{{ data.r_gain_prev }}</span>
-          <span id="r_tax_prev"  style="color:rgb(0,0,0);
-            font-size:2px;">{{ data.r_tax_prev }}</span>
-          <span id="r_gain_net_prev"  style="color:rgb(0,0,0);
-            font-size:2px;">{{ data.r_gain_net_prev }}</span>
-                    <span id="tax_disclos"  style="color:rgb(0,0,0);
-            font-size:2px;">{{ data.tax_disclos }}</span>
-                    <span id="tax_discre"  style="color:rgb(0,0,0);
-            font-size:2px;">{{ data.tax_discre }}</span>
-                    <span id="audit"  style="color:rgb(0,0,0);
-            font-size:2px;">{{ data.audit }}</span>
-                    <span id="penalty"  style="color:rgb(0,0,0);
-            font-size:2px;">{{ data.penalty }}</span>
-                    <span id="r_gain_final"  style="color:rgb(0,0,0);
-            font-size:2px;">{{ data.r_gain_final }}</span>
-          <span id="lang" style="color:rgb(0,0,0);
-            font-size:2px;">{{ data.lang }}</span>
-
-
-        </div>  
-       
-      {% include 'chartscript.html' %}      
-      {% include 'capture-timer.html' %}
-     </div class='row'>  
-    
-  </div class="fixed-box-0">
-
-
-
-    
 </body>
-  
 </html>

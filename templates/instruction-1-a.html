@@ -1,419 +1,845 @@
 <!DOCTYPE html>
-
-<html>
-  <head>
+<html lang="id">
+<head>
     {% include 'bootstrap.html' %}
     <title>TEG</title>
-  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="expires" content="0">
+    
     <style>
-      p {
-        font-family: Arial;
-        color: rgb(80,80,80);
-        margin-bottom: 20px;
+        :root {
+            --primary-color: rgb(80,80,80);
+            --accent-color: rgb(10, 103, 173);
+            --accent-light: rgba(10, 103, 173, 0.05);
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+            --transition-speed: 0.3s;
+            --border-radius: 16px;
+            --spacing-unit: clamp(0.5rem, 2vw, 1rem);
         }
-      h1{
-        font-size: 40px;
-        font-family: Arial;
-        color: rgb(80,80,80);
-      }
-      #container {
-        max-width: 70%;
-        margin: 10px auto;
-        justify-content: center;
-        align-items: center;
-      }
-      .fixed-box-0 {
-      height: 700px; 
-      overflow: auto; 
-      border: 3px grooved solid #ccc; 
-      padding: 10px; 
-      position: relative;
-    }
-      .fixed-box-1 {
-      font-family: Arial;
-      color: rgb(80,80,80);
-      height: 450px; 
-      overflow: auto; 
-      border: 3px grooved solid #ccc; 
-      padding: 10px; 
-      position: relative;
-      margin-left:20px;
-      box-shadow: inset 0 0 4px #555;
-      border-radius: 10px;
-    }
-      .fixed-box-2 {
-      font-family: Arial;
-      color: rgb(80,80,80);
-      height: 250px; 
-      overflow: auto; 
-      border: 3px grooved solid #ccc; 
-      padding: 10px; 
-      position: relative;
-      margin-left:20px;
-      border-radius: 10px;
-      }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: var(--primary-color);
+            line-height: 1.7;
+            background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+            padding: var(--spacing-unit);
+            user-select: none;
+        }
+
+        #container {
+            width: min(95%, 1200px);
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 2);
+        }
+
+        .fixed-box-0, .fixed-box-1, .fixed-box-2 {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            overflow: auto;
+        }
+
+        .fixed-box-0 {
+            padding: calc(var(--spacing-unit) * 2.5);
+            height: auto;
+            max-height: 90vh;
+        }
+
+        .fixed-box-1 {
+            margin: calc(var(--spacing-unit));
+            padding: calc(var(--spacing-unit) * 1.5);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .fixed-box-2 {
+            margin: calc(var(--spacing-unit) * 1.2);
+            padding: calc(var(--spacing-unit) * 1.8);
+            background: rgba(248, 249, 250, 0.5);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: calc(var(--spacing-unit));
+            color: var(--primary-color);
+        }
+
+        p, li {
+            font-size: clamp(1rem, 1.5vw, 1.125rem);
+            margin-bottom: calc(var(--spacing-unit));
+        }
+
+        /* Video Container */
+        .video-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: calc(var(--spacing-unit) * 2) auto;
+            background-color: #f5f5f5;
+            padding: calc(var(--spacing-unit));
+            border-radius: var(--border-radius);
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            border-radius: calc(var(--border-radius) - 4px);
+        }
+        video {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        video::-webkit-media-controls-download-button {
+            display: none;
+        }
+        /* Questions Section */
+        .questions-section {
+            background-color: lightgray;
+            padding: calc(var(--spacing-unit) * 1.5);
+            border-radius: var(--border-radius);
+            margin-top: calc(var(--spacing-unit) * 2);
+        }
+
+        .question-group {
+            margin-bottom: calc(var(--spacing-unit) * 1.5);
+            margin-left: calc(var(--spacing-unit) * 2);
+        }
+
+        /* Updated Radio Button Styles */
+        .options {
+            margin-left: calc(var(--spacing-unit) * 1.5);
+        }
+
+        .options div {
+            display: flex;
+            align-items: baseline;
+            margin-bottom: calc(var(--spacing-unit) * 0.8);
+            padding-left: calc(var(--spacing-unit) * 1.5);
+        }
+
+        input[type="radio"] {
+            width: 1.2rem;
+            height: 1.2rem;
+            margin-right: calc(var(--spacing-unit));
+            border: 2px solid var(--accent-color);
+            border-radius: 50%;
+            appearance: none;
+            -webkit-appearance: none;
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        input[type="radio"]:checked {
+            border-color: var(--accent-color);
+            background-color: white;
+        }
+
+        input[type="radio"]:checked::after {
+            content: '';
+            position: absolute;
+            width: 0.6rem;
+            height: 0.6rem;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .options div label {
+            font-size: clamp(1rem, 1.5vw, 1.125rem);
+            margin-left: calc(var(--spacing-unit) * 0.5);
+            cursor: pointer;
+        }
+/* Buttons and Controls */
+        button, .btn {
+            background: linear-gradient(45deg, var(--accent-color), #2c5282);
+            color: white;
+            padding: calc(var(--spacing-unit)) calc(var(--spacing-unit) * 2);
+            border: none;
+            border-radius: calc(var(--border-radius) - 8px);
+            font-size: clamp(1rem, 1.2vw, 1.125rem);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            margin-top: calc(var(--spacing-unit) * 2);
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        button:hover, .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(10, 103, 173, 0.2);
+        }
+
+        /* Consent Checkbox */
+        .consent-checkbox {
+            display: flex;
+            position: relative;
+            padding: calc(var(--spacing-unit) * 0.8);
+            background: white;
+            border-radius: calc(var(--border-radius) - 8px);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            margin-bottom: 2rem;
+        }
+
+        .consent-checkbox input[type="checkbox"] {
+            width: 1.2rem;
+            height: 1.2rem;
+            border-radius: 4px;
+            border: 2px solid var(--accent-color);
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            transition: all var(--transition-speed);
+            position: relative;
+            opacity: 0.8;
+            margin-right: 10px;
+        }
+
+        .consent-checkbox input[type="checkbox"]:checked {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            opacity: 1;
+        }
+
+        .consent-checkbox input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 1rem;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .consent-checkbox label {
+            font-size: clamp(1rem, 1.5vw, 1.125rem);
+            color: var(--primary-color);
+        }
+
+        .consent-checkbox input[type="checkbox"]:disabled {
+            background-color: #e9ecef;
+            border-color: #ced4da;
+            cursor: not-allowed;
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Warning Message */
+        .warning-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 69, 0, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            display: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Dividers */
+        hr {
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1), transparent);
+            margin: calc(var(--spacing-unit) * 2) 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            :root {
+                --border-radius: 12px;
+            }
+
+            #container {
+                width: 100%;
+                padding: var(--spacing-unit);
+            }
+
+            .fixed-box-0 {
+                padding: calc(var(--spacing-unit) * 1.5);
+            }
+
+            .fixed-box-1, .fixed-box-2 {
+                margin: calc(var(--spacing-unit));
+                padding: calc(var(--spacing-unit));
+            }
+
+            .question-group {
+                margin-left: calc(var(--spacing-unit));
+            }
+
+            .options {
+                margin-left: calc(var(--spacing-unit));
+            }
+
+            button, .btn {
+                width: 100%;
+                margin-bottom: calc(var(--spacing-unit));
+            }
+        }
     </style>
+</head>
+<body>
+    <!-- Warning Message Container -->
+    <div id="warningMessage" class="warning-message"></div>
 
-      <script>
+    <div id="container">
+        <div class="fixed-box-0">
+            <h1>Instruksi</h1>
 
-        document.addEventListener('DOMContentLoaded', (event) => {
-            const video = document.getElementById('tutorialVideo');
-            const nextButton = document.getElementById('nextButton'); 
+            <div class="fixed-box-1">
+                <div class="fixed-box-2">
+                    <p><strong>Ikhtisar</strong></p>
 
-            // Disable the button initially
-            nextButton.disabled = true;
+                    <p>Dalam eksperimen ini, Anda akan berperan sebagai pedagang {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }}, dengan dua jenis aset yang dapat Anda gunakan: mata uang fiat dan {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }} di bursa terdesentralisasi. Anda akan memulai simulasi dengan 1 unit {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }} dan tanpa mata uang fiat.</p>
 
-            video.addEventListener('ended', () => {
-                // Enable the button only after the video has finished playing
-                nextButton.disabled = false;
+                    <p><strong>Simulasi Perdagangan</strong></p>
+                    <ul>
+                        <li>Ronde: Simulasi ini mencakup 15 ronde perdagangan.</li>
+                        <li>Mekanisme Perdagangan: Dalam tiap ronde, Anda akan secara selang-seling menjual dan membeli aset, dengan kesempatan melakukan hingga 5 transaksi per ronde. Tiap ronde akan berlangsung 40 detik.</li>
+                        <li>Cara Berdagang: Untuk melakukan perdagangan, cukup klik tombol "Beli" atau "Jual".</li>
+                    </ul>
+
+                    <p><strong>Pelaporan Pajak</strong></p>
+                    <ul>
+                        <li>Di akhir setiap ronde, Anda akan memasuki fase pelaporan pajak, di mana Anda diharapkan membayar pajak 20% atas keuntungan perdagangan.</li>
+                        <li>Contoh Perhitungan Pajak: Jika Anda membeli {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }} seharga <i>f</i> 10.000 dan kemudian menjualnya seharga <i>f</i> 15.000, keuntungan Anda adalah <i>f</i> 5.000. Pajak yang terhutang atas keuntungan ini adalah <i>f</i> 1.000 (20% dari <i>f</i> 5.000)</li>
+                        <li>Perhitungan pajak dilakukan secara otomatis. Anda dapat melihat kewajiban pajak perkiraan Anda dengan mengarahkan kursor ke tombol "tampilkan total" di halaman pelaporan pajak. Namun, Anda harus memasukkan jumlah pajak yang ingin Anda laporkan secara manual pada kotak yang disediakan. Meskipun Anda memiliki kebebasan untuk melaporkan jumlah berapa pun, Anda harus mengungkapkan angka perkiraan dengan akurat untuk menghindari sanksi apabila transaksi Anda diaudit.</li>
+                    </ul>
+
+                    <p><strong>Kompensasi, Undian, dan Audit</strong></p>
+                    <ul>
+                        <li>Memaksimalkan keuntungan Anda sangat penting karena kompensasi dari studi ini berbasis kinerja.</li>
+                        <li>Undian: Dengan berpartisipasi, Anda secara otomatis terdaftar. Pada akhir keseluruhan ronde, satu ronde akan dipilih secara acak oleh sistem, dan Anda akan menerima e-gift voucher berdasarkan keuntungan yang Anda peroleh di ronde tersebut. Jika keuntungan Anda kurang dari <i>f</i> 1 juta, Anda akan menerima voucher Rp 50.000,-. Untuk keuntungan antara <i>f</i> 1-5 juta, hadiahnya meningkat menjadi Rp 100.000,-. Melampaui <i>f</i> 5 juta akan memberikan Anda Rp 200.000,-.</li>
+                        <li>Anda hanya akan menerima e-gift voucher pada partisipasi pertama. Jika Anda berpartisipasi lebih dari sekali, Anda tidak akan menerima voucher tambahan. Ketentuan ini bertujuan untuk memastikan kualitas data yang diperoleh dari studi ini. Kami mohon kerja sama Anda untuk berpartisipasi dengan sungguh-sungguh.</li>
+                        <li>Jika terjadi audit, pajak yang tidak dilaporkan pada suatu ronde akan menjadi dasar pengenaan denda sebesar 200% dari jumlah pajak yang tidak dilaporkan tersebut. Denda ini, ditambah dengan pajak yang seharusnya dilaporkan, akan dikurangi dari total keuntungan Anda.</li>
+                        <li>Kemungkinan untuk terkena audit pajak adalah 20%{{ ", tetapi karena perdagangan terjadi di bursa terdesentralisasi, kemungkinan terkena audit bisa lebih rendah setengahnya atau bahkan lebih. Hal ini karena transaksi terjadi antar pihak, tanpa perlu perantara/broker, sehingga otoritas memiliki akses terbatas atas informasi ini" if au == "1" else "" if au == "0" }}.</li>
+                    </ul>
+
+                    <p><strong>Strategi dan Umpan Balik</strong></p>
+                    <ul>
+                        <li>Anda tidak harus menggunakan seluruh 5 kesempatan transaksi di setiap ronde, memberikan Anda waktu untuk merencanakan strategi transaksi berdasarkan fluktuasi harga aset.</li>
+                        <li>Setelah simulasi, Anda akan menerima kuesioner tentang perilaku kepatuhan dan umpan balik penelitian.</li>
+                    </ul>
+
+                    <p><strong>Wawancara Tindak Lanjut Opsional</strong></p>
+                    <ul>
+                        <li>Setelah menyelesaikan kuesioner, Anda dapat memilih untuk berpartisipasi dalam wawancara tindak lanjut untuk memberikan umpan balik yang lebih mendalam. Jika Anda memilih demikian, email dengan jadwal dan rincian mengenai wawancara ini akan dikirimkan kepada Anda.</li>
+                    </ul>
+                </div>
+
+                <hr>
+
+                <div class="video-container">
+                    <video id="instructionVideo"                             width="100%" 
+                        controls 
+                        controlsList="nodownload noplaybackrate" 
+                        disablePictureInPicture 
+                        oncontextmenu="return false;">
+                        <source src="{{ url_for('static', filename='introductory_video-StockIndo.mp4') }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+
+                <hr>
+<div class="questions-section">
+    <p style="margin-left: 20px;">Untuk memastikan pemahaman Anda tentang instruksi eksperimen di atas, silakan jawab pertanyaan-pertanyaan berikut dengan benar:</p>
+
+    <div class="question-group">
+        <p>1. Berapa banyak ronde dalam simulasi ini?</p>
+        <div class="options">
+            <div>
+                <input type="radio" name="q1" value="10" id="q1-1">
+                <label for="q1-1">10</label>
+            </div>
+            <div>
+                <input type="radio" name="q1" value="20" id="q1-2">
+                <label for="q1-2">20</label>
+            </div>
+            <div>
+                <input type="radio" name="q1" value="15" id="q1-3">
+                <label for="q1-3">15</label>
+            </div>
+            <div>
+                <input type="radio" name="q1" value="30" id="q1-4">
+                <label for="q1-4">30</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-group">
+        <p>2. Berapa lama durasi perdagangan setiap ronde?</p>
+        <div class="options">
+            <div>
+                <input type="radio" name="q2" value="40" id="q2-1">
+                <label for="q2-1">40 detik</label>
+            </div>
+            <div>
+                <input type="radio" name="q2" value="60" id="q2-2">
+                <label for="q2-2">60 detik</label>
+            </div>
+            <div>
+                <input type="radio" name="q2" value="20" id="q2-3">
+                <label for="q2-3">20 detik</label>
+            </div>
+            <div>
+                <input type="radio" name="q2" value="15" id="q2-4">
+                <label for="q2-4">15 detik</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-group">
+        <p>3. Apa peran Anda?</p>
+        <div class="options">
+            <div>
+                <input type="radio" name="q3" value="crypto" id="q3-1">
+                <label for="q3-1">Pedagang kripto</label>
+            </div>
+            <div>
+                <input type="radio" name="q3" value="stock" id="q3-2">
+                <label for="q3-2">Pedagang saham</label>
+            </div>
+            <div>
+                <input type="radio" name="q3" value="tax" id="q3-3">
+                <label for="q3-3">Petugas pajak</label>
+            </div>
+            <div>
+                <input type="radio" name="q3" value="broker" id="q3-4">
+                <label for="q3-4">Broker</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-group">
+        <p>4. Berapa persentase kemungkinan otoritas mengaudit pajak atas transaksi Anda{{ " ketika Anda tidak beroperasi di bursa terdesentralisasi" if au == "1" else "" if au == "0" }}?</p>
+        <div class="options">
+            <div>
+                <input type="radio" name="q4" value="10" id="q4-1">
+                <label for="q4-1">10%</label>
+            </div>
+            <div>
+                <input type="radio" name="q4" value="0" id="q4-2">
+                <label for="q4-2">0%</label>
+            </div>
+            <div>
+                <input type="radio" name="q4" value="20" id="q4-3">
+                <label for="q4-3">20%</label>
+            </div>
+            <div>
+                <input type="radio" name="q4" value="9" id="q4-4">
+                <label for="q4-4">9%</label>
+            </div>
+        </div>
+    </div>
+<div class="question-group">
+        <p>5. Berapa banyak transaksi yang dapat Anda lakukan dalam setiap ronde?</p>
+        <div class="options">
+            <div>
+                <input type="radio" name="q5" value="10" id="q5-1">
+                <label for="q5-1">10</label>
+            </div>
+            <div>
+                <input type="radio" name="q5" value="20" id="q5-2">
+                <label for="q5-2">20</label>
+            </div>
+            <div>
+                <input type="radio" name="q5" value="5" id="q5-3">
+                <label for="q5-3">5</label>
+            </div>
+            <div>
+                <input type="radio" name="q5" value="13" id="q5-4">
+                <label for="q5-4">13</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-group">
+        <p>6. Berapa tarif pajak yang berlaku atas keuntungan perdagangan yang Anda peroleh?</p>
+        <div class="options">
+            <div>
+                <input type="radio" name="q6" value="10" id="q6-1">
+                <label for="q6-1">10%</label>
+            </div>
+            <div>
+                <input type="radio" name="q6" value="20" id="q6-2">
+                <label for="q6-2">20%</label>
+            </div>
+            <div>
+                <input type="radio" name="q6" value="30" id="q6-3">
+                <label for="q6-3">30%</label>
+            </div>
+            <div>
+                <input type="radio" name="q6" value="15" id="q6-4">
+                <label for="q6-4">15%</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-group">
+        <p>7. Jika Anda membeli {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }} seharga <i>f</i> 10.000 dan menjualnya seharga <i>f</i> 20.000, berapa banyak pajak yang harus Anda laporkan sesuai dengan tarif pajak yang berlaku?</p>
+        <div class="options">
+            <div>
+                <input type="radio" name="q7" value="1000" id="q7-1">
+                <label for="q7-1"><i>f</i> 1.000</label>
+            </div>
+            <div>
+                <input type="radio" name="q7" value="0" id="q7-2">
+                <label for="q7-2"><i>f</i> 0</label>
+            </div>
+            <div>
+                <input type="radio" name="q7" value="2000" id="q7-3">
+                <label for="q7-3"><i>f</i> 2.000</label>
+            </div>
+            <div>
+                <input type="radio" name="q7" value="1500" id="q7-4">
+                <label for="q7-4"><i>f</i> 1.500</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-group">
+        <p>8. Dalam satu ronde acak, Anda melaporkan pajak sebesar <i>f</i> 50.000, sementara keuntungan Anda adalah <i>f</i> 1.100.000, dan pajak yang tidak dilaporkan adalah <i>f</i> 170.000. Dalam ronde ini, Anda tidak diaudit oleh otoritas. Berapa nilai e-gift voucher yang berhak Anda terima apabila ronde ini terpilih dalam undian?</p>
+        <div class="options">
+            <div>
+                <input type="radio" name="q8" value="200000" id="q8-1">
+                <label for="q8-1">Rp 200.000,-</label>
+            </div>
+            <div>
+                <input type="radio" name="q8" value="50000" id="q8-2">
+                <label for="q8-2">Rp 50.000,-</label>
+            </div>
+            <div>
+                <input type="radio" name="q8" value="100000" id="q8-3">
+                <label for="q8-3">Rp 100.000,-</label>
+            </div>
+            <div>
+                <input type="radio" name="q8" value="0" id="q8-4">
+                <label for="q8-4">Rp 0,-, karena tidak ada audit</label>
+            </div>
+        </div>
+    </div>
+<div class="question-group">
+        <p>9. Dalam satu ronde, Anda memiliki pajak yang tidak dilaporkan sebesar <i>f</i> 300. Otoritas mengaudit Anda dan memberlakukan denda. Berapa banyak pajak yang masih harus Anda bayar?</p>
+        <div class="options">
+            <div>
+                <input type="radio" name="q9" value="900" id="q9-1">
+                <label for="q9-1"><i>f</i> 900</label>
+            </div>
+            <div>
+                <input type="radio" name="q9" value="300" id="q9-2">
+                <label for="q9-2"><i>f</i> 300</label>
+            </div>
+            <div>
+                <input type="radio" name="q9" value="600" id="q9-3">
+                <label for="q9-3"><i>f</i> 600</label>
+            </div>
+            <div>
+                <input type="radio" name="q9" value="1200" id="q9-4">
+                <label for="q9-4"><i>f</i> 1.200</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="question-group">
+        <p>10. Jumlah keuntungan dan pajak Anda dalam satu ronde di halaman pelaporan pajak...</p>
+        <div class="options">
+            <div>
+                <input type="radio" name="q10" value="manual" id="q10-1">
+                <label for="q10-1">untuk Anda hitung dan ketik di kolom kosong.</label>
+            </div>
+            <div>
+                <input type="radio" name="q10" value="hover" id="q10-2">
+                <label for="q10-2">ditampilkan setelah Anda mengarahkan kursor tetikus Anda pada tombol "tampilkan total".</label>
+            </div>
+            <div>
+                <input type="radio" name="q10" value="enter" id="q10-3">
+                <label for="q10-3">secara otomatis diperbarui setelah Anda klik "Enter".</label>
+            </div>
+            <div>
+                <input type="radio" name="q10" value="none" id="q10-4">
+                <label for="q10-4">tidak tersedia jika Anda tidak meng-klik "Beli" atau "Jual".</label>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin: 20px;">
+        <button onclick="checkAnswers()" class="btn">Periksa Jawaban</button>
+    </div>
+</div>
+            </div>
+
+            <div style="margin-left: 20px; margin-bottom: 20px; color: rgb(80,80,80);">
+                <div class="consent-checkbox">
+                    <input type="checkbox" id="consentCheckbox" disabled>
+                    <label for="consentCheckbox">Saya telah memahami instruksi dan video eksperimen, dan siap untuk mulai.</label>
+                </div>
+                <form action="{{ url_for('index') }}" method="post">
+                    <input type="hidden" name="form_type" value="instruction">
+                    <input type="hidden" name="id" value="{{ id }}">
+                    <input type="hidden" name="lang" value="{{ lang }}">
+                    <input type="hidden" name="asset_type" value="{{ asset_type }}">
+                    <button type="submit" id="submitButton" class="btn" disabled>Lanjut</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            let beforeUnloadAttached = false;
+
+            function showWarning(message) {
+                const warningDiv = document.getElementById('warningMessage');
+                warningDiv.textContent = message;
+                warningDiv.style.display = 'block';
+                setTimeout(() => {
+                    warningDiv.style.display = 'none';
+                }, 3000);
+            }
+
+            function preventBackNavigation() {
+                window.history.pushState(null, null, window.location.href);
+                showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+            }
+
+            function preventUnload(e) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+
+            function initializeProtection() {
+                window.addEventListener('popstate', preventBackNavigation);
+
+                // Only attach beforeunload if not already attached
+                if (!beforeUnloadAttached) {
+                    window.addEventListener('beforeunload', preventUnload);
+                    beforeUnloadAttached = true;
+                }
+
+                document.addEventListener('keydown', function(e) {
+                    const blockedKeys = [
+                        { key: 'Backspace', condition: !isFormInput(document.activeElement) },
+                        { key: 'r', condition: e.ctrlKey || e.metaKey },
+                        { key: 'F5', condition: true },
+                        { key: 'ArrowLeft', condition: e.altKey },
+                        { key: 'ArrowRight', condition: e.altKey },
+                        { key: 'w', condition: e.ctrlKey || e.metaKey },
+                        { key: 'u', condition: e.ctrlKey || e.metaKey },
+                        { key: 's', condition: e.ctrlKey || e.metaKey },
+                    ];
+
+                    for (let combo of blockedKeys) {
+                        if (e.key === combo.key && combo.condition) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                            return false;
+                        }
+                    }
+                }, true);
+
+                document.addEventListener('contextmenu', (e) => e.preventDefault());
+                document.addEventListener('dragstart', (e) => e.preventDefault());
+                document.addEventListener('drop', (e) => e.preventDefault());
+
+                setInterval(() => {
+                    window.history.pushState(null, null, window.location.href);
+                }, 100);
+            }
+
+            function isFormInput(element) {
+                if (!element) return false;
+                const formTags = ['INPUT', 'TEXTAREA', 'SELECT'];
+                return formTags.includes(element.tagName);
+            }
+
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    initializeProtection();
+                    setupFormHandlers();
+                });
+            } else {
+                initializeProtection();
+                setupFormHandlers();
+            }
+
+            function setupFormHandlers() {
+                // Find all forms in the document
+                const forms = document.querySelectorAll('form');
+                forms.forEach(form => {
+                    form.addEventListener('submit', function() {
+                        // Remove the beforeunload event listener
+                        if (beforeUnloadAttached) {
+                            window.removeEventListener('beforeunload', preventUnload);
+                            beforeUnloadAttached = false;
+                        }
+                    });
+                });
+
+                // Also handle the submit button click
+                const submitButton = document.getElementById('submitButton');
+                if (submitButton) {
+                    submitButton.addEventListener('click', function() {
+                        if (beforeUnloadAttached) {
+                            window.removeEventListener('beforeunload', preventUnload);
+                            beforeUnloadAttached = false;
+                        }
+                    });
+                }
+            }
+        })();
+    </script>
+    <script>
+        // Global variables for tracking conditions
+        let answersCorrect = false;
+        let videoWatched = false;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const video = document.getElementById('instructionVideo');
+            const checkbox = document.getElementById('consentCheckbox');
+            const submitButton = document.getElementById('submitButton');
+
+            // Initially disable both checkbox and submit button
+            checkbox.disabled = true;
+            checkbox.checked = false;
+            submitButton.disabled = true;
+
+            // Track video completion
+            video.addEventListener('ended', function() {
+                videoWatched = true;
+                updateSubmitButton();
+            });
+
+            // Handle checkbox changes
+            checkbox.addEventListener('change', function() {
+                submitButton.disabled = !this.checked;
+            });
+
+            // Handle submit button clicks
+            submitButton.addEventListener('click', function(e) {
+                if (!videoWatched) {
+                    e.preventDefault();
+                    alert('Silakan tonton video instruksi hingga selesai.');
+                    return;
+                }
+                if (!answersCorrect) {
+                    e.preventDefault();
+                    alert('Silakan jawab semua pertanyaan dengan benar terlebih dahulu.');
+                    return;
+                }
+                if (!checkbox.checked) {
+                    e.preventDefault();
+                    alert('Silakan centang kotak persetujuan terlebih dahulu.');
+                    return;
+                }
             });
         });
 
-      </script>
-  </head>
-  
-<body>
+        // Answer checking function
+        function checkAnswers() {
+            const correctAnswers = {
+                'q1': { value: '15', text: 'Jumlah ronde dalam simulasi' },
+                'q2': { value: '40', text: 'Durasi perdagangan tiap ronde' },
+                'q3': { value: '{{ "crypto" if asset_type == "crypto" else "stock" }}', text: 'Peran Anda dalam simulasi' },
+                'q4': { value: '20', text: 'Persentase kemungkinan audit' },
+                'q5': { value: '5', text: 'Jumlah transaksi per ronde' },
+                'q6': { value: '20', text: 'Tarif pajak yang berlaku' },
+                'q7': { value: '2000', text: 'Perhitungan pajak' },
+                'q8': { value: '100000', text: 'Nilai voucher berdasarkan keuntungan' },
+                'q9': { value: '900', text: 'Perhitungan denda pajak' },
+                'q10': { value: 'hover', text: 'Cara melihat jumlah keuntungan dan pajak' }
+            };
 
-  <div id="container">
-  <div class="fixed-box-0">
-    
-  <h1>Instruksi</h1>
- 
-  <p>
-    
-  </p>
-  
-  <div class="fixed-box-1">
-    <div class="fixed-box-2" >
-    <p><b>Ikhtisar</b></p>
-    <p>Dalam eksperimen ini, Anda akan berperan sebagai pedagang {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }}, dengan dua jenis aset yang dapat Anda gunakan: mata uang fiat dan {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }} di bursa terdesentralisasi. Anda akan memulai simulasi dengan 1 unit {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }} dan tanpa mata uang fiat.
-</p>
-    <p><b>Simulasi Perdagangan</b></p>
-    <ul>
-      <li>Ronde: Simulasi ini mencakup 15 ronde perdagangan.</li>
-      <li>Mekanisme Perdagangan: Dalam tiap ronde, Anda akan secara selang-seling menjual dan membeli aset, dengan kesempatan melakukan hingga 5 transaksi per ronde. Tiap ronde akan berlangsung 40 detik.</li>
-      <li>Cara Berdagang: Untuk melakukan perdagangan, cukup klik tombol "Beli" atau "Jual".</li>      
-    </ul>
-    <p><b>Pelaporan Pajak</b></p>
-    <ul>
-      <li>Di akhir setiap ronde, Anda akan memasuki fase pelaporan pajak, di mana Anda diharapkan membayar pajak 20% atas keuntungan perdagangan.</li>
-      <li>Contoh Perhitungan Pajak: Jika Anda membeli {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }} seharga <i>f</i> 10.000 dan kemudian menjualnya seharga <i>f</i> 15.000, keuntungan Anda adalah <i>f</i> 5.000. Pajak yang terhutang atas keuntungan ini adalah <i>f</i> 1.000 (20% dari <i>f</i> 5.000)
-      </li>
-      <li>Perhitungan pajak dilakukan secara otomatis. Anda dapat melihat kewajiban pajak perkiraan Anda dengan mengarahkan kursor ke tombol "tampilkan total" di halaman pelaporan pajak. Namun, Anda harus memasukkan jumlah pajak yang ingin Anda laporkan secara manual pada kotak yang disediakan. Meskipun Anda memiliki kebebasan untuk melaporkan jumlah berapa pun, Anda harus mengungkapkan angka perkiraan dengan akurat untuk menghindari sanksi apabila transaksi Anda diaudit.</li>    
-    </ul>
-    <p><b>Kompensasi, Undian, dan Audit</b></p>
-    <ul>
-      <li>Memaksimalkan keuntungan Anda sangat penting karena kompensasi dari studi ini berbasis kinerja.</li>
-      <li>Undian: Dengan berpartisipasi, Anda secara otomatis terdaftar. Pada akhir keseluruhan ronde, satu ronde akan dipilih secara acak oleh sistem, dan Anda akan menerima e-gift voucher berdasarkan keuntungan yang Anda peroleh di ronde tersebut. Jika keuntungan Anda kurang dari <i>f</i> 1 juta, Anda akan menerima voucher Rp 50.000,-. Untuk keuntungan antara <i>f</i> 1-5 juta, hadiahnya meningkat menjadi Rp 100.000,-. Melampaui <i>f</i> 5 juta akan memberikan Anda Rp 200.000,-.</li>
-        <li>Anda hanya akan menerima e-gift voucher pada partisipasi pertama. Jika Anda berpartisipasi lebih dari sekali, Anda tidak akan menerima voucher tambahan. Ketentuan ini bertujuan untuk memastikan kualitas data yang diperoleh dari studi ini. Kami mohon kerja sama Anda untuk berpartisipasi dengan sungguh-sungguh.</li>
-      <li>Jika terjadi audit, pajak yang tidak dilaporkan pada suatu ronde akan menjadi dasar pengenaan denda sebesar 200% dari jumlah pajak yang tidak dilaporkan tersebut. Denda ini, ditambah dengan pajak yang seharusnya dilaporkan, akan dikurangi dari total keuntungan Anda.</li>
-      <li>Kemungkinan untuk terkena audit pajak adalah 20%{{ ", tetapi karena perdagangan terjadi di bursa terdesentralisasi, kemungkinan terkena audit bisa lebih rendah hingga setengahnya atau bahkan lebih. Hal ini karena transaksi terjadi antar pihak, tanpa perlu perantara/broker, sehingga otoritas memiliki akses terbatas atas informasi ini" if au == "1" else "" if au == "0" }}.
-      </li>
-    </ul>
-    <p><b>Strategi dan Umpan Balik</b></p>
-    <ul>
-      <li>Anda tidak harus menggunakan seluruh 5 kesempatan transaksi di setiap ronde, memberikan Anda waktu untuk merencanakan strategi transaksi berdasarkan fluktuasi harga aset.</li>
-      <li>Setelah simulasi, Anda akan menerima kuesioner tentang perilaku kepatuhan dan umpan balik penelitian.</li>
-     </ul>
-    <p><b>Wawancara Tindak Lanjut Opsional</b></p>
-    <ul>
-      <li>Setelah menyelesaikan kuesioner, Anda dapat memilih untuk berpartisipasi dalam wawancara tindak lanjut untuk memberikan umpan balik yang lebih mendalam. Jika Anda memilih demikian, email dengan jadwal dan rincian mengenai wawancara ini akan dikirimkan kepada Anda.</li>
-     </ul>
-    </div class="fixed-box-2" style="background-color: lightgray;">
+            let allCorrect = true;
+            let unanswered = [];
+            let incorrect = [];
 
-<hr>
+            for (let question in correctAnswers) {
+                const selectedAnswer = document.querySelector(`input[name="${question}"]:checked`);
+                const questionNumber = question.replace('q', '');
 
-      <div style="margin-top: 20px; margin-left: 20px; text-align: center;">  
-          <video id="tutorialVideo" width="900" controls style="max-width: 100%; max-height: calc(900px * 9 / 16);">
-              <source src="{{ url_for('static', filename='introductory_video-StockIndo.mp4') }}" type="video/mp4">
-              Your browser does not support the video tag.
-          </video>
-      </div>
+                if (!selectedAnswer) {
+                    unanswered.push(questionNumber);
+                    continue;
+                }
 
-      <hr>
-      
-    <div class="fixed-box-2" style="background-color: lightgray;">
-      
-    <p>Untuk memastikan pemahaman Anda tentang instruksi eksperimen di atas, silakan jawab pertanyaan-pertanyaan berikut dengan benar:</p>
-      <div style="margin-left: 20px;">
-          <form id="simulationForm">
-              <p>1. Berapa banyak ronde dalam simulasi ini?<br>
-              <input type="radio" name="q1" value="10"> 10<br>
-              <input type="radio" name="q1" value="20"> 20<br>
-              <input type="radio" name="q1" value="15"> 15<br>
-              <input type="radio" name="q1" value="30"> 30<br>
-              <p id="q1-warning" style="color: red;"></p></p>
+                if (selectedAnswer.value !== correctAnswers[question].value) {
+                    incorrect.push({
+                        number: questionNumber,
+                        topic: correctAnswers[question].text
+                    });
+                    allCorrect = false;
+                }
+            }
 
-                <p>2. Berapa lama durasi perdagangan setiap ronde?<br>
-                <input type="radio" name="q2" value="30"> 40 detik<br>
-                <input type="radio" name="q2" value="60"> 60 detik<br>
-                <input type="radio" name="q2" value="20"> 20 detik<br>
-                <input type="radio" name="q2" value="15"> 15 detik<br>
-                <p id="q2-warning" style="color: red;"></p></p>
+            if (unanswered.length > 0) {
+                alert(`Mohon jawab pertanyaan nomor ${unanswered.join(', ')} sebelum memeriksa jawaban.`);
+                answersCorrect = false;
+                return;
+            }
 
-             <p>3. Apa peran Anda?<br>
-              <input type="radio" name="q3" value="A crypto user"> Pedagang kripto<br>
-              <input type="radio" name="q3" value="A stock user"> Pedagang saham<br>
-              <input type="radio" name="q3" value="A tax officer"> Petugas pajak<br>
-              <input type="radio" name="q3" value="A broker"> Broker<br>
-              <p id="q3-warning" style="color: red;"></p></p>
+            if (allCorrect) {
+                answersCorrect = true;
+                const checkbox = document.getElementById('consentCheckbox');
+                const submitButton = document.getElementById('submitButton');
 
-              <p>4. Berapa persentase kemungkinan otoritas mengaudit pajak atas transaksi Anda{{ " ketika Anda tidak beroperasi di bursa terdesentralisasi" if au == "1" else "" if au == "0" }}?<br>
-              <input type="radio" name="q4" value="10%"> 10%<br>
-              <input type="radio" name="q4" value="0%"> 0%<br>
-              <input type="radio" name="q4" value="20%"> 20%<br>
-              <input type="radio" name="q4" value="9%"> 9%<br>
-              <p id="q4-warning" style="color: red;"></p></p>
+                if (videoWatched) {
+                    checkbox.disabled = false;
+                    checkbox.checked = true;
+                    submitButton.disabled = false;
+                }
 
-              <p>5. Berapa banyak transaksi yang dapat Anda lakukan dalam setiap ronde?<br>
-              <input type="radio" name="q5" value="10"> 10<br>
-              <input type="radio" name="q5" value="20"> 20<br>
-              <input type="radio" name="q5" value="5"> 5<br>
-              <input type="radio" name="q5" value="3"> 13<br>
-              <p id="q5-warning" style="color: red;"></p></p>
+                alert('Selamat! Semua jawaban Anda benar. ' + 
+                      (!videoWatched ? 'Silakan tonton video instruksi hingga selesai untuk melanjutkan.' : 'Anda dapat melanjutkan ke tahap berikutnya.'));
+            } else {
+                answersCorrect = false;
+                let warningMessage = 'Jawaban yang perlu diperbaiki:\n\n';
+                incorrect.forEach(item => {
+                    warningMessage += `- Nomor ${item.number}: ${item.topic}\n`;
+                });
+                alert(warningMessage + '\nSilakan periksa kembali jawaban Anda.');
+            }
 
-              <p>6. Berapa tarif pajak yang berlaku atas keuntungan perdagangan yang Anda peroleh?<br>
-              <input type="radio" name="q6" value="10%"> 10%<br>
-              <input type="radio" name="q6" value="20%"> 20%<br>
-              <input type="radio" name="q6" value="30%"> 30%<br>
-              <input type="radio" name="q6" value="15%"> 15%<br>
-              <p id="q6-warning" style="color: red;"></p></p>
+            updateSubmitButton();
+        }
 
-              <p>7. Jika Anda membeli {{ "kripto" if asset_type == "crypto" else "saham" if asset_type == "stock" else asset_type }} seharga <i>f</i> 10.000 dan menjualnya seharga <i>f</i> 20.000, berapa banyak pajak yang harus Anda laporkan sesuai dengan tarif pajak yang berlaku?<br>
-              <input type="radio" name="q7" value="f 1,000"> <i>f</i> 1.000<br>
-              <input type="radio" name="q7" value="f 0"> <i>f</i> 0<br>
-              <input type="radio" name="q7" value="f 2,000"> <i>f</i> 2.000<br>
-              <input type="radio" name="q7" value="f 1,500"> <i>f</i> 1.500<br>
-              <p id="q7-warning" style="color: red;"></p></p>
+        // Helper function to update button state
+        function updateSubmitButton() {
+            const checkbox = document.getElementById('consentCheckbox');
+            const submitButton = document.getElementById('submitButton');
 
-              <p>8. Dalam satu ronde acak, Anda melaporkan pajak sebesar <i>f</i> 50.000, sementara keuntungan Anda adalah <i>f</i> 1.100.000, dan pajak yang tidak dilaporkan adalah <i>f</i> 170.000. Dalam ronde ini, Anda tidak diaudit oleh otoritas. Berapa nilai e-gift voucher yang berhak Anda terima apabila ronde ini terpilih dalam undian?<br>
-              <input type="radio" name="q8" value="AUD 20">  Rp 200.000,-<br>
-              <input type="radio" name="q8" value="A percentage amount of 10,000"> Rp 50.000,-<br>
-              <input type="radio" name="q8" value="A percentage dollar amount of f 5,000"> Rp 100.000,-<br>
-              <input type="radio" name="q8" value="No compensation because there is no audit">Rp 0,-, karena tidak ada audit<br>
-              <p id="q8-warning" style="color: red;"></p></p>
-
-                <p>9. Dalam satu ronde, Anda memiliki pajak yang tidak dilaporkan sebesar <i>f</i> 300. Otoritas mengaudit Anda dan memberlakukan denda. Berapa banyak pajak yang masih harus Anda bayar?<br>
-                <input type="radio" name="q9" value="A questionnaire"><i>f</i> 900<br>
-                <input type="radio" name="q9" value="An online game"><i>f</i> 300<br>
-                <input type="radio" name="q9" value="A captcha"><i>f</i>   600<br>
-                <input type="radio" name="q9" value="A tax calculation"><i>f</i> 1.200<br>
-              <p id="q9-warning" style="color: red;"></p></p>
-
-              <p>10. Jumlah keuntungan dan pajak Anda dalam satu ronde di halaman pelaporan pajak...<br>
-              <input type="radio" name="q10" value="For you to calculate and type in the field"> untuk Anda hitung dan ketik di kolom kosong.<br>
-              <input type="radio" name="q10" value="Shown after you hover your mouse over a button"> ditampilkan setelah Anda mengarahkan kursor tetikus Anda pada tombol "tampilkan total".<br>
-              <input type="radio" name="q10" value="Automatically refreshed after you press enter"> secara otomatis diperbarui setelah Anda klik "Enter".<br>
-              <input type="radio" name="q10" value="Not available if you do not click 'Buy' or 'Sell'"> tidak tersedia jika Anda tidak meng-klik "Beli" atau "Jual".<br>
-              <p id="q10-warning" style="color: red;"></p></p>
-
-               <br> 
-            <button style="margin-bottom:30px;  margin-top:0px;  border-radius: 4px; border-color: grey;   " type="button" onclick="checkAnswers()">Periksa Jawaban</button>
-          </form>
-      </div>
-  </div>
-
-
-
-  </div>
-
-  <h4 style="margin-left: 20px; 
-  margin-bottom: 5px;
-  font-family: Arial;
-  color: rgb(80,80,80);">
-  <b>
-  </b>
-  </h4>
-
-  <form action="/tryout" method="POST" >
-    <input type="hidden" name="id" id="id" value={{id}}>
-    <input type="hidden" name="asset_type" id="asset_type" value={{asset_type}}>
-    <input type="hidden" name="lang" id="lang" value={{lang}}>
-
-    
-  <input type="checkbox" required id="consentCheckbox"  style="margin-left: 20px;">
-  <label for="consentCheckbox" style="font-family: Arial;
-  color: rgb(80,80,80);">
-    Saya telah menelaah instruksi eksperimen dan saya siap untuk mulai berpartisipasi.
-  </label>
-
-  <br>
-  <br>
-
-  <button id="nextButton" style="margin-left: 20px;
-  background-color: rgb(10, 103, 173, 0.9); 
-  color: white; 
-  padding: 10px 30px; 
-  border: none; 
-  border-radius: 4px; 
-  font-size: 16px; 
-  font-weight: bold;"
-  type="submit"
-  onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
-  onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'"
-  disabled
-  >
-  Lanjut
-  </button>
-
-  </form>
-
-  </div>
-
-
-  </div>
-
-
-  <script>
-
-
-  function checkAnswers() {
-      var q1Answer = document.querySelector('input[name="q1"]:checked');
-      var q2Answer = document.querySelector('input[name="q2"]:checked');
-      var q3Answer = document.querySelector('input[name="q3"]:checked');
-      var q4Answer = document.querySelector('input[name="q4"]:checked');
-      var q5Answer = document.querySelector('input[name="q5"]:checked');
-      var q6Answer = document.querySelector('input[name="q6"]:checked');
-      var q7Answer = document.querySelector('input[name="q7"]:checked');
-      var q8Answer = document.querySelector('input[name="q8"]:checked');
-      var q9Answer = document.querySelector('input[name="q9"]:checked');
-      var q10Answer = document.querySelector('input[name="q10"]:checked');
-
-      var q1Warning = document.getElementById('q1-warning');
-      var q2Warning = document.getElementById('q2-warning');
-      var q3Warning = document.getElementById('q3-warning');
-      var q4Warning = document.getElementById('q4-warning');
-      var q5Warning = document.getElementById('q5-warning');
-      var q6Warning = document.getElementById('q6-warning');
-      var q7Warning = document.getElementById('q7-warning');
-      var q8Warning = document.getElementById('q8-warning');
-      var q9Warning = document.getElementById('q9-warning');
-      var q10Warning = document.getElementById('q10-warning');
-
-      if (!q1Answer) {
-          q1Warning.textContent = "Jawab pertanyaan ini.";
-      } else {
-          if (q1Answer.value !== "15") {
-              q1Warning.textContent = "Jawaban tidak tepat.";
-          } else {
-              q1Warning.textContent = "";
-          }
-      }
-
-      if (!q2Answer) {
-          q2Warning.textContent = "Jawab pertanyaan ini.";
-      } else {
-          if (q2Answer.value !== "30") {
-              q2Warning.textContent = "Jawaban tidak tepat.";
-          } else {
-              q2Warning.textContent = "";
-          }
-      }
-
-      if (!q3Answer) {
-          q3Warning.textContent = "Jawab pertanyaan ini.";
-      } else {
-          if (q3Answer.value !== "A {{asset_type}} user") {
-              q3Warning.textContent = "Jawaban tidak tepat.";
-          } else {
-              q3Warning.textContent = "";
-          }
-      }
-
-      if (!q4Answer) {
-          q4Warning.textContent = "Jawab pertanyaan ini.";
-      } else {
-          if (q4Answer.value !== "20%") {
-              q4Warning.textContent = "Jawaban tidak tepat.";
-          } else {
-              q4Warning.textContent = "";
-          }
-      }
-
-      if (!q5Answer) {
-          q5Warning.textContent = "Jawab pertanyaan ini.";
-      } else {
-          if (q5Answer.value !== "5") {
-              q5Warning.textContent = "Jawaban tidak tepat.";
-          } else {
-              q5Warning.textContent = "";
-          }
-      }
-
-      if (!q6Answer) {
-          q6Warning.textContent = "Jawab pertanyaan ini.";
-      } else {
-          if (q6Answer.value !== "20%") {
-              q6Warning.textContent = "Jawaban tidak tepat.";
-          } else {
-              q6Warning.textContent = "";
-          }
-      }
-
-      if (!q7Answer) {
-          q7Warning.textContent = "Jawab pertanyaan ini.";
-      } else {
-          if (q7Answer.value !== "f 2,000") {
-              q7Warning.textContent = "Jawaban tidak tepat.";
-          } else {
-              q7Warning.textContent = "";
-          }
-      }
-
-      if (!q8Answer) {
-          q8Warning.textContent = "Jawab pertanyaan ini.";
-      } else {
-          if (q8Answer.value !== "A percentage dollar amount of f 5,000") {
-              q8Warning.textContent = "Jawaban tidak tepat.";
-          } else {
-              q8Warning.textContent = "";
-          }
-      }
-
-      if (!q9Answer) {
-          q9Warning.textContent = "Jawab pertanyaan ini.";
-      } else {
-          if (q9Answer.value !== "A questionnaire") {
-              q9Warning.textContent = "Jawaban tidak tepat.";
-          } else {
-              q9Warning.textContent = "";
-          }
-      }
-
-      if (!q10Answer) {
-          q10Warning.textContent = "Jawab pertanyaan ini.";
-      } else {
-          if (q10Answer.value !== "Shown after you hover your mouse over a button") {
-              q10Warning.textContent = "Jawaban tidak tepat.";
-          } else {
-              q10Warning.textContent = "";
-          }
-      }
-
-
-      var allAnswersCorrect = !q1Warning.textContent && !q2Warning.textContent && !q3Warning.textContent && !q4Warning.textContent &&
-          !q5Warning.textContent && !q6Warning.textContent && !q7Warning.textContent && !q8Warning.textContent && !q9Warning.textContent &&
-          !q10Warning.textContent;
-    var consentCheckbox = document.getElementById('consentCheckbox');
-    var nextButton = document.getElementById('nextButton');
-
-      if (allAnswersCorrect) {
-          popupText = "Seluruh jawaban Anda benar. Silakan klik 'Lanjut' untuk meneruskan.";
-        consentCheckbox.checked = true;  // Automatically check the checkbox
-        nextButton.disabled = false;     // Enable the "Next" button
-      } else {
-          popupText = "Periksa lagi apabila ada jawaban kosong atau tidak benar.";
-        consentCheckbox.checked = false; // Uncheck the checkbox if answers are incorrect
-        nextButton.disabled = true;      // Disable the "Next" button
-      }
-
-    var popupText = allAnswersCorrect ? "Seluruh jawaban Anda benar. Silakan klik 'Lanjut' untuk meneruskan." : "Periksa lagi apabila ada jawaban kosong atau tidak benar.";
-    alert(popupText);
-  }
-  </script>
-
+            checkbox.disabled = !(answersCorrect && videoWatched);
+            if (answersCorrect && videoWatched) {
+                checkbox.checked = true;
+            }
+            submitButton.disabled = !(answersCorrect && videoWatched && checkbox.checked);
+        }
+    </script>
 
 </body>
-  
 </html>

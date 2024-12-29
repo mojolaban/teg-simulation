@@ -1,389 +1,412 @@
-<html>
-  <head>
-    {% include 'bootstrap.html' %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!DOCTYPE html>
+    <html>
+    <head>
+      {% include 'bootstrap.html' %}
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+      <title>TEG</title>
 
-    <title>TEG</title>
+      <style>
+        *, *::before, *::after {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
 
-    <style>
-      p {
-        font-family: Arial;
-        color: rgb(80, 80, 80);
-        margin-bottom: 20px;
-      }
-      h1 {
-        font-size: 40px;
-        font-family: Arial;
-        color: rgb(80, 80, 80);
-      }
-      #container {
-        max-width: 75%;
-        margin: 10px auto;
-        justify-content: center;
-        align-items: center;
-        background-color: black;
-        border: 1px solid white;
-        
-      }
-      .fixed-box-0 {
-        height: 85px;
-        max-width: 95%;
-        border: 1px solid #ccc;
-        padding: 10px;
-        position: relative;
-        margin-left: 20px;
-        margin-right: 20px;
-        margin-top: 20px;
-        background-color: white;
-      }
-      .fixed-box-1 {
-        font-family: Arial;
-        color: rgb(80, 80, 80);
-        height: 450px;
-        overflow: auto;
-        border: 1px solid black;
-        padding: 10px;
-        position: relative;
-        margin-left: 20px;
-        margin-right: 20px;
-        margin-top: 20px;
-      }
-      .fixed-box-2 {
-        font-family: Arial;
-        font-size: 25px;
-        color: rgb(80, 80, 80);
-        height: 60px;
-        overflow: auto;
-        border: 1px solid red;
-        padding: 10px;
-        border-radius: 10px;
-        margin-left: 40px;
-        margin-right: 0px;
-        display: flex;
-        justify-content: center;
-      }
+        html, body {
+          height: 100vh;
+          width: 100vw;
+          overflow: auto;
+          background-color: rgb(0, 0, 0);
+          color: white;
+          font-family: Arial, sans-serif;
+          -webkit-text-size-adjust: 100%;
+          -webkit-font-smoothing: antialiased;
+        }
 
-      .fixed-box-2 span {
-        margin-left: 5px;
-      }
-      /* Remove up and down arrow from input[type="number"] */
-      input[type="number"]::-webkit-inner-spin-button,
-      input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-      }
+        #container {
+          max-width: 95%;
+          margin: 10px auto;
+          background-color: black;
+          border: 1px solid black;
+          border-radius: 1rem;
+          display: flex;
+          flex-direction: column;
+          position: relative;
+        }
 
-    </style>
-  </head>
+        /* Header styles */
+        .header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 0.5rem 1rem;
+          height: 4rem;
+          background-color: white;
+          border-radius: 0.5rem;
+          margin: 0;
+          max-width: 100%;
+        }
 
-  <body>
+        .round-display {
+          color: rgb(80, 80, 80);
+          font-size: 2.5rem;
+          margin-left: 2rem;
+        }
 
-    <div id="container">
-      <!-- Round and Timer -->
-      <div class="fixed-box-0">
-        <div class='row'>
-          <!-- Round -->
-          <div class="col-md-7" style="margin-left: 20px;">
-            <h1>Akhir Ronde {{ summary_data['round'] }}<span id="round"> </span></h1>
+        .timer-display {
+          background: transparent;
+          border: 1px solid red;
+          border-radius: 0.5rem;
+          padding: 0.5rem 1rem;
+          color: rgb(80, 80, 80);
+          font-size: 2rem;
+          margin-right: 2rem;
+          width: 20rem;
+          height: 3rem;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        /* Main content */
+        .main-content {
+          display: flex;
+          gap: 1rem;
+          height: calc(100vh - 5rem);
+          padding: 1rem;
+        }
+
+        /* Left panel */
+        #left-pane {
+          width: 15rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.8rem;
+        }
+    /* Box styles */
+        .info-box {
+          background: rgb(10, 10, 10);
+          border: 1px solid rgb(40, 40, 40);
+          border-radius: 0.5rem;
+          padding: 1rem;
+        }
+
+        .info-title {
+          color: rgb(130, 130, 130);
+          font-size: 1.1rem;
+          text-align: center;
+          margin-bottom: 0.5rem;
+          line-height: 1;
+        }
+
+        .info-content {
+          display: flex;
+          flex-direction: column;
+          gap: 0.2rem;
+        }
+
+        .info-row {
+          display: flex;
+          justify-content: space-between;
+          color: rgb(80, 80, 80);
+          font-size: 1.1rem;
+          line-height: 1;
+        }
+
+        /* Position indicator (updated to match Pelaporan Pajak style) */
+        .position-indicator {
+          height: 3rem;
+          background: rgb(10, 10, 10);
+          border: 1px solid rgb(40, 40, 40);
+          border-radius: 0.5rem;
+          padding: 0.5rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .position-indicator img {
+          width: 1rem;
+          height: 1rem;
+          margin-right: 0.5rem;
+        }
+
+        .position-indicator span {
+          color: white;
+          font-size: 0.9rem;
+        }
+
+        /* Middle panel */
+        #middle-pane {
+          flex-grow: 1;
+          display: flex;
+          flex-direction: column;
+          margin: 0 1rem; /* Existing margin */
+          margin-left: 0; /* Reset */
+          position: relative;
+          transform: translateX(-3rem); /* Move 1rem to the left */
+        }
+
+        .attention-section {
+          text-align: center;
+          margin-top: 0rem;
+        }
+
+        .attention-title {
+          color: white;
+          font-size: 2rem;
+          margin-bottom: 0.1rem;
+        }
+
+        .attention-subtitle {
+          color: white;
+          font-size: 1.2rem;
+          margin-bottom: 0.75rem;
+        }
+
+        /* Compensation box */
+        #compensation-box {
+          width: 400px;
+          margin: 0.1rem auto;
+          padding: 1rem;
+          border: 1px solid rgb(40, 40, 40);
+          border-radius: 0.5rem;
+          background-color: rgb(10, 10, 10);
+        }
+
+        .calculation-text {
+          font-size: 0.7rem;
+          color: rgb(125, 125, 125);
+          line-height: 1.8;
+          margin: 0;
+        }
+
+        /* Compensation button and tooltip */
+        .compensation-container {
+          position: relative;
+          margin: 0.5rem auto;
+          text-align: center;
+        }
+    /* Button styles */
+        #compensation {
+          height: 3.5rem;
+          width: 14rem;
+          text-align: center;
+          border-radius: 0.5rem;
+          background: rgb(200, 50, 20);
+          border: none;
+          color: white;
+          font-size: 1.2rem;
+        }
+
+        .action-button {
+          width: 17rem;
+          padding: 0.8rem;
+          border: none;
+          border-radius: 0.5rem;
+          font-size: 1.1rem;
+          font-weight: bold;
+          background-color: white;
+          color: rgb(80, 80, 80);
+          cursor: pointer;
+          transition: background-color 0.2s;
+        }
+
+        #tooltip {
+          position: absolute;
+          bottom: -2rem;
+          left: 50%;
+          transform: translateX(-50%);
+          font-size: 0.5rem;
+          color: white;
+          display: none;
+          white-space: nowrap;
+        }
+
+        /* Right panel */
+        #right-pane {
+          width: 12rem;
+          display: flex;
+          align-items: flex-start;
+          margin-top: 8rem; 
+          flex-direction: column;
+          gap: 1rem;
+          transform: translateX(-8rem); /* Move 3rem to the left */
+        }
+
+        .money-gif {
+          width: 18.75rem;
+          height: 11.25rem;
+        }
+
+        /* Warning message */
+        .warning-message {
+          position: fixed;
+          bottom: 1.25rem;
+          left: 50%;
+          transform: translateX(-50%);
+          background-color: rgba(255, 69, 0, 0.9);
+          color: white;
+          padding: 0.625rem 1.25rem;
+          border-radius: 0.5rem;
+          z-index: 10000;
+          display: none;
+          text-align: center;
+          white-space: nowrap;
+        }
+
+        /* Responsive design */
+        @media (max-width: 1200px), (max-height: 750px) {
+          #container {
+            transform: scale(0.88);
+            transform-origin: center top;
+            min-width: 1200px;
+          }
+        }
+
+        @media screen and (orientation: portrait) {
+          body {
+            transform: rotate(-90deg);
+            transform-origin: left top;
+            width: 100vh;
+            height: 100vw;
+            position: absolute;
+            top: 100%;
+            left: 0;
+          }
+        }
+      </style>
+    </head>
+
+    <body class="disable-selection">
+      <div id="container">
+        <!-- Header Section -->
+        <div class="header">
+          <div class="round-display">
+            Akhir Ronde {{ summary_data['round'] }}
           </div>
-          <!-- Timer -->
-          <div class="col-md-4">
-            <div class="fixed-box-2">
-              Waktu:
-              <span id="countdown">0</span>s
-            </div>
+          <div class="timer-display">
+            <span style="margin-right: 1rem; font-size: 2rem;">Waktu:</span>
+            <span id="countdown" style="font-size: 2rem;margin-right: 1rem;margin-left:1rem;">0</span>
+            <span style="font-size: 2rem;margin-left:1rem;">s</span>
           </div>
         </div>
-      </div>
 
-      <div class="fixed-box-1">
-        <div class='row'>
-          
-          <!-- This is the Totals Pane -->
-          <div id="left-pane" class="col-2" style="margin-left: 30px;">
-            <!-- Start of Left Pane -->
-            
-            <!-- Your Total Asset -->
-            <div id="total-asset-box" style="height: 60px; width: 200px;
-              background-color: black;
-              border: 1px solid #222222;
-              border-radius: 10px;
-              padding: 10px;
-              margin-bottom: 20px;">
-              <div>
-                <div style="text-align: center;">
-                  <p style="line-height:1;
-                    margin: 0;color: rgb(130,130,130);font-size:12px">
-                    <b>Total Aset</b>
-                  </p>
+        <div class="main-content">
+    <!-- Left Panel -->
+          <div id="left-pane">
+            <!-- Total Asset Box -->
+            <div class="info-box">
+              <div class="info-title">
+                <b>Total Aset</b>
+              </div>
+              <div class="info-content">
+                <div class="info-row">
+                  <span>Fiat</span>
+                  <span id="fiat"></span>
                 </div>
-                <div class="row justify-content-evenly">
-                  <div class="col-2">
-                    <p style="font-size:12px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
-                      Fiat
-                    </p>
-                  </div>
-                  <div class="col-4">
-                    <p id="fiat" style="font-size:12px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
-                      <!-- {{ "{:,.0f}".format(summary_data['fiat']) }} -->
-                    </p>
-                  </div>
-                  <div class="col-3">
-                    <p style="font-size:12px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
-                      {{ summary_data['asset_type'] }}
-                    </p>
-                  </div>
-                  <div class="col-3">
-                    <p id="crypto" style="font-size:12px;line-height:2;
-                      margin: 0;color: rgb(80,80,80);">
-                      <!-- {{ summary_data['crypto'] }} -->
-                    </p>
-                  </div>
+                <div class="info-row">
+                  <span>{{ summary_data['asset_type'] }}</span>
+                  <span id="crypto"></span>
                 </div>
               </div>
             </div>
 
-            
-
-            <!-- TOTAL GAIN -->
-            <div id="total-gain-box" style="height: 60px; width: 200px;
-              background-color: black;
-              border: 1px solid #111111;
-              border-radius: 10px;
-              padding: 5px;
-              margin-left: 0px;
-              margin-top:5px;
-              margin-bottom:10px;">
-              <div>
-                <div style="text-align: center;">
-                  <p style="line-height:2;
-                    margin: 0;color: rgb(130,130,130);font-size:12px">
-                    <b>Total Keuntungan</b>
-                  </p>
+            <!-- Total Gain Box -->
+            <div class="info-box">
+              <div class="info-title">
+                <b>Total Keuntungan</b>
+              </div>
+              <div class="info-content">
+                <div class="info-row">
+                  <span><i>f</i></span>
+                  <span id="r_gain"></span>
                 </div>
-                <div class="row justify-content-center">
+              </div>
+            </div>
+
+            <!-- Total Tax Box -->
+            <div class="info-box">
+              <div class="info-title">
+                <b>Total Pajak</b>
+              </div>
+              <div class="info-content">
+                <div class="info-row">
+                  <span><i>f</i></span>
+                  <span id="r_tax"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Total Net Gain Box -->
+            <div class="info-box">
+              <div class="info-title">
+                <b>Total Keuntungan Bersih</b>
+              </div>
+              <div class="info-content">
+                <div class="info-row">
+                  <span><i>f</i></span>
+                  <span id="r_gain_net"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Position Indicator (Updated to match Pelaporan Pajak style) -->
+            <div class="position-indicator">
+              <div class="indicator-content" style="display: flex; align-items: center;">
+                <img src="{{ url_for('static', filename='star.png') }}" alt="Star">
+                <span><b>AUDIT PAJAK</b></span>
+              </div>
+            </div>
+          </div>
+    <!-- Middle Panel -->
+          <div id="middle-pane">
+            <div class="attention-section">
+              <div class="attention-title">Perhatian!</div>
+              <div class="attention-subtitle">
+                Otoritas Pajak menerima data<br>
+                pihak ketiga dan mengaudit transaksi Anda.
+              </div>
+
+              <p style="font-size: 0.75rem; color: rgb(125,125,125); margin-bottom: 0.5rem;">
+                Nilai e-Gift Voucher Anda
+              </p>
+
+              <!-- Compensation Box -->
+              <div id="compensation-box">
+                <div class="row">
                   <div class="col-5">
-                    <p style="font-size:12px;line-height:1.5;
-                      margin-left: 0;color: rgb(80,80,80);" class="text-center">
-                      <i>f</i>
-                    </p>
+                    <div class="calculation-text">
+                      Total Keuntungan <br>
+                      <u>Pajak Diungkapkan</u><span style="color:black;">_</span>_<br>
+                      Keuntungan setelah Pajak <br>
+                      Pajak Tak Diungkapkan<br>
+                      <u>Denda</u><span style="color:black;">_</span>_<br>
+                      Keuntungan Riil<br>
+                    </div>
                   </div>
-                  <div class="col">
-                    <p id="r_gain" style="font-size:12px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
-                      <!-- {{ "{:,.0f}".format(summary_data['r_gain'])  }} -->
-                    </p>
+                  <div class="col-1">
+                    <div class="calculation-text text-center">
+                      :<br>:<br>:<br>:<br>:<br>:
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- TOTAL TAX -->
-            <div id="total-tax-box" style="height: 60px; width: 200px;
-              background-color: black;
-              border: 1px solid #111111;
-              border-radius: 10px;
-              padding: 5px;
-              margin-left: 0px;
-              margin-top:0px;
-              margin-bottom:10px;">
-              <div>
-                <div style="text-align: center;">
-                  <p style="line-height:2;
-                    margin: 0;color: rgb(130,130,130);font-size:12px">
-                    <b>Total Pajak</b>
-                  </p>
-                </div>
-                <div class="row justify-content-evenly">
-                  <div class="col-5">
-                    <p style="font-size:12px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
-                      <i>f</i>
-                    </p>
-                  </div>
-                  <div class="col">
-                    <p id="r_tax" style="font-size:12px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
-                      <!-- {{ "{:,.0f}".format(summary_data['t_tax']) }} -->
-                    </p>
+                  <div class="col-6">
+                    <div class="calculation-text">
+                      <span><i>f </i><span id="r_gain_displayed">{{ '{:,.0f}'.format(summary_data.r_gain) }}</span></span><br>
+                      <span><u><i>f </i><span id="tax_disclos_displayed">{{'{:,.0f}'.format(summary_data.tax_disclos |int) }}</span></u></span><br>
+                      <span><i>f </i><span id="r_gain_net_displayed">{{'{:,.0f}'.format(summary_data.r_gain - summary_data.tax_disclos|int) }}</span></span><br>
+                      <span><i>f </i><span id="tax_discre_displayed">{{'{:,.0f}'.format(summary_data.tax_discre) }}</span></span><br>
+                      <span><u><i>f </i><span id="penalty_displayed">{{'{:,.0f}'.format(summary_data.penalty) }}</span></u></span><br>
+                      <span><i>f </i><span id="r_gain_final_displayed">{{'{:,.0f}'.format(summary_data.r_gain_final) }}</span></span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            <!-- TOTAL NET GAIN -->
-            <div id="total-net-gain-box" style="height: 75px; width: 200px;
-              background-color: black;
-              border: 1px solid #111111;
-              border-radius: 10px;
-              padding: 10px;
-              margin-left: 0px;
-              margin-top:20px;
-              margin-bottom:10px;">
-              <div>
-                <div style="text-align: center;">
-                  <p style="line-height:2;
-                    margin: 0;color: rgb(130,130,130);font-size:12px">
-                    <b>Total Keuntungan Bersih</b>
-                  </p>
-                </div>
-                <div class="row justify-content-evenly">
-                  <div class="col-5">
-                    <p style="font-size:12px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
-                      <i>f</i>
-                    </p>
-                  </div>
-                  <div class="col">
-                    <p id="r_gain_net" style="font-size:12px;line-height:1.5;
-                      margin: 0;color: rgb(80,80,80);" class="text-center">
-                      <!-- {{ "{:,.0f}".format(summary_data['r_gain_net']) }} -->
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Position Tax Reporting -->
-            <div style="height: 33px; width: 200px;
-              background-color: black;
-              border: 1px solid #111111;
-              border-radius: 10px;
-              padding: 5px;
-              margin-left: 0px;
-              margin-top:20px;              display: flex;               align-items: center;
-              justify-content: center;
-              text-align: right;">
-              <div class="row">
-                <div id="img-star" class="col-3 d-flex justify-content-center align-items-center">
-                  <img src="{{ url_for('static', filename='star.png') }}" alt="Small Image"
-                    style="width: 13px; height: 13px;">
-                </div>
-                <div id="text-star" class="col-9">
-                  <span style="line-height:2;
-                      margin: 0;color: rgb(130,130,130);font-size:11px; text-align: center;">
-                    <b>AUDIT PAJAK</b></span>
-                </div>
-              </div>
-            </div>
-
-          </div> <!-- End of left pane  -->
-
-
-
-          
-
-          <!-- This is middle section -->
-          <div id="middle-pane" class="col-md-6 offset-md-1" style="margin-left: 0px;margin-right: 0px;border: 1px solid  rgba(0, 0, 0, 0)">
-            <!-- The Text -->
-            <div class="mx-auto text-center" style="height: 80px; width:100px
-            background-color: black;
-            border: 1px solid black;
-            border-radius: 1px;
-            padding: 0px;
-            margin-left: 0px;
-            margin-top:30px;
-            margin-bottom:0px;">
-              
-            
-                <p class="text-center" style="line-height:1;margin-bottom:0px;color:rgb(256,256,256);font-size: 30px">
-                Perhatian!
-                </p>
-                <p class="text-center" style="font-size:30px;line-height:1;margin-bottom:10px;color:rgb(256,256,256);font-size: 15px">
-                  Otoritas Pajak menerima data pihak ketiga dan mengaudit transaksi Anda.
-                </p>
-                   <div class="mx-auto text-center">
-                      <p class="text-center" style="width:150px;
-                        line-height:1;margin:auto;color:rgb(125,125,125);
-                        font-size: 12px;border: 1px solid rgba(0,0,0,0);">
-                        Nilai e-Gift Voucher Anda
-                      </p>
-                          <div >
-                            <div id="compensation-box" class="row justify-content-center 
-                              d-flex align-items-center" style="padding:5px;
-                              border: 1px solid black; 
-                              width: 400px; margin: auto; border-radius: 10px;">
-                              <div class="col-5 d-flex align-items-center 
-                                justify-content-center" style="font-size: 11px; 
-                                color: rgb(125, 125, 125);">
-                                <p style="margin: auto;">
-                                  Total Keuntungan <br>
-                                  <u>Pajak Diungkapkan</u><span style="color:black;">_</span>_<br>
-                                  Keuntungan setelah Pajak<br>
-                                  Pajak Tak Diungkapkan<br>
-                                  <u>Denda</u><span style="color:black;">_</span>_<br>
-                                  Keuntungan Riil<br> </p>
-                              </div>
-                              
-                              <div class="col-1 col-1 d-flex align-items-center 
-                                justify-content-center" style="font-size: 11px; 
-                                color: rgb(125, 125, 125);">
-                                <p style="margin: auto;">
-                                  :<br>:<br>:<br>:<br>:<br>:</p>
-                              </div>
-                              
-                              <div class="col-5 d-flex justify-content-center" 
-                                style="font-size: 11px; color: rgb(125, 125, 125);">
-                                    <div>
-                                      <span><i>f </i> 
-                                        <span id ="r_gain_displayed">
-                                          '{:,.0f}'.format(summary_data.r_gain) }}
-                                        </span>
-                                      </span><br>
-                                      <span><u><i>f </i>
-                                        <span id="tax_disclos_displayed">
-                                          {{'{:,.0f}'.format(summary_data.tax_disclos |int) }}
-                                        </span>
-                                      </u> <span style="color:black;">_</span>_</span> <br>
-                                      <span><i>f </i>
-                                        <span id="r_gain_net_displayed">
-                                        {{'{:,.0f}'.format(summary_data.r_gain - summary_data.tax_disclos|int) }}
-                                        </span>
-                                      </span>
-                                        <br>
-                                      <span><i>f </i>
-                                        <span id= "tax_discre_displayed">
-                                        {{'{:,.0f}'.format(summary_data.tax_discre) }}
-                                        </span>
-                                      </span><br>
-                                        <span><u><i>f </i>
-                                          <span id="penalty_displayed">
-                                          {{'{:,.0f}'.format(summary_data.penalty) }}
-                                          </span>
-                                        </u><span style="color:black;">_</span>_</span><br>
-                                      <span><i>f </i>
-                                        <span id="r_gain_final_displayed">
-                                        {{'{:,.0f}'.format(summary_data.r_gain_final )  }}
-                                        </span>                                       
-                                      </span>
-                                    </div>
-                              </div>
-                            </div>
-                            <p id="tooltip" style="font-size:8px; color:rgb(256,256,256);display:none;">(Keuntungan Riil < <i>f</i> 1 juta: <b>Rp 50.000,-</b>; <i>f</i>1-5 juta: <b>Rp 100.000,-</b>; > <i>f</i> 5 juta: <b>Rp 200.000)</b></p>
-                          </div>
-                   </div>
-
-              
-            </div>
-            
-            <!-- The Submit Button -->
-            <div id="reporting-box" class="mx-auto" style="height: 100px; width: 400px;
-            background-color: black;
-            border: 1px solid rgba(0,0,0,0);
-            border-radius: 1px;
-            padding: 0px;
-            margin-left: 0px;
-            margin-top:110px;
-            margin-bottom:20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;">
-
-           
-              <button type="button" id="compensation" name="compensation" placeholder="compensation" style="height: 50px; width: 225px; text-align: center; border-radius: 10px; background:rgb(200,50,20);">
+              <!-- Compensation Button and Tooltip -->
+              <div class="compensation-container">
+                <button type="button" id="compensation" name="compensation">
                   Rp
                   {% if summary_data.r_gain_final < 1000000 %}
                     50.000,-
@@ -392,249 +415,193 @@
                   {% else %}
                     200.000,-
                   {% endif %}
-              </button>
-
-            </div>
-  <form action="/next_round"> 
-                  
-  <input type="hidden" name="id" value= {{summary_data.id}}>
-  <input type="hidden" name="lang" value= {{summary_data.lang}}>
-                  
-            <div class="row justify-content-center" style="margin-left: 0px;">
-              <div class="col-5 d-flex justify-content-center">
-                <button type="button" id="showTotalsButton"
-                  style="margin-right: 0px;
-                  width: 190px;
-                  padding: 10px 30px;
-                  border: none;
-                  border-radius: 4px;
-                  font-size: 16px;
-                  font-weight: bold;
-                  background-color:  white;
-                  color: grey ;"
-                  onmouseover="showTotals() ; this.style.backgroundColor = 'rgb(10,10,10)'"
-                  onmouseout="hideTotals();this.style.backgroundColor = 'white'">
-                  Tampilkan Total
-                 </button>
+                </button>
+                <p id="tooltip">
+                  (Keuntungan Riil < <i>f</i> 1 juta: <b>Rp 50.000,-</b>; <i>f</i>1-5 juta: <b>Rp 100.000,-</b>; > <i>f</i> 5 juta: <b>Rp 200.000)</b>
+                </p>
               </div>
-              <div class="col-5 d-flex justify-content-center">
-                
 
-                  
-                <button type="submit" id="reportTaxesButton"
-                  style="margin-left: 0px;
-                  width: 190px;
-                  padding: 10px 30px;
-                  border: none;
-                  border-radius: 4px;
-                  font-size: 16px;
-                  font-weight: bold;
-                  background-color: white;
-                  color: grey;"
-                  onmouseover="this.style.backgroundColor = 'rgb(10,10,10)'"
-                  onmouseout="this.style.backgroundColor = 'white'">
-                  Lanjut
-                </button>     
-                </form>
-              
-              </div>
-            </div>
-          </div> <!-- End of middle section  -->
-
-     
-          <!-- This is the right section -->
-          <div id="right-pane" class="col-md-1 offset-md-1" style="margin: auto;">
-
-          <div id="img-star" class="col-3 d-flex justify-content-center align-items-center">
-                  <img src="{{ url_for('static', filename='money.gif') }}" alt="Small Image"
-                    style="width: 300px; height: 180px;">
+              <!-- Action Buttons -->
+              <div class="row justify-content-center" style="margin-top: 2rem;">
+                <div class="col-5">
+                  <button type="button" id="showTotalsButton" class="action-button" 
+                          onmouseover="showTotals(); this.style.backgroundColor='rgb(10,10,10)'" 
+                          onmouseout="hideTotals();this.style.backgroundColor='white'">
+                    Tampilkan Total
+                  </button>
                 </div>
+                <div class="col-5">
+                  <form action="{% if summary_data.is_dev %}{{ url_for('dev_view', template_name='rounds-a.html') }}{% else %}{{ url_for('index') }}{% endif %}" method="POST">
+                    <input type="hidden" name="id" value="{{summary_data.id}}">
+                    <input type="hidden" name="lang" value="{{summary_data.lang}}">
+                    {% if not summary_data.is_dev %}
+                      <input type="hidden" name="form_type" value="next_round">
+                    {% endif %}
+                    <button type="submit" id="reportTaxesButton" class="action-button"
+                            onmouseover="this.style.backgroundColor='rgb(10,10,10)'" 
+                            onmouseout="this.style.backgroundColor='white'">
+                      Lanjut
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
 
-            
-          </div> <!-- End of right pane   -->
+          <!-- Right Panel -->
+          <div id="right-pane">
+            <img src="{{ url_for('static', filename='money.gif') }}" alt="Money Animation" class="money-gif">
+          </div>
         </div>
       </div>
-    </div>
+    <!-- Warning Message Container -->
+      <div id="warningMessage" class="warning-message"></div>
 
-  <script>
-    // Input Number Validation
-          function formatNumber(value) {
-            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-          }
+                    <script>
+                        let allowNavigation = false;
 
-          function updateTextView(_obj) {
-            var num = getNumber(_obj.val());
-            if (num === 0) {
-              _obj.val('');
-            } else {
-              _obj.val(formatNumber(num));
-            }
-          }
+                        // Prevent text selection
+                        document.addEventListener('selectstart', function(e) { 
+                            e.preventDefault(); 
+                        });
 
-          function getNumber(_str) {
-            var arr = _str.replace(/,/g, '').split('');
-            var out = new Array();
-            for (var cnt = 0; cnt < arr.length && cnt < 7; cnt++) {
-              if (!isNaN(arr[cnt])) {
-                out.push(arr[cnt]);
-              }
-            }
-            return out.join('');
-          }
+                        // Navigation Protection
+                        window.addEventListener('beforeunload', function(e) {
+                            if (!allowNavigation) {
+                                e.preventDefault();
+                                e.returnValue = '';
+                                showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                                return '';
+                            }
+                        });
 
-     // Hide or Show Totals
+                        // Handle form submission
+                        $('form').on('submit', function() {
+                            allowNavigation = true;
+                        });
 
-          var showTotalsFlag = false;
+                        // History state management
+                        setInterval(() => {
+                            if (!allowNavigation) {
+                                window.history.pushState(null, null, window.location.href);
+                            }
+                        }, 100);
 
-          function showTotals() {
-            if (!showTotalsFlag) {
-              // Create an instance of Intl.NumberFormat for Indonesian locale
-              const formatter = new Intl.NumberFormat('id-ID', {
-                minimumFractionDigits: 0, // Adjust this value as needed
-                maximumFractionDigits: 0, // Adjust this value as needed
-              });
+                        window.addEventListener('popstate', function(event) {
+                            if (!allowNavigation) {
+                                window.history.pushState(null, null, window.location.href);
+                                showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                            }
+                        });
 
-              // Use the formatter to format each number
-              $('#fiat').text(formatter.format(parseInt("{{ summary_data['fiat'] }}", 10)));
-              $('#crypto').text(formatter.format(parseFloat("{{ summary_data['crypto'] }}")));
-              $('#r_gain').text(formatter.format(parseInt("{{ summary_data['r_gain'] }}", 10)));
-              $('#r_gain_net').text(formatter.format(parseInt("{{ summary_data['r_gain_net'] }}", 10)));
-              $('#r_tax').text(formatter.format(parseInt("{{ summary_data['r_tax'] }}", 10)));
-            }
-          }
+                        // Warning Message Function
+                        function showWarning(message) {
+                            const warningDiv = document.getElementById('warningMessage');
+                            warningDiv.textContent = message;
+                            warningDiv.style.display = 'block';
+                            setTimeout(() => {
+                                warningDiv.style.display = 'none';
+                            }, 3000);
+                        }
 
-          function hideTotals() {
-            if (!showTotalsFlag) {
-              $('#fiat').text('');
-              $('#crypto').text('');
-              $('#r_gain').text('');
-              $('#r_gain_net').text('');
-              $('#r_tax').text('');
-            }
-          }
+                        // Number formatting functions
+                        function formatNumber(value) {
+                            return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        }
 
-    // Enter Input to "Reporting Taxes" 
-          $(document).ready(function () {
-            $('input[type=text]').on('input', function () {
-              var maxDigits = 7;
-              var inputValue = $(this).val();
-              if (inputValue.length > maxDigits) {
-                $(this).val(inputValue.slice(0, maxDigits));
-              }
-              updateTextView($(this));
-            });
+                        function getNumber(str) {
+                            var arr = str.replace(/[.,]/g, '').split('');
+                            var out = new Array();
+                            for (var cnt = 0; cnt < arr.length && cnt < 7; cnt++) {
+                                if (!isNaN(arr[cnt])) {
+                                    out.push(arr[cnt]);
+                                }
+                            }
+                            return out.join('');
+                        }
 
-          document.getElementById("tax-input").addEventListener("input", function () {
-            var input = getNumber(this.value);
-            var expectedFiat = document.getElementById("expected_fiat");
-            var rGain = parseFloat("{{ summary_data['r_gain']|int }}");
+                        // Total display management
+                        var showTotalsFlag = false;
 
-            if (input === "") {
-              expectedFiat.textContent = formatNumber(rGain);
-            } else {
-              var inputNumber = parseInt(input.substring(0, 6));
-              expectedFiat.textContent = formatNumber(rGain - inputNumber);
-            }
+                        function showTotals() {
+                            if (!showTotalsFlag) {
+                                const formatter = new Intl.NumberFormat('id-ID', {
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 0
+                                });
 
-            // Validate input
-            var inputLength = this.value.trim().replace(/,/g, '').length;
-            if (isNaN(inputNumber) || inputLength > 7) {
-              this.setCustomValidity("Please enter a valid number up to 6 digits.");
-            } else {
-              this.setCustomValidity("");
-            }
-          });
+                                $('#fiat').text(formatter.format(parseInt("{{ summary_data['fiat'] }}", 10)));
+                                $('#crypto').text(formatter.format(parseFloat("{{ summary_data['crypto'] }}")));
+                                $('#r_gain').text(formatter.format(parseInt("{{ summary_data['r_gain'] }}", 10)));
+                                $('#r_gain_net').text(formatter.format(parseInt("{{ summary_data['r_gain_net'] }}", 10)));
+                                $('#r_tax').text(formatter.format(parseInt("{{ summary_data['r_tax'] }}", 10)));
+                            }
+                        }
 
+                        function hideTotals() {
+                            if (!showTotalsFlag) {
+                                $('#fiat').text('');
+                                $('#crypto').text('');
+                                $('#r_gain').text('');
+                                $('#r_gain_net').text('');
+                                $('#r_tax').text('');
+                            }
+                        }
 
+                        $(document).ready(function() {
+                            // Show tooltip on hover
+                            $('#compensation').hover(function() {
+                                $('#tooltip').show();
+                            }, function() {
+                                $('#tooltip').hide();
+                            });
 
-    //Press "Report Taxes"
+                            // Format and display data
+                            function formatNumberWithDot(number) {
+                                return new Intl.NumberFormat('id-ID').format(number);
+                            }
 
-         $('form').on('submit', function () {
-            var id = "{{ summary_data['id'] }}";
-            var taxInput = $('#tax-input').val();
+                            var data = {
+                                r_gain: {{ summary_data.r_gain }},
+                                tax_disclos: {{ summary_data.tax_disclos |int}},
+                                r_gain_net: {{ summary_data.r_gain - summary_data.tax_disclos |int}},
+                                tax_discre: {{ summary_data.tax_discre }},
+                                penalty: {{ summary_data.penalty }},
+                                r_gain_final: {{ summary_data.r_gain_final }}
+                            };
 
-            $('#id').text(id);
-            $('#tax_disclos').text(taxInput);
+                            // Format and set displayed values
+                            Object.keys(data).forEach(key => {
+                                const element = document.getElementById(key + "_displayed");
+                                if (element) {
+                                    element.innerText = formatNumberWithDot(data[key]);
+                                }
+                            });
 
+                            // Security measures
+                            document.addEventListener('contextmenu', function(e) {
+                                e.preventDefault();
+                            });
 
-          // Include the "id" value in the form submission
-            $('form').append('<input type="hidden" name="id" value="' + id + '">');
-            $('form').append('<input type="hidden" name="tax_discre" value="' + tax_discre + '">');
+                            document.addEventListener('keydown', function(e) {
+                                if ((e.ctrlKey || e.metaKey) && 
+                                    (e.key === 'c' || e.key === 'v' || e.key === 'u' || 
+                                     e.key === 's' || e.key === 'p' || e.key === 'a')) {
+                                    e.preventDefault();
+                                }
+                            });
 
+                            // Prevent zoom on mobile
+                            document.addEventListener('gesturestart', function(e) {
+                                e.preventDefault();
+                            });
 
-
-    /*
-              var taxInput = $('#tax-input').val();
-              var rTax = {{ summary_data['r_tax'] }};
-              var taxDiscre = parseInt(taxInput.replace(/,/g, '')) - rTax;
-              var audit = Math.random() < 0.2 ? 1 : 0;
-              var penalty = audit === 1 ? 2 * taxDiscre : 0;
-              var rGain = {{ summary_data['r_gain'] }};
-              var rGainFinal = rGain - (taxDiscre + penalty);
-
-
-              summary_data['tax_disclos'] = taxInput;
-              summary_data['tax_discre'] = taxDiscre;
-              summary_data['audit'] = audit;
-              summary_data['penalty'] = penalty;
-              summary_data['r_gain_final'] = rGainFinal;
-    */
-              // Insert the code to send the updated summary_data to the database here
-
-              // Testing - Print the updated summary_data object in the console
-    //          console.log(summary_data);
-            });
-
-
-    //new
-              // Start the countdown timer when the page loads
-
-            //newend
-
-
-
-          });
-
-    //newstart
-
-
-
-          //newend
-
-        // Show tooltip on hover
-        $('#compensation').hover(function () {
-            $('#tooltip').show();
-        }, function () {
-            $('#tooltip').hide();
-        });
-
-
-        document.addEventListener("DOMContentLoaded", function() {
-            // Example data - replace these with the actual data from your server
-            var data = {
-                r_gain: {{ summary_data.r_gain }},
-                tax_disclos: {{ summary_data.tax_disclos |int}},
-                r_gain_net: {{ summary_data.r_gain - summary_data.tax_disclos |int}},
-                tax_discre: {{ summary_data.tax_discre }},
-                penalty: {{ summary_data.penalty }},
-                r_gain_final: {{ summary_data.r_gain_final }}
-            };
-
-            // Function to format number with dot as thousand separator
-            function formatNumberWithDot(number) {
-                return new Intl.NumberFormat('id-ID').format(number);
-            }
-
-            // Formatting and setting the values
-            document.getElementById("r_gain_displayed").innerText = formatNumberWithDot(data.r_gain);
-            document.getElementById("tax_disclos_displayed").innerText = formatNumberWithDot(data.tax_disclos);
-            document.getElementById("r_gain_net_displayed").innerText = formatNumberWithDot(data.r_gain_net);
-            document.getElementById("tax_discre_displayed").innerText = formatNumberWithDot(data.tax_discre);
-            document.getElementById("penalty_displayed").innerText = formatNumberWithDot(data.penalty);
-            document.getElementById("r_gain_final_displayed").innerText = formatNumberWithDot(data.r_gain_final);
-        });
-
-    </script>
-
-  </body>
-</html>
+                            document.addEventListener('touchmove', function(e) {
+                                if (e.scale && e.scale !== 1) {
+                                    e.preventDefault();
+                                }
+                            }, { passive: false });
+                        });
+                    </script>
+    </body>
+    </html>

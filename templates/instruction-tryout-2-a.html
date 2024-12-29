@@ -1,168 +1,375 @@
 <!DOCTYPE html>
-
-<html>
-  <head>
-    {% include 'bootstrap.html' %}
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>TEG</title>
-  
+    
     <style>
-      p {
-        font-family: Arial;
-        color: rgb(80,80,80);
-        margin-bottom: 20px;
+        :root {
+            --primary-color: rgb(80,80,80);
+            --accent-color: rgb(10, 103, 173);
+            --accent-light: rgba(10, 103, 173, 0.05);
+            --box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+            --transition-speed: 0.3s;
+            --border-radius: 16px;
+            --spacing-unit: clamp(0.5rem, 2vw, 1rem);
         }
-      h1{
-        font-size: 40px;
-        font-family: Arial;
-        color: rgb(80,80,80);
-      }
-      #container {
-        max-width: 70%;
-        margin: 10px auto;
-        justify-content: center;
-        align-items: center;
-      }
-      .fixed-box-0 {
-      height: 700px; 
-      overflow: auto; 
-      border: 0px solid #ccc; 
-      padding: 10px; 
-      position: relative;
-    }
-      .fixed-box-1 {
-      font-family: Arial;
-      color: rgb(80,80,80);
-      height: 550px; 
-      overflow: auto; 
-      border: 1px solid #ccc; 
-      padding: 10px; 
-      position: relative;
-      margin-left:20px;
-      box-shadow: inset 0 0 4px #555;
-      border-radius: 10px;
-    }
-      .fixed-box-2 {
-      font-family: Arial;
-      color: rgb(80,80,80);
-      height: 400px; 
-      max-width: 100%;
-      overflow: auto; 
-      border: 0px solid #ccc; 
-      padding: 10px; 
-      position: relative;
-      margin-left:20px;
-      background-color: white;
-      }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            color: var(--primary-color);
+            line-height: 1.7;
+            background: linear-gradient(to bottom, #f8f9fa, #ffffff);
+            padding: var(--spacing-unit);
+            user-select: none;
+        }
+
+        #container {
+            width: min(95%, 1200px);
+            margin: 0 auto;
+            padding: calc(var(--spacing-unit) * 2);
+        }
+.fixed-box-0 {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: calc(var(--spacing-unit) * 2.5);
+            box-shadow: var(--box-shadow);
+            height: auto;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .fixed-box-1 {
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: calc(var(--border-radius) - 4px);
+            padding: calc(var(--spacing-unit) * 1.5);
+            margin: calc(var(--spacing-unit) * 1.5) 0;
+            height: auto;
+            max-height: min(70vh, 600px);
+            overflow: auto;
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+            box-shadow: var(--box-shadow);
+        }
+
+        .fixed-box-2 {
+            background: rgba(248, 249, 250, 0.5);
+            border-radius: calc(var(--border-radius) - 8px);
+            padding: calc(var(--spacing-unit) * 1.2);
+            margin: calc(var(--spacing-unit) * 1.2) 0;
+            height: auto;
+            max-height: min(60vh, 400px);
+            overflow: auto;
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.02);
+            transition: background-color var(--transition-speed);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            background: linear-gradient(45deg, var(--accent-color), #2c5282);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: calc(var(--spacing-unit) * 2);
+        }
+img {
+            max-width: 100%;
+            height: auto;
+            margin: calc(var(--spacing-unit)) 0;
+            border-radius: calc(var(--border-radius) - 8px);
+            box-shadow: var(--box-shadow);
+        }
+
+        .video-container {
+            margin: calc(var(--spacing-unit) * 2) auto;
+            text-align: center;
+        }
+
+        .video-container video {
+            max-width: 100%;
+            height: auto;
+            border-radius: calc(var(--border-radius) - 8px);
+            box-shadow: var(--box-shadow);
+        }
+        video {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        video::-webkit-media-controls-download-button {
+            display: none;
+        }
+        .consent-checkbox {
+            display: flex;
+            align-items: center;
+            gap: calc(var(--spacing-unit));
+            margin: calc(var(--spacing-unit) * 2) 0;
+            padding: calc(var(--spacing-unit));
+            background: white;
+            border-radius: calc(var(--border-radius) - 8px);
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+
+        .consent-checkbox input[type="checkbox"] {
+            width: 1.2rem;
+            height: 1.2rem;
+            border-radius: 4px;
+            border: 2px solid var(--accent-color);
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .consent-checkbox input[type="checkbox"].enabled {
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        button {
+            background: linear-gradient(45deg, var(--accent-color), #2c5282);
+            color: white;
+            padding: calc(var(--spacing-unit)) calc(var(--spacing-unit) * 2);
+            border: none;
+            border-radius: calc(var(--border-radius) - 8px);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            margin-top: calc(var(--spacing-unit) * 2);
+        }
+button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        button:not(:disabled):hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(10, 103, 173, 0.2);
+        }
+
+        .warning-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 69, 0, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            display: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            :root {
+                --border-radius: 12px;
+            }
+
+            #container {
+                width: 100%;
+                padding: var(--spacing-unit);
+            }
+
+            .fixed-box-0, .fixed-box-1, .fixed-box-2 {
+                padding: calc(var(--spacing-unit));
+                margin: calc(var(--spacing-unit));
+            }
+
+            img {
+                margin-left: 0 !important;
+            }
+        }
+
+        #id {
+            color: rgb(256,256,256);
+            font-size: 2px;
+        }
     </style>
-
-    <script>
-
-      document.addEventListener('DOMContentLoaded', (event) => {
-        const video = document.getElementById('tutorialVideo');
-        const nextButton = document.getElementById('nextButton');
-        const checkBox = document.getElementById('confirmationCheck');
-
-        // Disable the button initially
-        nextButton.disabled = true;
-
-        video.addEventListener('ended', () => {
-          // Enable the button and check the checkbox after the video has finished playing
-          nextButton.disabled = false;
-          checkBox.checked = true;
-        });
-      });
-
-    </script>
-  </head>
-  
+</head>
 <body>
-
-  <div id="container">
-  <div class="fixed-box-0">
+    <div id="warningMessage" class="warning-message"></div>
     
-  <h1></h1>
- 
-  <p>
-    
-  </p>
-  
-  <div class="fixed-box-1">
-    Sebelum memulai, Anda memiliki kesempatan untuk mengikuti satu ronde percobaan (Ronde 0). Silakan luangkan waktu sejenak untuk mengenali informasi-informasi yang akan Anda temui pada tangkapan layar dan video di bawah ini. Setelah ronde percobaan, Anda akan melanjutkan ke ronde utama (Ronde 1 - Ronde 15).
-    <span id="id" style="color:rgb(256,256,256);font-size:2px;"> 
-       {{ id }}</span>
-<hr>
+    <div id="container">
+        <div class="fixed-box-0">
+            <div class="fixed-box-1">
+                <p>Sebelum memulai, Anda memiliki kesempatan untuk mengikuti satu ronde percobaan (Ronde 0). Silakan luangkan waktu sejenak untuk mengenali informasi-informasi yang akan Anda temui pada tangkapan layar di bawah ini. Setelah ronde percobaan, Anda akan melanjutkan ke ronde utama (Ronde 1 - Ronde 15). <span id="id">{{ id }}</span></p>
 
-  <div class="fixed-box-2">
+                <hr>
 
-     <img src="{{ url_for('static', filename='01a-.jpg') }}"style="max-width:900px;margin-top:0px;margin-left:20px;">
+                <div class="fixed-box-2">
+                    <img src="{{ url_for('static', filename='01a-.jpg') }}" alt="Screenshot 1">
+                    <img src="{{ url_for('static', filename='02a-.jpg') }}" alt="Screenshot 2">
+                    <img src="{{ url_for('static', filename='03a-.jpg') }}" alt="Screenshot 3">
+                    <img src="{{ url_for('static', filename='04a-.jpg') }}" alt="Screenshot 4">
 
-     <img src="{{ url_for('static', filename='02a-.jpg') }}"style="max-width:900px;margin-top:20px;margin-left:20px;"> 
+                    <div class="video-container">
+                        <video id="instructionVideo"                                         width="100%" 
+                            controls 
+                            controlsList="nodownload noplaybackrate" 
+                            disablePictureInPicture 
+                            oncontextmenu="return false;">
+                            <source src="{{ url_for('static', filename='video_explanation_indo.mp4') }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div>
+                </div>
+            </div>
 
-     <img src="{{ url_for('static', filename='03a-.jpg') }}"style="max-width:900px;margin-top:20px;margin-left:20px;">
+          <div class="consent-checkbox">
+            <input type="checkbox" id="consentCheckbox" required disabled>
+            <label for="consentCheckbox">Saya telah menyaksikan video penjelasan dan mempelajari tangkapan layar di atas dengan saksama.</label>
+          </div>
 
-     <img src="{{ url_for('static', filename='04a-.jpg') }}"style="max-width:900px;margin-top:20px;margin-left:20px;">
+          <form action="{{ url_for('index') }}" method="post">
+            <input type="hidden" name="form_type" value="start">
+            <input type="hidden" name="id" value="{{ id }}">
+            <input type="hidden" name="lang" value="{{ lang }}">
+            <input type="hidden" name="asset_type" value="{{ asset_type }}">
+            <button type="submit" id="continueButton" onclick="validateAndContinue()" disabled>Lanjut</button>
+          </form>
+          
+<script>
+        (function() {
+            const video = document.getElementById('instructionVideo');
+            const checkbox = document.getElementById('consentCheckbox');
+            const continueButton = document.getElementById('continueButton');
+            let videoCompleted = false;
 
-    <div style="margin-top: 20px; margin-left: 20px; text-align: center;">  
-        <video id="tutorialVideo" width="900" controls style="max-width: 100%; max-height: calc(900px * 9 / 16);">
-            <source src="{{ url_for('static', filename='video_explanation_indo.mp4') }}" type="video/mp4">
-            Your browser does not support the video tag.
-        </video>
-    </div>
-    
-  </div>
+            // Video completion handler
+            video.addEventListener('ended', function() {
+                videoCompleted = true;
+                checkbox.disabled = false;
+                checkbox.checked = true; // Automatically check the box
+                checkbox.classList.add('enabled');
+                continueButton.disabled = false; // Enable the continue button
+            });
 
+            // Checkbox handler
+            checkbox.addEventListener('change', function() {
+                if (this.checked && videoCompleted) {
+                    continueButton.disabled = false;
+                } else {
+                    continueButton.disabled = true;
+                }
+            });
 
+            // Prevent checkbox from being unchecked after video completion
+            checkbox.addEventListener('click', function(e) {
+                if (!videoCompleted) {
+                    e.preventDefault();
+                    showWarning('Mohon tonton video penjelasan sampai selesai terlebih dahulu.');
+                }
+            });
+function showWarning(message) {
+                const warningDiv = document.getElementById('warningMessage');
+                warningDiv.textContent = message;
+                warningDiv.style.display = 'block';
+                setTimeout(() => {
+                    warningDiv.style.display = 'none';
+                }, 3000);
+            }
 
-  </div>
+            // Prevent navigation and reload
+            function preventBackNavigation() {
+                window.history.pushState(null, null, window.location.href);
+                showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+            }
 
+            function preventUnload(e) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
 
+            function isFormInput(element) {
+                if (!element) return false;
+                const formTags = ['INPUT', 'TEXTAREA', 'SELECT'];
+                return formTags.includes(element.tagName);
+            }
+function initializeProtection() {
+                // Block back navigation
+                window.addEventListener('popstate', preventBackNavigation);
 
-    <div style="margin-left: 20px; margin-top: 20px;">
-      <input type="checkbox" id="confirmationCheck" disabled>
-      <label for="confirmationCheck">Saya telah mereviu tangkapan layar dan video di atas.</label>
-    </div>
+                // Block reloads and closing
+                window.addEventListener('beforeunload', preventUnload);
 
-    
-  <h4 style="margin-left: 20px; 
-  margin-bottom: 5px;
-  font-family: Arial;
-  color: rgb(80,80,80);">
-  <b>
-  </b>
-  </h4>
+                // Block keyboard shortcuts
+                document.addEventListener('keydown', function(e) {
+                    const blockedKeys = [
+                        { key: 'Backspace', condition: !isFormInput(document.activeElement) },
+                        { key: 'r', condition: e.ctrlKey || e.metaKey },
+                        { key: 'F5', condition: true },
+                        { key: 'ArrowLeft', condition: e.altKey },
+                        { key: 'ArrowRight', condition: e.altKey },
+                        { key: 'w', condition: e.ctrlKey || e.metaKey },
+                        { key: 'u', condition: e.ctrlKey || e.metaKey },
+                        { key: 's', condition: e.ctrlKey || e.metaKey },
+                    ];
 
- 
-  <br>
-  <br>
-  <form action="/start" method="POST" >
-  <input type="hidden" name="id" value="{{ id }}">
-  <input type="hidden" name="lang" value="{{ lang }}">
-  <button id="nextButton" style="margin-left: 20px;
-  background-color: rgb(10, 103, 173, 0.9); 
-  color: white; 
-  padding: 10px 30px; 
-  border: none; 
-  border-radius: 4px; 
-  font-size: 16px; 
-  font-weight: bold;"
-  type="submit"
-  onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
-  onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'"
-  
-  >
-    Lanjut
-  </button>
+                    for (let combo of blockedKeys) {
+                        if (e.key === combo.key && combo.condition) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                            return false;
+                        }
+                    }
+                }, true);
 
-  </form>
+                // Prevent right-click
+                document.addEventListener('contextmenu', (e) => e.preventDefault());
 
-  </div>
+                // Prevent drag and drop
+                document.addEventListener('dragstart', (e) => e.preventDefault());
+                document.addEventListener('drop', (e) => e.preventDefault());
 
+                // Disable selection on non-form elements
+                document.addEventListener('selectstart', (e) => {
+                    if (!isFormInput(e.target)) e.preventDefault();
+                });
 
-  </div>
+                // Continuous history push
+                setInterval(() => {
+                    window.history.pushState(null, null, window.location.href);
+                }, 100);
+            }
 
+          window.validateAndContinue = function() {
+              if (!videoCompleted) {
+                  showWarning('Mohon tonton video penjelasan sampai selesai terlebih dahulu.');
+                  return false;
+              }
 
-  
+              if (!checkbox.checked) {
+                  showWarning('Mohon centang kotak persetujuan sebelum melanjutkan.');
+                  return false;
+              }
+
+              // Remove beforeunload listener before navigation
+              window.removeEventListener('beforeunload', preventUnload);
+              return true; // Allow form submission
+          };
+
+            // Initialize protection
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeProtection);
+            } else {
+                initializeProtection();
+            }
+        })();
+    </script>
 </body>
-  
-</html>

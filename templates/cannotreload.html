@@ -1,0 +1,114 @@
+<script>
+// Security and navigation protection implementation
+function initializePageSecurity() {
+    const warningDiv = document.createElement('div');
+    warningDiv.id = 'warningMessage';
+    warningDiv.className = 'warning-message';
+    document.body.appendChild(warningDiv);
+
+    // Add warning message styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .warning-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(255, 69, 0, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            z-index: 10000;
+            display: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+    `;
+    document.head.appendChild(style);
+
+    function showWarning(message) {
+        warningDiv.textContent = message;
+        warningDiv.style.display = 'block';
+        setTimeout(() => {
+            warningDiv.style.display = 'none';
+        }, 3000);
+    }
+
+    function preventBackNavigation() {
+        window.history.pushState(null, null, window.location.href);
+        showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+    }
+
+    function isFormInput(element) {
+        if (!element) return false;
+        const formTags = ['INPUT', 'TEXTAREA', 'SELECT'];
+        return formTags.includes(element.tagName);
+    }
+
+    // Block back navigation
+    window.addEventListener('popstate', preventBackNavigation);
+
+    // Block keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+        const blockedKeys = [
+            { key: 'Backspace', condition: !isFormInput(document.activeElement) },
+            { key: 'r', condition: e.ctrlKey || e.metaKey },
+            { key: 'F5', condition: true },
+            { key: 'ArrowLeft', condition: e.altKey },
+            { key: 'ArrowRight', condition: e.altKey },
+            { key: 'w', condition: e.ctrlKey || e.metaKey },
+            { key: 'u', condition: e.ctrlKey || e.metaKey },
+            { key: 's', condition: e.ctrlKey || e.metaKey },
+        ];
+
+        for (let combo of blockedKeys) {
+            if (e.key === combo.key && combo.condition) {
+                e.preventDefault();
+                e.stopPropagation();
+                showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                return false;
+            }
+        }
+    }, true);
+
+    // Prevent right-click
+    document.addEventListener('contextmenu', (e) => e.preventDefault());
+
+    // Prevent drag and drop
+    document.addEventListener('dragstart', (e) => e.preventDefault());
+    document.addEventListener('drop', (e) => e.preventDefault());
+
+    // Disable selection on non-form elements
+    document.addEventListener('selectstart', (e) => {
+        if (!isFormInput(e.target)) e.preventDefault();
+    });
+
+    // Continuous history push
+    setInterval(() => {
+        window.history.pushState(null, null, window.location.href);
+    }, 100);
+
+    // Only add beforeunload event if timer is not at 0
+    let beforeUnloadHandler = function(e) {
+        if (window.timer > 0) {  // Check if timer exists and is greater than 0
+            e.preventDefault();
+            e.returnValue = '';
+            return '';
+        }
+    };
+
+    window.addEventListener('beforeunload', beforeUnloadHandler);
+
+    // Create a method to remove the beforeunload handler when needed
+    window.removeBeforeUnloadHandler = function() {
+        window.removeEventListener('beforeunload', beforeUnloadHandler);
+    };
+}
+
+// Initialize security measures when the DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializePageSecurity);
+} else {
+    initializePageSecurity();
+}
+</script>

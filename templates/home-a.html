@@ -7,6 +7,42 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Create a mask over non-interactive elements */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            cursor: default !important;
+            z-index: 1000;
+        }
+
+        /* Style interactive elements */
+        #consentCheckbox,
+        #consentCheckbox + label,
+        .submit-button {
+            position: relative;
+            z-index: 1001;  /* Above the mask */
+            cursor: pointer !important;
+        }
+
+        /* Disable text selection */
+        body {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
         :root {
             --primary-color: rgb(80,80,80);
             --accent-color: rgb(10, 103, 173);
@@ -15,12 +51,6 @@
             --transition-speed: 0.3s;
             --border-radius: 16px;
             --spacing-unit: clamp(0.5rem, 2vw, 1rem);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
         }
 
         html {
@@ -82,7 +112,7 @@
             color: var(--primary-color);
         }
 
-        /* Logo and Header */
+        /* Layout Components */
         .header-container {
             display: flex;
             align-items: flex-start;
@@ -118,7 +148,8 @@
             position: relative;
             border: 1px solid rgba(0, 0, 0, 0.03);
         }
-.fixed-box-1 {
+
+        .fixed-box-1 {
             background: rgba(255, 255, 255, 0.8);
             border-radius: calc(var(--border-radius) - 4px);
             padding: calc(var(--spacing-unit) * 1.5);
@@ -144,7 +175,7 @@
             transition: background-color var(--transition-speed);
         }
 
-        /* Subtle Scrollbar */
+        /* Scrollbar Styles */
         .fixed-box-0::-webkit-scrollbar,
         .fixed-box-1::-webkit-scrollbar,
         .fixed-box-2::-webkit-scrollbar {
@@ -163,6 +194,23 @@
         .fixed-box-2::-webkit-scrollbar-thumb {
             background: rgba(0, 0, 0, 0.1);
             border-radius: 10px;
+        }
+
+        /* Container and Columns */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: calc(var(--spacing-unit) * 1.5);
+            margin: calc(var(--spacing-unit) * 1.5) 0;
+        }
+
+        .column {
+            flex: 1;
+            min-width: min(100%, 300px);
+            background: rgba(255, 255, 255, 0.4);
+            padding: calc(var(--spacing-unit));
+            border-radius: calc(var(--border-radius) - 8px);
+            border: 1px solid rgba(0, 0, 0, 0.03);
         }
 
         /* Consent List */
@@ -191,23 +239,6 @@
             font-weight: 500;
             opacity: 0.8;
             min-width: 1.2rem;
-        }
-
-        /* Contact Info */
-        .container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: calc(var(--spacing-unit) * 1.5);
-            margin: calc(var(--spacing-unit) * 1.5) 0;
-        }
-
-        .column {
-            flex: 1;
-            min-width: min(100%, 300px);
-            background: rgba(255, 255, 255, 0.4);
-            padding: calc(var(--spacing-unit));
-            border-radius: calc(var(--border-radius) - 8px);
-            border: 1px solid rgba(0, 0, 0, 0.03);
         }
 
         /* Form Elements */
@@ -242,6 +273,7 @@
             border-radius: calc(var(--border-radius) - 8px);
             border: 1px solid rgba(0, 0, 0, 0.03);
             margin-bottom: 2rem;
+            z-index: 1001;  /* Added to ensure checkbox container is above mask */
         }
 
         .consent-checkbox input[type="checkbox"] {
@@ -249,7 +281,6 @@
             height: 1.2rem;
             border-radius: 4px;
             border: 2px solid var(--accent-color);
-            cursor: pointer;
             appearance: none;
             -webkit-appearance: none;
             transition: all var(--transition-speed);
@@ -285,7 +316,8 @@
         .warning-message.show {
             display: block;
         }
-.submit-button {
+
+        .submit-button {
             background: linear-gradient(45deg, var(--accent-color), #2c5282);
             color: white;
             padding: calc(var(--spacing-unit) * 0.8) calc(var(--spacing-unit) * 2);
@@ -293,7 +325,6 @@
             border-radius: calc(var(--border-radius) - 8px);
             font-size: 1rem;
             font-weight: 500;
-            cursor: pointer;
             transition: all var(--transition-speed);
             box-shadow: 0 4px 15px rgba(10, 103, 173, 0.1);
             opacity: 0.9;
@@ -303,6 +334,13 @@
         .submit-button:hover {
             opacity: 1;
             transform: translateY(-2px);
+        }
+
+        .section-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.05), transparent);
+            margin: calc(var(--spacing-unit) * 2) 0;
         }
 
         /* Responsive Design */
@@ -345,15 +383,7 @@
                 width: 100%;
             }
         }
-
-        .section-divider {
-            border: none;
-            height: 1px;
-            background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.05), transparent);
-            margin: calc(var(--spacing-unit) * 2) 0;
-        }
     </style>
-
     <script>
         (function () {
             // Push initial state to the history stack
@@ -382,91 +412,177 @@
                 }, 3000);
             }
 
-            // Prevent navigation and reload
-            function preventBackNavigation() {
-                // Push state back to prevent leaving the page
+            // Helper function to check if an element should be interactive
+            function isFormInput(element) {
+                if (!element) return false;
+                const interactiveElements = ['INPUT', 'TEXTAREA', 'SELECT'];
+
+                // Check if element is checkbox or button
+                const isCheckbox = element.id === 'consentCheckbox';
+                const isSubmitButton = element.classList.contains('submit-button');
+                const isCheckboxLabel = element.getAttribute('for') === 'consentCheckbox';
+
+                return interactiveElements.includes(element.tagName) || 
+                       isCheckbox || 
+                       isSubmitButton || 
+                       isCheckboxLabel;
+            }
+
+            function preventBackNavigation(e) {
+                // Prevent default back navigation
+                e.preventDefault();
+
+                // Push a new state to prevent actual navigation
                 window.history.pushState(null, null, window.location.href);
-                showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+
+                // Show warning message
+                const warningDiv = document.createElement('div');
+                warningDiv.style.position = 'fixed';
+                warningDiv.style.bottom = '10px';
+                warningDiv.style.left = '50%';
+                warningDiv.style.transform = 'translateX(-50%)';
+                warningDiv.style.backgroundColor = 'rgba(255, 69, 0, 0.9)';
+                warningDiv.style.color = 'white';
+                warningDiv.style.padding = '10px 20px';
+                warningDiv.style.borderRadius = '8px';
+                warningDiv.style.zIndex = '10000';
+                warningDiv.textContent = 'Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!';
+
+                // Remove any existing warnings first
+                const existingWarnings = document.querySelectorAll('[data-warning="navigation"]');
+                existingWarnings.forEach(warning => warning.remove());
+
+                // Add attribute to identify this warning
+                warningDiv.setAttribute('data-warning', 'navigation');
+
+                document.body.appendChild(warningDiv);
+
+                // Remove warning after 3 seconds
+                setTimeout(() => {
+                    if (document.body.contains(warningDiv)) {
+                        document.body.removeChild(warningDiv);
+                    }
+                }, 3000);
             }
 
             function preventUnload(e) {
-                // Show the browser's default prompt
                 e.preventDefault();
-                e.returnValue = ''; // Required for the prompt to appear
+                e.returnValue = '';
+            }
+
+            function handleKeyboardShortcuts(e) {
+                const blockedKeys = [
+                    { key: 'Backspace', condition: !isFormInput(document.activeElement) },
+                    { key: 'r', condition: e.ctrlKey || e.metaKey },
+                    { key: 'F5', condition: true },
+                    { key: 'ArrowLeft', condition: e.altKey },
+                    { key: 'ArrowRight', condition: e.altKey },
+                    { key: 'w', condition: e.ctrlKey || e.metaKey },
+                    { key: 'u', condition: e.ctrlKey || e.metaKey },
+                    { key: 's', condition: e.ctrlKey || e.metaKey },
+                ];
+
+                const blockedKey = blockedKeys.find(k => k.key === e.key && k.condition);
+                if (blockedKey) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+                    return false;
+                }
+            }
+
+            function handleSelection(e) {
+                if (!isFormInput(e.target)) {
+                    e.preventDefault();
+                }
             }
 
             function initializeProtection() {
-                // Block back navigation using the history API
-                window.addEventListener('popstate', preventBackNavigation);
+                // Navigation prevention with more robust handling
+                window.addEventListener('popstate', preventBackNavigation, true);
 
-                // Block reloads and closing the tab
-                window.addEventListener('beforeunload', preventUnload);
+                // Ensure initial state is set
+                window.history.pushState(null, null, window.location.href);
 
-                // Block specific keyboard shortcuts
-                document.addEventListener(
-                    'keydown',
-                    function (e) {
-                        const blockedKeys = [
-                            { key: 'Backspace', condition: !isFormInput(document.activeElement) },
-                            { key: 'r', condition: e.ctrlKey || e.metaKey },
-                            { key: 'F5', condition: true },
-                            { key: 'ArrowLeft', condition: e.altKey },
-                            { key: 'ArrowRight', condition: e.altKey },
-                            { key: 'w', condition: e.ctrlKey || e.metaKey },
-                            { key: 'u', condition: e.ctrlKey || e.metaKey },
-                            { key: 's', condition: e.ctrlKey || e.metaKey },
-                        ];
+                window.addEventListener('beforeunload', preventUnload, true);
 
-                        for (let combo of blockedKeys) {
-                            if (e.key === combo.key && combo.condition) {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
-                                return false;
-                            }
-                        }
-                    },
-                    true
-                );
+                // Keyboard shortcuts
+                document.addEventListener('keydown', handleKeyboardShortcuts, true);
 
-                // Prevent right-click
-                document.addEventListener('contextmenu', (e) => e.preventDefault());
+                // Right-click prevention
+                document.addEventListener('contextmenu', e => e.preventDefault(), true);
 
-                // Prevent drag and drop events
-                document.addEventListener('dragstart', (e) => e.preventDefault());
-                document.addEventListener('drop', (e) => e.preventDefault());
+                // Drag and drop prevention
+                document.addEventListener('dragstart', e => e.preventDefault(), true);
+                document.addEventListener('drop', e => e.preventDefault(), true);
 
-                // Disable selection on non-form elements
-                document.addEventListener('selectstart', (e) => {
-                    if (!isFormInput(e.target)) e.preventDefault();
-                });
+                // Selection prevention
+                document.addEventListener('selectstart', handleSelection, true);
 
-                // Continuously push the state to the history stack
-                setInterval(() => {
+                // Continuous history state maintenance
+                window.historyInterval = setInterval(() => {
                     window.history.pushState(null, null, window.location.href);
-                }, 100); // Set interval to 100ms for stronger prevention
+                }, 100);
             }
 
-            // Helper function to check if an element is a form input
-            function isFormInput(element) {
-                if (!element) return false;
-                const formTags = ['INPUT', 'TEXTAREA', 'SELECT'];
-                return formTags.includes(element.tagName);
-            }
-
-            // Initialize protection
+            // Initialize on DOM load
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', initializeProtection);
             } else {
                 initializeProtection();
             }
 
-            // Remove beforeunload listener when form is submitted
+            // Form handling and cursor management
             document.addEventListener('DOMContentLoaded', function () {
                 const form = document.querySelector('.consent-form');
                 const checkbox = document.getElementById('consentCheckbox');
                 const warning = document.querySelector('.warning-message');
+                const label = document.querySelector('label[for="consentCheckbox"]');
+                const submitButton = document.querySelector('.submit-button');
 
+                // Cursor management style element
+                const styleElement = document.createElement('style');
+                styleElement.innerHTML = `
+                    /* Global default cursor */
+                    body, body * {
+                        cursor: default !important;
+                        user-select: none !important;
+                        -webkit-user-select: none !important;
+                        -moz-user-select: none !important;
+                        -ms-user-select: none !important;
+                    }
+
+                    /* Interactive elements cursor */
+                    #consentCheckbox,
+                    label[for="consentCheckbox"],
+                    .submit-button {
+                        cursor: pointer !important;
+                    }
+
+                    /* Remove any hover overrides */
+                    #consentCheckbox:hover,
+                    label[for="consentCheckbox"]:hover,
+                    .submit-button:hover {
+                        cursor: pointer !important;
+                    }
+                `;
+                document.head.appendChild(styleElement);
+
+                // Remove inline style settings for cursor
+                const targetElements = [
+                    document.getElementById('consentCheckbox'),
+                    document.querySelector('label[for="consentCheckbox"]'),
+                    document.querySelector('.submit-button')
+                ];
+
+                targetElements.forEach(el => {
+                    if (el) {
+                        // Remove any existing inline cursor styles
+                        el.style.removeProperty('cursor');
+                    }
+                });
+
+                // Form validation
                 if (form && checkbox && warning) {
                     form.addEventListener('submit', function (e) {
                         if (!checkbox.checked) {
@@ -474,13 +590,16 @@
                             warning.classList.add('show');
                         } else {
                             warning.classList.remove('show');
-
-                            // Remove the beforeunload event to prevent "Leave site?" dialog
-                            window.removeEventListener('beforeunload', preventUnload);
+                            // Remove the beforeunload event listener when form is submitted
+                            window.removeEventListener('beforeunload', preventUnload, true);
+                            // Also remove the popstate event listener
+                            window.removeEventListener('popstate', preventBackNavigation, true);
+                            // Clear the interval that pushes history state
+                            clearInterval(window.historyInterval);
+                            return true;
                         }
                     });
 
-                    // Hide warning when checkbox is checked
                     checkbox.addEventListener('change', function () {
                         if (this.checked) {
                             warning.classList.remove('show');
@@ -600,8 +719,7 @@
                 </div>
 
                 <hr class="section-divider">
-
-                <div class="header-container">
+<div class="header-container">
                     <div class="header-text">
                         <h2>Formulir Kesediaan</h2>
                         <h3>Departemen Hukum Bisnis dan Perpajakan</h3>
@@ -617,7 +735,8 @@
 
                 <p>Investigasi Perilaku Kepatuhan Pajak dalam Lingkungan Aset Kripto:<br>
                 Bukti dari Indonesia (Persetujuan MUHREC ID 39727)</p>
-<div class="fixed-box-2 consent-items">
+
+                <div class="fixed-box-2 consent-items">
                     <ol class="consent-list">
                         <li>
                             <div class="consent-item">Saya bersedia berpartisipasi dalam proyek ini, dimana rinciannya telah dijelaskan kepada saya, dan saya telah diberikan Pernyataan Penjelasan tertulis untuk direviu.</div>
@@ -676,32 +795,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Handle form submission and warning message
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.querySelector('.consent-form');
-            const checkbox = document.getElementById('consentCheckbox');
-            const warning = document.querySelector('.warning-message');
-            
-            if (form && checkbox && warning) {
-                form.addEventListener('submit', function(e) {
-                    if (!checkbox.checked) {
-                        e.preventDefault();
-                        warning.classList.add('show');
-                    } else {
-                        warning.classList.remove('show');
-                    }
-                });
-
-                // Hide warning when checkbox is checked
-                checkbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        warning.classList.remove('show');
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 </html>

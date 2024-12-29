@@ -49,7 +49,7 @@
 
   
   //------------ Timer countdown function
-  var timer = 40; /* 40 seconds */
+  var timer = 1; /* 40 seconds */
   var timerText = document.getElementById("countdown");
   var userid = document.getElementById("id").textContent; // Define userid here
 
@@ -58,13 +58,19 @@
       clearInterval(countdown); /* End */
       timerText.innerHTML = "0";
       console.log("User ID:", userid); // Debug statement to log the userid
-      window.location.href = "/tr?id=" + encodeURIComponent(userid); // Pass the id as a query parameter in the URL
+//      window.location.href = "/tr?id=" + encodeURIComponent(userid); // Pass the id as a query parameter in the URL
+      // Remove the beforeunload handler before navigation
+      if (window.removeBeforeUnloadHandler) {
+          window.removeBeforeUnloadHandler();
+      }
+      document.getElementById('navigationForm').submit(); 
     } else {
       timer -= 1; /* Countdown */
       timerText.innerHTML = timer;
     }
   }, 1000); /* Milliseconds */
-
+  // Make timer globally available for the security checks
+  window.timer = timer;
 
   // ------------ Button color changing
 function updateButtonColor(trxValue) {

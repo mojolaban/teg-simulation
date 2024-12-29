@@ -1,409 +1,361 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    {% include 'bootstrap.html' %}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<head>
+  {% include 'bootstrap.html' %}
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>TEG</title>
 
-    <title>TEG</title>
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    <style>
-      p {
-        font-family: Arial;
-        color: rgb(80, 80, 80);
-        margin-bottom: 20px;
-      }
-      h1 {
-        font-size: 40px;
-        font-family: Arial;
-        color: rgb(80, 80, 80);
-      }
+    html, body {
+      height: 100vh;
+      width: 100vw;
+      overflow: auto;
+      background-color: rgb(0, 0, 0);
+      color: white;
+      font-family: Arial, sans-serif;
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    #container {
+      max-width: 95%;
+      margin: 10px auto;
+      background-color: black;
+      border: 1px solid black;
+      border-radius: 1rem;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Header styles */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 1rem;
+      height: 4rem;
+      background-color: white;
+      border-radius: 0.5rem;
+      margin: 0;
+      max-width: 100%;
+    }
+
+    .round-display {
+      color: rgb(80, 80, 80);
+      font-size: 2.5rem;
+      margin-left: 2rem;
+    }
+
+    .timer-display {
+      background: transparent;
+      border: 1px solid red;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      color: rgb(80, 80, 80);
+      font-size: 2rem;
+      margin-right: 2rem;
+      width: 20rem;
+      height: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Main content */
+    .main-content {
+      display: flex;
+      gap: 1rem;
+      height: calc(100vh - 5rem);
+      padding: 1rem;
+    }
+
+    /* Left panel */
+    #left-pane {
+      width: 15rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 24rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Position indicator */
+    .position-indicator {
+      height: 3rem;
+      background: rgb(10, 10, 10);
+      border: 1px solid rgb(40, 40, 40);
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .position-indicator img {
+      width: 1rem;
+      height: 1rem;
+      margin-right: 0.5rem;
+    }
+
+    .position-indicator span {
+      color: white;
+      font-size: 0.9rem;
+    }
+
+    /* Middle panel */
+    #middle-pane {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transform: translateX(-3rem);
+    }
+
+    .thanks-section {
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    .thanks-title {
+      color: white;
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .thanks-subtitle {
+      color: white;
+      font-size: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    /* Compensation button */
+    .compensation-container {
+      margin: 2rem auto;
+      text-align: center;
+    }
+
+    #compensation {
+      height: 3.5rem;
+      width: 14rem;
+      text-align: center;
+      border-radius: 0.5rem;
+      background: rgb(40, 180, 120);
+      border: none;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .action-button {
+      width: 17rem;
+      padding: 0.8rem;
+      border: none;
+      border-radius: 0.5rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      background-color: white;
+      color: rgb(80, 80, 80);
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    /* Random round selector */
+    .random-round-display {
+      width: 12rem;
+      background: rgb(10, 10, 10);
+      border: 1px solid rgb(40, 40, 40);
+      border-radius: 0.5rem;
+      padding: 1rem;
+      margin-top: 2rem;
+      transform: translateX(-8rem);
+      text-align: center;  /* Added to center content */
+      display: flex;
+      flex-direction: column;
+      align-items: center;  /* Added for better centering */
+    }
+
+    .random-round-title {
+      color: rgb(130, 130, 130);
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+      width: 100%;  /* Added for full width */
+      text-align: cent;  /* Keep title left-aligned */
+    }
+
+    #number {
+      font-size: 2.5rem;
+      color: white;  /* Changed from rgb(40, 40, 40) to white */
+      font-family: Arial;
+
+    }
+
+    @keyframes numberChange {
+      0% { opacity: 0; }
+      50% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    .number-changing {
+      animation: numberChange 0.5s linear infinite;
+    }
+
+    /* Warning message */
+    .warning-message {
+      position: fixed;
+      bottom: 1.25rem;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(255, 69, 0, 0.9);
+      color: white;
+      padding: 0.625rem 1.25rem;
+      border-radius: 0.5rem;
+      z-index: 10000;
+      display: none;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    /* Responsive design */
+    @media (max-width: 1200px), (max-height: 750px) {
       #container {
-        max-width: 75%;
-        margin: 10px auto;
-        justify-content: center;
-        align-items: center;
-        background-color: black;
-        border: 1px solid white;
-        
+        transform: scale(0.88);
+        transform-origin: center top;
+        min-width: 1200px;
       }
-      .fixed-box-0 {
-        height: 85px;
-        max-width: 95%;
-        border: 1px solid #ccc;
-        padding: 10px;
-        position: relative;
-        margin-left: 20px;
-        margin-right: 20px;
-        margin-top: 20px;
-        background-color: white;
-      }
-      .fixed-box-1 {
-        font-family: Arial;
-        color: rgb(80, 80, 80);
-        height: 450px;
-        overflow: auto;
-        border: 1px solid black;
-        padding: 10px;
-        position: relative;
-        margin-left: 20px;
-        margin-right: 20px;
-        margin-top: 20px;
-      }
-      .fixed-box-2 {
-        font-family: Arial;
-        font-size: 25px;
-        color: rgb(80, 80, 80);
-        height: 60px;
-        overflow: auto;
-        border: 1px solid red;
-        padding: 10px;
-        border-radius: 10px;
-        margin-left: 40px;
-        margin-right: 0px;
-        display: flex;
-        justify-content: center;
-      }
+    }
 
-      .fixed-box-2 span {
-        margin-left: 5px;
+    @media screen and (orientation: portrait) {
+      body {
+        transform: rotate(-90deg);
+        transform-origin: left top;
+        width: 100vh;
+        height: 100vw;
+        position: absolute;
+        top: 100%;
+        left: 0;
       }
- 
-      #number-container {
-        font-size: 24px;
-        font-weight: bold;
-        text-align: center;
-      }
-      
-      @keyframes numberChange {
-        0% {
-          opacity: 0;
-        }
-        50% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0;
-        }
-      }
-      
-      .number-changing {
-        animation: numberChange 0.5s linear infinite;
-      }
-      
-    </style>
-  </head>
+    }
+  </style>
+</head>
 
-  <body>
-    <div id="container">
-      <!-- Round and Timer -->
-      <div class="fixed-box-0">
-        <div class='row'>
-          <!-- Round -->
-          <div class="col-md-7" style="margin-left: 20px;">
-            <h1>Akhir Ronde 15</h1>
-          </div>
-          <!-- Timer -->
-          <div class="col-md-4">
-            <div class="fixed-box-2">
-              Waktu:
-              <span id="countdown">0</span>s
-            </div>
+<body class="disable-selection">
+  <div id="container">
+    <!-- Header Section -->
+    <div class="header">
+      <div class="round-display">
+        Akhir Ronde 15
+      </div>
+      <div class="timer-display">
+        <span style="margin-right: 1rem; font-size: 2rem;">Waktu:</span>
+        <span id="countdown" style="font-size: 2rem;margin-right: 1rem;margin-left:1rem;">0</span>
+        <span style="font-size: 2rem;margin-left:1rem;">s</span>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <!-- Left Panel -->
+      <div id="left-pane">
+        <!-- Position Indicator -->
+        <div class="position-indicator">
+          <div class="indicator-content">
+            <img src="{{ url_for('static', filename='star.png') }}" alt="Star">
+            <span><b>KOMPENSASI</b></span>
           </div>
         </div>
       </div>
 
-      <div class="fixed-box-1">
-        <div class='row'>
-          
-          <!-- This is the Totals Pane -->
-          <div id="left-pane" class="col-2" style="margin-left: 30px;">
-            <!-- Start of Left Pane -->
-            
-            <!-- Your Total Asset -->
-            <div id="total-asset-box" style="height: 60px; width: 200px;
-              background-color: black;
-              border: 1px solid black;
-              border-radius: 10px;
-              padding: 10px;
-              margin-bottom: 20px;">
-              <div>
-                <div style="text-align: center;">
-                  <p style="line-height:1;
-                    margin: 0;color: black;font-size:12px">
-                    <b></b>
-                  </p>
-                </div>
-                <div class="row justify-content-evenly">
-                  <div class="col-2">
-                    <p style="font-size:12px;line-height:2;
-                      margin: 0;color: black;">
-                      
-                    </p>
-                  </div>
-                  <div class="col-4">
-                    <p id="fiat" style="font-size:12px;line-height:2;
-                      margin: 0;color: black;">
-                    </p>
-                  </div>
-                  <div class="col-3">
-                    <p style="font-size:12px;line-height:2;
-                      margin: 0;color: black;">
-                     
-                    </p>
-                  </div>
-                  <div class="col-3">
-                    <p id="crypto" style="font-size:12px;line-height:2;
-                      margin: 0;color: black;">
-                      <span id="comp_round" style="font-size:1px;line-height:0.5;
-                      margin: 0;color: black;" >{{comp_round}}</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <!-- Middle Panel -->
+      <div id="middle-pane">
+        <div class="thanks-section">
+          <div class="thanks-title">
+            Terima kasih atas partisipasi Anda dalam studi ini.
+          </div>
+          <div class="thanks-subtitle">
+            Sebagai bentuk penghargaan<br>
+            Anda berhak menerima e-gift voucher senilai
+          </div>
 
-            
+          <div class="compensation-container">
+            <button type="text" id="compensation" name="compensation-amt">
+              <span id="compensation-amt" style="visibility: hidden"></span>
+            </button>
+          </div>
 
-            <!-- TOTAL GAIN -->
-            <div id="total-gain-box" style="height: 60px; width: 200px;
-              background-color: black;
-              border: 1px solid black;
-              border-radius: 10px;
-              padding: 5px;
-              margin-left: 0px;
-              margin-top:5px;
-              margin-bottom:10px;">
-              <div>
-                <div style="text-align: center;">
-                  <p style="line-height:2;
-                    margin: 0;color: black;font-size:12px">
-                    <b></b>
-                  </p>
-                </div>
-                <div class="row justify-content-center">
-                  <div class="col-5">
-                    <p style="font-size:12px;line-height:1.5;
-                      margin-left: 0;color: black;" class="text-center">
-                      <i></i>
-                    </p>
-                  </div>
-                  <div class="col">
-                    <p id="r_gain" style="font-size:12px;line-height:1.5;
-                      margin: 0;color: black;" class="text-center">
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <form action="{{ url_for('index') }}" method="post" style="margin-top: 3rem;">
+              <button type="submit" id="buttonToSurvey" class="action-button"
+                      onmouseover="this.style.backgroundColor='rgb(10,10,10)'"
+                      onmouseout="this.style.backgroundColor='white'">
+                  Lanjutkan
+              </button>
+              <input type="hidden" name="form_type" value="survey">
+              <input type="hidden" name="id" value="{{ user_id }}">
+              <input type="hidden" name="gr" value="{{ gr }}">
+              <input type="hidden" name="lang" value="{{ lang }}">
+            <input type="hidden" name="comp_amt" value="{{ comp_rgainfinal }}">
+            <input type="hidden" name="comp_round" value="{{ comp_round }}">
+            <input type="hidden" name="comp_rgainfinal" value="{{ comp_amt }}">
+          </form>
+          <span id="comp_round" style="display: none;">{{ comp_round }}</span>
+        </div>
+      </div>
 
-            <!-- TOTAL TAX -->
-            <div id="total-tax-box" style="height: 60px; width: 200px;
-              background-color: black;
-              border: 1px solid black;
-              border-radius: 10px;
-              padding: 5px;
-              margin-left: 0px;
-              margin-top:0px;
-              margin-bottom:10px;">
-              <div>
-                <div style="text-align: center;">
-                  <p style="line-height:2;
-                    margin: 0;color: black;font-size:12px">
-                    <b></b>
-                  </p>
-                </div>
-                <div class="row justify-content-evenly">
-                  <div class="col-5">
-                    <p style="font-size:12px;line-height:1.5;
-                      margin: 0;color: black;" class="text-center">
-                      <i></i>
-                    </p>
-                  </div>
-                  <div class="col">
-                    <p id="r_tax" style="font-size:12px;line-height:1.5;
-                      margin: 0;color: black;" class="text-center">
-   
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- TOTAL NET GAIN -->
-            <div id="total-net-gain-box" style="height: 75px; width: 200px;
-              background-color: black;
-              border: 1px black;
-              border-radius: 10px;
-              padding: 10px;
-              margin-left: 0px;
-              margin-top:20px;
-              margin-bottom:10px;">
-              <div>
-                <div style="text-align: center;">
-                  <p style="line-height:2;
-                    margin: 0;color: black;font-size:12px">
-                    <b></b>
-                  </p>
-                </div>
-                <div class="row justify-content-evenly">
-                  <div class="col-5">
-                    <p style="font-size:12px;line-height:1.5;
-                      margin: 0;color: black;" class="text-center">
-                      <i></i>
-                    </p>
-                  </div>
-                  <div class="col">
-                    <p id="r_gain_net" style="font-size:12px;line-height:1.5;
-                      margin: 0;color: black;" class="text-center">
-   
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Position Tax Reporting -->
-            <div style="height: 33px; width: 200px;
-              background-color: black;
-              border: 1px solid #111111;
-              border-radius: 10px;
-              padding: 5px;
-              margin-left: 0px;
-              margin-top:20px;              display: flex;               align-items: center;
-              justify-content: center;
-              text-align: right;">
-              <div class="row">
-                <div id="img-star" class="col-3 d-flex
-                  justify-content-center align-items-center">
-                  <img src="{{ url_for('static', filename='star.png') }}" alt="Small Image"
-                    style="width: 13px; height: 13px;">
-                </div>
-                <div id="text-star" class="col-9">
-                  <span style="line-height:2;
-                      margin: 0;color: rgb(130,130,130);font-size:11px; text-align: center;">
-                    <b>KOMPENSASI</b></span>
-                </div>
-              </div>
-            </div>
-
-          </div> <!-- End of left pane  -->
-
-
-
-          
-
-          <!-- This is middle section --><div id="middle-pane" class="col-md-6 offset-md-1" style="margin-left: 0px;margin-right: 0px;border: 1px solid  rgba(0, 0, 0, 0);width:650px;">
-  <!-- The Text -->
-  <div class="mx-auto" style="height: 80px;
-    background-color: black;
-    border: 1px solid black;
-    border-radius: 1px;
-    padding: 0px;
-    margin-left: 0px;
-    margin-top:60px;
-    margin-bottom:0px;">
-    <div>
-      <p class="text-center" style="line-height:1.5;margin-bottom:0px;color:rgb(256,256,256);">
-        Terima kasih atas partisipasi Anda dalam studi ini.
-      </p>
-      <p class="text-center" id="thanks-word" style="font-size:24px;line-height:1;margin:auto;color:rgb(256,256,256)">
-        Sebagai bentuk penghargaan <br> Anda berhak menerima e-gift voucher senilai
-      </p>
-    </div>
-  </div>
-  <!-- The Submit Button -->
-
-
-            
-  <div id="reporting-box" class="mx-auto" style="height: 100px; width: 300px;
-    background-color: black;
-    border: 1px solid black;
-    border-radius: 1px;
-    padding: 0px;
-    margin-left: 0px;
-    margin-top:0px;
-    margin-bottom:20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;">
-    <button type="text" name="compensation-amt" style="height: 50px; width: 240px; margin-top:0px; text-align: center;border-radius: 10px;color:white;background:rgb(40, 180, 120);border: none;"> 
-      <span id="compensation-amt" style="visibility: hidden";></span>
-    </button>    
-  </div>
-
-  <div class="row justify-content-center" style="margin: auto;">
-    <div class="col-5 d-flex justify-content-center align-items-center">
-      <form action="/survey" method="post">
-        <button type="submit" id="buttonToSurvey"
-          style="margin-left: 0px;
-          width: 240px;
-          margin-top:50px;
-          padding: 10px 30px;
-          border: none;
-          border-radius: 4px;
-          font-size: 16px;
-          font-weight: bold;
-          background-color: white;
-          color: grey;"
-          onmouseover="this.style.backgroundColor = 'rgb(10,10,10)'"
-          onmouseout="this.style.backgroundColor = 'white'">
-          Lanjutkan
-        </button>   
-                        <input type="hidden" name="comp_amt" value= {{comp_rgainfinal}}>
-                        <input type="hidden" name="comp_round" value= {{comp_round}}>
-                        <input type="hidden" name="user_id" value= {{user_id}}> 
-                        <input type="hidden" name="gr" value= {{gr}}> 
-                        <input type="hidden" name="comp_rgainfinal" value= {{comp_amt}}> 
-                        <input type="hidden" name="lang" value= {{lang}}>
-      </form>   
-    </div>
-  </div>
-</div>
- <!-- End of middle section  -->
-
-     
-          <!-- This is the right section -->
-          <div id="right-pane" class="col-md-1 offset-md-1" style="margin-left: 0px;">
-            <div class='row'>
-              <div class="col-3" style="margin-top: 5px;margin-left: 0px;">
-
-                <div style="height: 50px; width:220px;
-                  background-color: black;
-                  border: 1px solid black; margin-top:0px;
-                  padding: 10px;">
-                  <p style="line-height:1;
-                    margin: 0;text-align: left;">
-                    <span style="font-size:11px;color: rgb(130,130,130);">Pemilih Ronde Acak</span>
-                    <div id="number-container" style="text-align: left;">                      
-                      <span style="font-size:40px; font-style:"arial"; color: rgb(40,40,40);"
-                      id="number">0</span>
-                     </div>
-                  </p>
-
-                </div>
-
-
-              </div>
-            </div>
-          </div> <!-- End of right pane   -->
+      <!-- Right Panel -->
+      <div id="right-pane">
+        <div class="random-round-display">
+          <div class="random-round-title">
+            Pemilih Ronde Acak
+          </div>
+          <div id="number">0</div>
         </div>
       </div>
     </div>
+  </div>
 
-<script>
-  $(document).ready(function() {
-    var animationComplete = false; // Flag to track animation status
+  <!-- Warning Message Container -->
+  <div id="warningMessage" class="warning-message"></div>
 
+  <script>
+    // Prevent text selection
+    document.addEventListener('selectstart', function(e) {
+      e.preventDefault();
+    });
+
+    // Navigation Protection
+    window.addEventListener('popstate', function() {
+      window.history.pushState(null, null, window.location.href);
+      showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+    });
+
+    setInterval(() => {
+      window.history.pushState(null, null, window.location.href);
+    }, 100);
+
+    // Warning Message Function
+    function showWarning(message) {
+      const warningDiv = document.getElementById('warningMessage');
+      warningDiv.textContent = message;
+      warningDiv.style.display = 'block';
+      setTimeout(() => {
+        warningDiv.style.display = 'none';
+      }, 3000);
+    }
+
+    // Random number animation
     function animateNumber() {
       var numberElement = document.getElementById('number');
       numberElement.classList.add('number-changing');
-      numberElement.style.fontFamily = 'Arial'; // Set the font family to Arial
 
-      var numbers = shuffleArray(Array.from({ length: 15 }, (_, index) => index + 1)); // Array of shuffled numbers from 1 to 15
-
+      var numbers = shuffleArray(Array.from({ length: 15 }, (_, index) => index + 1));
       var currentIndex = 0;
-      var duration = 4750; // Duration of shuffling number in milliseconds (adjust as needed)
-      var intervalTime = Math.floor(duration / (numbers.length * 2)); // Interval time based on duration and number of elements
+      var duration = 4750;
+      var intervalTime = Math.floor(duration / (numbers.length * 2));
 
       var interval = setInterval(function() {
         if (currentIndex >= numbers.length * 2) {
@@ -416,24 +368,19 @@
         }
       }, intervalTime);
 
-      // Delay the animation end with a setTimeout
       setTimeout(function() {
         clearInterval(interval);
-
-        // Check if the value is provided
         if (document.getElementById('comp_round')) {
           numberElement.textContent = document.getElementById('comp_round').textContent;
         }
-
         numberElement.classList.remove('number-changing');
-        animationComplete = true; // Set the animation status to complete
       }, duration);
     }
 
     function shuffleArray(array) {
       var currentIndex = array.length,
-        temporaryValue,
-        randomIndex;
+          temporaryValue,
+          randomIndex;
 
       while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
@@ -447,29 +394,48 @@
       return array;
     }
 
-    animateNumber(); // Start the animation
+    $(document).ready(function() {
+      // Start number animation
+      animateNumber();
 
-    // Assuming comp_rgainfinal is a variable holding the compensation amount
-    var comp_rgainfinal = {{ comp_rgainfinal }}; // This should be a numeric value
+      // Format and display compensation amount
+      var comp_rgainfinal = {{ comp_rgainfinal }};
+      var formattedCompensation = new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        minimumFractionDigits: 0
+      }).format(comp_rgainfinal);
 
-    // Format the compensation amount in Indonesian locale
-    var formattedCompensation = new Intl.NumberFormat('id-ID', {
-      style: 'currency',
-      currency: 'IDR',
-      minimumFractionDigits: 0 // Adjust as necessary
-    }).format(comp_rgainfinal);
+      setTimeout(function() {
+        var compensationAmtElement = document.getElementById('compensation-amt');
+        compensationAmtElement.innerHTML = formattedCompensation;
+        compensationAmtElement.style.visibility = 'visible';
+      }, 5000);
 
-    // Delay showing the formatted compensation amount
-    setTimeout(function() {
-      var compensationAmtElement = document.getElementById('compensation-amt');
-      compensationAmtElement.innerHTML = formattedCompensation; // Use innerHTML to insert formatted string
-      compensationAmtElement.style.visibility = 'visible';
-    }, 5000); // Delay of 5 seconds
+      // Security measures
+      document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+      });
 
-    
-  });
-</script>
+      document.addEventListener('keydown', function(e) {
+        if ((e.ctrlKey || e.metaKey) && 
+            (e.key === 'c' || e.key === 'v' || e.key === 'u' || 
+             e.key === 's' || e.key === 'p' || e.key === 'a')) {
+          e.preventDefault();
+        }
+      });
 
+      // Prevent zoom on mobile
+      document.addEventListener('gesturestart', function(e) {
+        e.preventDefault();
+      });
 
-  </body>
+      document.addEventListener('touchmove', function(e) {
+        if (e.scale && e.scale !== 1) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+    });
+  </script>
+</body>
 </html>

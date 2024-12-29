@@ -1,232 +1,374 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     {% include 'bootstrap.html' %}
-    <title>TEG</title>
-    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Survey</title>
+
     <style>
       p {
         font-family: Arial;
         color: rgb(80,80,80);
-        margin-bottom: 20px;
-        }
-      h1{
-        font-size: 40px;
+        margin-bottom: 1.25rem;
+      }
+      h1 {
+        font-size: 2.5rem;
         font-family: Arial;
         color: rgb(80,80,80);
       }
       #container {
         max-width: 70%;
-        margin: 10px auto;
+        margin: 0.625rem auto;
         justify-content: center;
         align-items: center;
       }
       .fixed-box-0 {
-      height: 700px; 
-      overflow: auto; 
-      padding: 10px; 
-      position: relative;
-    }
+        height: 43.75rem; 
+        overflow: auto; 
+        padding: 0.625rem; 
+        position: relative;
+      }
       .fixed-box-1 {
-      font-family: Arial;
-      color: rgb(80,80,80);
-      height: 400px; 
-      overflow: auto; 
-      border: 1px solid #ccc; 
-      border-radius: 10px;
-      box-shadow: inset 0 0 4px #555;
-      padding: 10px; 
-      position: relative;
-      margin-left:20px;
-    }
+        font-family: Arial;
+        color: rgb(80,80,80);
+        height: 30rem; 
+        overflow: auto; 
+        border: 0.0625rem solid white; 
+        padding: 0.625rem; 
+        position: relative;
+        margin-left:1.25rem;
+      }
       .fixed-box-2 {
-      font-family: Arial;
-      color: rgb(80,80,80);
-      height: 300px; 
-      overflow: auto; 
-      padding: 10px; 
-      position: relative;
-      margin-left:20px;
-    }
+        font-family: Arial;
+        color: rgb(80,80,80);
+        height: 28rem; 
+        overflow: auto; 
+        padding: 0.625rem; 
+        position: relative;
+        margin-left:1.25rem;
+      }
       .fixed-box-1 img {
-      position: absolute; 
-      top: 3px; 
-      right: 20px; 
-      width: 200px; 
-      height: 110px; 
-    }
-    .likert-scale {
-    text-align: center;
-    font-size:10px;
-    width:70px;
-      
-    } 
-    .radio-bg {
-      background-color: rgb(240,240,240);
-          text-align: center;
-    }
-      
+        position: absolute; 
+        top: 0.1875rem; 
+        right: 0.625rem; 
+        width: 11.25rem; 
+        height: 6.875rem; 
+      }
+      .likert-scale {
+        text-align: center;
+        font-size:0.8rem;
+        width:4.375rem;
+        background-color: #f5f5f5;
+      } 
+      .radio-bg {
+        background-color: rgb(240,240,240);
+        text-align: center;
+      }
+      /* Add these new styles */
+      .radio-bg {
+        background-color: rgb(240,240,240);
+        text-align: center;
+        cursor: arrow; /* Changes cursor to question mark when hovering */
+      }
 
-      
+      /* Optional: Add a subtle transition effect */
+      .radio-bg:hover {
+        background-color: rgb(230,230,230);
+        transition: background-color 0.1s ease;
+      }
+      textarea {
+          cursor: pointer;
+      }
+
+      textarea:focus {
+          cursor: arrow;
+      }
+      textarea, textarea:hover, textarea:focus,
+      .form-control, .form-control:hover, .form-control:focus {
+          cursor: default;
+      }
+
+      .radio-bg {
+          background-color: rgb(240,240,240);
+          text-align: center;
+          cursor: default;
+      }
+      /* Add responsive and security-related styles */
+      html, body {
+        height: 100vh;
+        width: 100vw;
+        overflow: auto;
+        background-color: rgb(255,255,255);
+        -webkit-text-size-adjust: 100%;
+        -webkit-font-smoothing: antialiased;
+        user-select: none;
+      }
+
+      /* Warning message */
+      .warning-message {
+        position: fixed;
+        bottom: 0.78125rem;
+        left: 50%;
+        transform: translateX(-50%);
+        background-color: rgba(255, 69, 0, 0.9);
+        color: white;
+        padding: 0.390625rem 0.78125rem;
+        border-radius: 0.390625rem;
+        z-index: 10000;
+        display: none;
+        text-align: center;
+        white-space: nowrap;
+      }
+
+      /* Responsive design */
+      @media (max-width: 75rem), (max-height: 46.875rem) {
+        #container {
+          max-width: 95%;
+          transform: scale(0.88);
+          transform-origin: center top;
+        }
+      }
+
+      @media screen and (orientation: portrait) {
+        body {
+          transform: rotate(-90deg);
+          transform-origin: left top;
+          width: 100vh;
+          height: 100vw;
+          position: absolute;
+          top: 100%;
+          left: 0;
+        }
+      }
     </style>
   </head>
-  
-<body>
-  <div id="container">
-  <div class="fixed-box-0">
-    
-  <h1>Survey</h1>
- 
-  <p>
-    Terima kasih atas partisipasi Anda dalam studi ini. Silakan lengkapi kuesioner ini untuk menyelesaikan studi.
-  </p>
 
-    
-  <div class="fixed-box-1">
-    
-    <img src="{{ url_for('static', filename='monashuni.png') }}"style="height: 90px;width: 180px;margin-right:10px;"">
+<body class="disable-selection">
+    <div id="container">
+      <div class="fixed-box-0">
+        <h1>Survey</h1>
 
-    <h4 style= "margin-bottom: 3px;margin-top:10px;
-      color: rgb(80,80,80);">
-      Kuesioner Perilaku Kepatuhan Pajak</h4>
-    <h5 style="margin-top: 0; color: rgb(80,80,80);">
-      Departemen Hukum Bisnis dan Perpajakan</h5>
+        <p>
+          Terima kasih atas partisipasi Anda dalam studi ini. Silakan lengkapi kuesioner ini untuk menyelesaikan studi.
+        </p>
 
-    <p>
-     
-    </p>
-    
-  <div class="fixed-box-2">
-    
-<form action="/yes" method="post"> <!-- method="post"> -->
+        <div class="fixed-box-1">
+          <img src="{{ url_for('static', filename='monashuni.png') }}" style="height: 5.625rem;width: 11.25rem;margin-right:0.625rem;position:absolute;top:0.1875rem;right:0.625rem;">
 
+          <h4 style="margin-bottom: 0.1875rem;margin-top:0.625rem;color: rgb(80,80,80);">
+            Kuesioner Perilaku Kepatuhan Pajak
+          </h4>
+          <h5 style="margin-top: 0; color: rgb(80,80,80);">
+            Departemen Hukum Bisnis dan Perpajakan
+          </h5>
 
-    <input type="hidden" name="gr" value="{{ gr }}">
-    <input type="hidden" name="id" value="{{ id }}">
-    <input type="hidden" name="lang" value="{{ lang}}">
+          <p></p>
 
-  <table>
-    <tr>
-      <th colspan="8"></th>
-    </tr>
-    <tr>
-      <th style="width: 500px;font-size:12px">Saat saya membayar pajak kripto sesuai peraturan, saya melakukannya ... (1-3) </th>
-      <th class="likert-scale">Sangat Tidak Setuju</th>
-      <th class="likert-scale">Cukup Tidak Setuju</th>
-      <th class="likert-scale">Sedikit Tidak Setuju</th>
-      <th class="likert-scale">Sedikit Setuju</th>
-      <th class="likert-scale">Cukup Setuju</th>
-      <th class="likert-scale">Setuju</th>
-      <th class="likert-scale">Sangat Setuju</th>
-    </tr>
-    {% for question_num in range(0, questions|length) %}
-      <tr>
-        <td style="width: 500px; font-size:12px">{{ question_num + 1 }}. {{ questions[question_num] }}</td>
-        <td class="radio-bg">
-          <label><input type="radio" name="question{{ question_num }}" value=1 required></label></td>
-        <td class="radio-bg">
-          <label><input type="radio" name="question{{ question_num }}" value=2 required></label></td>
-        <td class="radio-bg">
-          <label><input type="radio" name="question{{ question_num }}" value=3 required></label></td>
-        <td class="radio-bg">
-          <label><input type="radio" name="question{{ question_num }}" value=4 required></label></td>
-        <td class="radio-bg">
-          <label><input type="radio" name="question{{ question_num }}" value=5 required></label></td>
-        <td class="radio-bg">        
-          <label><input type="radio" name="question{{ question_num }}" value=6 required></label></td>
-        <td class="radio-bg">
-          <label><input type="radio" name="question{{ question_num }}" value=7 required></label></td>
-        
-      </tr>
-    {% endfor %}
-  </table>
+          <div class="fixed-box-2">
+            <form action="{% if is_dev %}{{ url_for('dev_view', template_name='the_survey_ends-a.html') }}{% else %}{{ url_for('index') }}{% endif %}" method="post">
+              <input type="hidden" name="form_type" value="survey_end">
+                <input type="hidden" name="gr" value="{{ gr }}">
+              <input type="hidden" name="id" value="{{ id }}">
+              <input type="hidden" name="lang" value="{{ lang}}">
+              <!-- Add hidden veteran field with default value -->
+              <input type="hidden" name="veteran" value="Yes">
 
+              <table class="table" style="width: 100%;">
+                <tr>
+                  <th colspan="8"></th>
+                </tr>
+                <tr>
+                  <th style="font-size:1rem; font-weight: normal;">Saat saya membayar pajak kripto sesuai peraturan, saya melakukannya ... (1-3) </th>
+                  <th class="likert-scale">Sangat Tidak Setuju</th>
+                  <th class="likert-scale">Cukup Tidak Setuju</th>
+                  <th class="likert-scale">Sedikit Tidak Setuju</th>
+                  <th class="likert-scale">Sedikit Setuju</th>
+                  <th class="likert-scale">Cukup Setuju</th>
+                  <th class="likert-scale">Setuju</th>
+                  <th class="likert-scale">Sangat Setuju</th>
+                </tr>
+                {% for question_num in range(0, questions|length) %}
+                  <tr>
+                    <td style="font-size:1rem;">{{ question_num + 1 }}. {{ questions[question_num] }}</td>
+                    <td class="radio-bg" style="background-color: #f5f5f5;" title="Sangat Tidak Setuju">
+                      <label><input type="radio" name="question{{ question_num }}" value=1 required></label>
+                    </td>
+                    <td class="radio-bg" style="background-color: #f0f0f0;" title="Cukup Tidak Setuju">
+                      <label><input type="radio" name="question{{ question_num }}" value=2 required></label>
+                    </td>
+                    <td class="radio-bg" style="background-color: #ebebeb;" title="Sedikit Tidak Setuju">
+                      <label><input type="radio" name="question{{ question_num }}" value=3 required></label>
+                    </td>
+                    <td class="radio-bg" style="background-color: #e6e6e6;" title="Sedikit Setuju">
+                      <label><input type="radio" name="question{{ question_num }}" value=4 required></label>
+                    </td>
+                    <td class="radio-bg" style="background-color: #e1e1e1;" title="Cukup Setuju">
+                      <label><input type="radio" name="question{{ question_num }}" value=5 required></label>
+                    </td>
+                    <td class="radio-bg" style="background-color: #dcdcdc;" title="Setuju">
+                      <label><input type="radio" name="question{{ question_num }}" value=6 required></label>
+                    </td>
+                    <td class="radio-bg" style="background-color: #d7d7d7;" title="Sangat Setuju">
+                      <label><input type="radio" name="question{{ question_num }}" value=7 required></label>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </table>
+<div class="row justify-content-center">
+                <div class="col-9 col-sm-4" style="margin-top: 1.25rem;">
+                  <label for="email" style="font-size: 1rem; margin-top: 1.125rem;">Email Anda untuk menerima e-gift voucher:</label>
+                  <input type="email" class="form-control form-control-sm" id="colFormLabelSm" style="font-size: 1rem; text-align: left;background-color: #f5f5f5;margin-top:0rem"  name="email" required>
+                </div>
 
-    
+                <div class="col-12 col-sm-7" style="margin-top: 0.9375rem;">
+                  <label for="comments_a" style="font-size: 1rem; margin-top: 1.25rem;">Apakah instruksi eksperimen ini jelas dan mudah dimengerti? Jika tidak, bagaimana cara meningkatkannya?</label>
+                  <textarea id="comments_a" name="comments_a" rows="3" style="font-size: 1rem;width: 100%;border: 0.0625rem solid #ccc;background-color: #f5f5f5" required></textarea>
+
+                  <label for="comments_b" style="font-size: 1rem; margin-top: 1.25rem;">Apakah terdapat perubahan dalam strategi atau cara Anda menjalankan eksperimen ini dalam 15 ronde? Jika ya, bagaimana?</label>
+                  <textarea id="comments_b" name="comments_b" rows="3" style="font-size: 1rem;width: 100%;border: 0.0625rem solid #ccc;background-color: #f5f5f5" required></textarea>
+
+                  <label for="comments" style="font-size: 1rem; margin-top: 1.25rem;">Ada komentar lainnya terkait eksperimen ini?</label>
+                  <textarea id="comments" name="comments" rows="3" style="font-size: 1rem;width: 100%;border: 0.0625rem solid #ccc;background-color: #f5f5f5" required></textarea>
+
+                  <label for="cryptorisk" style="font-size: 1rem; margin-top: 1.25rem;">Apakah menurut Anda aset kripto memiliki risiko penghindaran pajak lebih besar dibanding aset lain, semisal saham?</label>
+                  <textarea id="cryptorisk" name="cryptorisk" rows="3" style="font-size: 1rem;width: 100%;border: 0.0625rem solid #ccc;background-color: #f5f5f5" required></textarea>
+
+                  <label for="trustpower" style="font-size: 1rem; margin-top: 1.25rem;">Anda percaya bahwa otoritas pajak memiliki kemampuan mendeteksi penghindaran pajak aset kripto, bahkan dalam transaksi di bursa terdesentralisasi?</label>
+                  <textarea id="trustpower" name="trustpower" rows="3" style="font-size: 1rem;width: 100%;border: 0.0625rem solid #ccc;background-color: #f5f5f5" required></textarea>
+
+                  <label for="followup" style="font-size: 1rem; margin-top: 1.25rem;">Tertarik untuk mengikuti wawancara lanjutan?</label>
+                  <select id="followup" name="followup" class="form-control form-control-sm" style="font-size: 0.9rem;margin-bottom:1.25rem;background-color: #f5f5f5" required>
+                    <option value="">Pilih</option>
+                    <option value="Yes">Ya</option>
+                    <option value="No">Tidak</option>
+                  </select>
+                </div>
+              </div>
+
+              <input type="checkbox" id="consentCheckbox" required style="margin-left: 1.25rem;margin-top:2rem;">
+              <label for="consentCheckbox" style="font-family: Arial; color: rgb(80,80,80); font-size:1.2rem;">
+                Saya telah mereviu dan menjawab semua pertanyaan.
+              </label>
+
+              <br><br>
+              <button style="margin-left: 1.25rem; background-color: rgb(10, 103, 173, 0.9); color: white; padding: 0.625rem 1.875rem; border: none; border-radius: 0.25rem; font-size: 1rem; font-weight: bold;"
+                      type="submit"
+                      onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
+                      onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'">
+                Kirim
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
-    
-    <div class="row justify-content-center">
-
-    <div class="col-9 col-sm-4" style="margin-top: 20px;">
-    <label for="email" style="font-size: 12px; margin-top: 18px;">Email Anda untuk menerima e-gift voucher:</label>
-    <input type="email" class="form-control form-control-sm" id="colFormLabelSm" style="font-size: 12px; text-align: left;background-color: #f5f5f5;margin-top:0px"  name="email" required>
     </div>
 
-    <div class="col-12 col-sm-7" style="margin-top: 15px;">
-      <label for="comments_a" style="font-size: 12px; margin-top: 20px;">Apakah instruksi eksperimen ini jelas dan mudah dimengerti? Jika tidak, bagaimana cara meningkatkannya?</label>
-      <textarea id="comments_a" name="comments_a" rows="3" style="font-size: 12px;width: 100%;border: 1px solid #ccc;background-color: #f5f5f5" required></textarea>
-      <label for="comments_b" style="font-size: 12px; margin-top: 20px;">Apakah terdapat perubahan dalam strategi atau cara Anda menjalankan eksperimen ini dalam 15 ronde? Jika ya, bagaimana?</label>
-      <textarea id="comments_b" name="comments_b" rows="3" style="font-size: 12px;width: 100%;border: 1px solid #ccc;background-color: #f5f5f5" required></textarea>
-      <label for="comments" style="font-size: 12px; margin-top: 20px;">Ada komentar lainnya terkait eksperimen ini?</label>
-    <textarea id="comments" name="comments" rows="3" style="font-size: 12px;width: 100%;border: 1px solid #ccc;background-color: #f5f5f5" required></textarea>
+<!-- Warning Message Container -->
+    <div id="warningMessage" class="warning-message"></div>
 
-    <label for="cryptorisk" style="font-size: 12px; margin-top: 20px;">Apakah menurut Anda aset kripto memiliki risiko penghindaran pajak lebih besar dibanding aset lain, semisal saham?</label>
-    <textarea id="cryptorisk" name="cryptorisk" rows="3" style="font-size: 12px;width: 100%;border: 1px solid #ccc;background-color: #f5f5f5" required></textarea>
+    <script>
+      // Add this variable at the start of your script
+      let isSubmitting = false;
 
-    <label for="trustpower" style="font-size: 12px; margin-top: 20px;">Anda percaya bahwa otoritas pajak memiliki kemampuan mendeteksi penghindaran pajak aset kripto, bahkan dalam transaksi di bursa terdesentralisasi?</label>
-    <textarea id="trustpower" name="trustpower" rows="3" style="font-size: 12px;width: 100%;border: 1px solid #ccc;background-color: #f5f5f5" required></textarea>
+      // Add this to your form
+      document.querySelector('form').addEventListener('submit', function() {
+          isSubmitting = true;
+      });
 
-    <label for="veteran" style="font-size: 12px; margin-top: 20px;">Apa Anda pernah mengikuti eksperimen daring/lab sebelumnya?</label>
-    <select id="veteran" name="veteran" class="form-control form-control-sm" style="font-size: 12px;margin-bottom:20px;background-color: #f5f5f5" required>
-     <option value="">Pilih</option>
-     <option value="Yes">Ya</option>
-     <option value="No">Tidak</option>
-    </select>
-
-    <label for="followup" style="font-size: 12px; margin-top: 20px;">Tertarik untuk mengikuti wawancara lanjutan?</label>
-    <select id="followup" name="followup" class="form-control form-control-sm" style="font-size: 12px;margin-bottom:20px;background-color: #f5f5f5" required>
-    <option value="">Pilih</option>
-    <option value="Yes">Ya</option>
-    <option value="No">Tidak</option>
-    </select>
+      // Single beforeunload listener that handles both cases
+      window.addEventListener('beforeunload', function(e) {
+          if (!isSubmitting) {
+              e.preventDefault();
+              e.returnValue = '';
+          }
+      });
+      // Prevent text selection
+      document.addEventListener('selectstart', function(e) { 
+        e.preventDefault(); 
+      });
 
 
-    </div>
+      window.addEventListener('unload', function(e) {
+        showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+      });
 
-    </div>
+      // Prevent reload and back navigation
+      window.addEventListener('popstate', function() {
+        window.history.pushState(null, null, window.location.href);
+        showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+      });
 
-    </div>    
-    
-<h4 style="margin-left: 20px; 
-    margin-bottom: 5px;
-    font-family: Arial;
-    color: rgb(80,80,80);">
-    <b>
-    </b>
-  </h4>
+      // Continuously push state to prevent back navigation
+      setInterval(() => {
+        window.history.pushState(null, null, window.location.href);
+      }, 100);
 
-    <input type="checkbox" id="consentCheckbox" required style="margin-left: 20px;">
-    <label for="consentCheckbox" style="font-family: Arial;
-      color: rgb(80,80,80);">
-      Saya telah mereviu dan menjawab semua pertanyaan.
-    </label>
-    
+      // Disable F5 and Ctrl+R
+      document.addEventListener('keydown', function(e) {
+        // Prevent F5, Ctrl+R, Ctrl+F5, Command+R (macOS)
+        if (
+          e.key === 'F5' || 
+          (e.ctrlKey && e.key === 'r') || 
+          (e.metaKey && e.key === 'r') ||
+          (e.ctrlKey && e.key === 'F5')
+        ) {
+          e.preventDefault();
+          showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+        }
 
-    
-      <br>
-      <br>
-    <button style="margin-left: 20px;
-      background-color: rgb(10, 103, 173, 0.9); 
-      color: white; 
-      padding: 10px 30px; 
-      border: none; 
-      border-radius: 4px; 
-      font-size: 16px; 
-      font-weight: bold;"
-      type="submit"
-      onmouseover="this.style.backgroundColor = 'rgb(10, 103, 173, 0.7)'"
-      onmouseout="this.style.backgroundColor = 'rgb(10, 103, 173, 0.9)'">
-      Kirim
-    </button>
-  </form>
-    
-  </div class="fixed-box-0">
-  
-  </div>
+        // Additional security for other shortcut keys
+        if ((e.ctrlKey || e.metaKey) && 
+          (e.key === 'c' || e.key === 'v' || e.key === 'u' || 
+           e.key === 's' || e.key === 'p' || e.key === 'a')) {
+          e.preventDefault();
+        }
+      });
 
-  
-</body>
-  
+      // Auto-checkbox functionality
+      function checkFormCompletion() {
+        // Get all required elements
+        const radioGroups = {};
+        const requiredInputs = document.querySelectorAll('input[required], textarea[required], select[required]');
+        const checkbox = document.getElementById('consentCheckbox');
+        
+        // Check all radio button groups
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+          const name = radio.getAttribute('name');
+          if (!radioGroups[name]) {
+            radioGroups[name] = false;
+          }
+          if (radio.checked) {
+            radioGroups[name] = true;
+          }
+        });
+
+        // Check if all radio groups are answered
+        const allRadiosAnswered = Object.values(radioGroups).every(group => group === true);
+        
+        // Check if all other required fields are filled
+        const allFieldsFilled = Array.from(requiredInputs).every(input => {
+          if (input.type === 'radio') return true; // Skip radio buttons as we handled them separately
+          if (input.type === 'checkbox') return true; // Skip checkbox as it's the one we're controlling
+          return input.value.trim() !== '';
+        });
+
+        // If everything is filled out, check the checkbox
+        if (allRadiosAnswered && allFieldsFilled) {
+          checkbox.checked = true;
+        } else {
+          checkbox.checked = false;
+        }
+      }
+
+      // Add event listeners to all form elements
+      document.querySelectorAll('input, textarea, select').forEach(element => {
+        element.addEventListener('change', checkFormCompletion);
+        element.addEventListener('input', checkFormCompletion);
+      });
+
+      // Initial check on page load
+      window.addEventListener('load', checkFormCompletion);
+    </script>
+  </body>
 </html>
-
