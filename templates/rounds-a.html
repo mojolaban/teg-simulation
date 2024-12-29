@@ -3,7 +3,7 @@
 <head>
   {% include 'bootstrap.html' %}
   <title>TEG</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.1, user-scalable=yes">
   <style>
     *, *::before, *::after {
       margin: 0;
@@ -240,22 +240,21 @@
 /* Responsive design */
     @media (max-width: 1200px), (max-height: 750px) {
       #container {
-        transform: scale(0.88);
         transform-origin: center top;
-        min-width: 1200px;
+        min-width: auto;
       }
     }
 
     @media screen and (orientation: portrait) {
       body {
-        transform: rotate(-90deg);
-        transform-origin: left top;
-        width: 100vh;
-        height: 100vw;
-        position: absolute;
-        top: 100%;
-        left: 0;
-      }
+        position: relative;
+        width: 100%;
+        height: 100%;
+        }
+
+        .main-content {
+        flex-direction: column;
+        }
     }
   </style>
 </head>
@@ -431,12 +430,6 @@
          }
      });
 
-     // Prevent text selection for the entire document
-     document.body.style.userSelect = 'none';
-     document.body.style.webkitUserSelect = 'none'; 
-     document.body.style.msUserSelect = 'none';
-     document.body.style.mozUserSelect = 'none';
-
      // Warning Message Function
      function showWarning(message) {
          const warningDiv = document.createElement('div');
@@ -512,22 +505,6 @@
          }
      });
 
-     // Prevent selection
-     document.addEventListener('selectstart', function(e) { 
-         e.preventDefault();
-         return false;
-     });
-
-     // Prevent zoom on mobile
-     document.addEventListener('gesturestart', function(e) {
-         e.preventDefault();
-     });
-
-     document.addEventListener('touchmove', function(e) {
-         if (e.scale && e.scale !== 1) {
-             e.preventDefault();
-         }
-     }, { passive: false });
 
      // Add warning div to body when page loads
      document.addEventListener('DOMContentLoaded', function() {

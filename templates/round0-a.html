@@ -246,23 +246,22 @@
     /* Replace your existing media query */
     @media (max-width: 1200px), (max-height: 750px) {
       #container {
-        transform: scale(0.88);  /* Match your screenshot's 88% scale */
         transform-origin: center top;
-        min-width: 1200px;      /* Match the width */
+        min-width: auto;      /* Match the width */
       }
     }
 
     /* Add this to force landscape on mobile */
     @media screen and (orientation: portrait) {
       body {
-        transform: rotate(-90deg);
-        transform-origin: left top;
-        width: 100vh;
-        height: 100vw;
-        position: absolute;
-        top: 100%;
-        left: 0;
-      }
+        position: relative;
+        width: 100%;
+        height: 100%;
+        }
+
+        .main-content {
+        flex-direction: column;
+        }
     }
   </style>
 </head>
@@ -557,19 +556,7 @@
                 e.preventDefault();
                 return false;
             });
-
-            // Prevent zoom on mobile
-            document.addEventListener('gesturestart', function(e) {
-                e.preventDefault();
-            });
-
-            document.addEventListener('touchmove', function(e) {
-                if (e.scale && e.scale !== 1) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-        };
-
+          }; 
         // Initialize protection methods
         const initializeProtection = () => {
             overrideNavigationMethods();
