@@ -4,7 +4,7 @@
   
   {% include 'bootstrap.html' %}
   <title>TEG</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.1, user-scalable=yes">
   <style>
     *, *::before, *::after {
       margin: 0;
@@ -571,11 +571,6 @@
                 console.error('Error setting up navigation event listeners:', error);
             }
 
-            // Prevent text selection
-            document.body.style.userSelect = 'none';
-            document.body.style.webkitUserSelect = 'none'; 
-            document.body.style.msUserSelect = 'none';
-            document.body.style.mozUserSelect = 'none';
         };
 
         // Run initialization when DOM is fully loaded
