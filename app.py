@@ -572,7 +572,42 @@ def format_crypto(value, lang):
 app.jinja_env.filters['format_crypto'] = format_crypto
 
 
+# Add this route to your Flask app
+@app.route('/test-round0-a')
+def test_round0_a():
+    # Create a dictionary with test data
+    test_data = {
+        "round": 0,
+        "gr": "1",
+        "id": "test123",
+        "trx": 0,
+        "crypto": "1.00",
+        "fiat": "0",
+        "buy": "0",
+        "sell": "0",
+        "pos": "JUAL",
+        "t_gain": "0",
+        "r_gain": "0",
+        "t_tax": "0",
+        "asset_type": "Saham",
+        "fiat_prev": "0",
+        "crypto_prev": "1.00",
+        "buy_prev": "0",
+        "r_tax": "0",
+        "r_gain_net": "0",
+        "t_gain_net": "0",
+        "r_gain_prev": "0",
+        "r_tax_prev": "0",
+        "tax_disclos": "0",
+        "tax_discre": "0",
+        "audit": "0",
+        "penalty": "0",
+        "r_gain_final": "0",
+        "lang": "1"
+    }
 
+    # Render the round0-a.html template with the test data
+    return render_template('round0-a.html', data=test_data)
 
 # Run the application
 if __name__ == "__main__":

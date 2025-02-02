@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-  
   {% include 'bootstrap.html' %}
   <title>TEG</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.1, user-scalable=yes">
   <style>
     *, *::before, *::after {
       margin: 0;
@@ -23,16 +22,20 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    /* Container styles */
     #container {
-      max-width: 95%;
+      min-width: 1000px;
+      max-width: 1400px;
       margin: 10px auto;
       background-color: black;
       border: 1px solid black;
       border-radius: 1rem;
       display: flex;
       flex-direction: column;
-      position: relative; /* Added */
+      position: relative;
     }
+
+    /* Header styles */
     .header {
       display: flex;
       justify-content: space-between;
@@ -41,42 +44,45 @@
       height: 4rem;
       background-color: white;
       border-radius: 0.5rem;
-      margin: 0; /* Match the screenshot margins */
-      max-width: 100%;    /* Match the container max-width */
+      margin: 0;
+      max-width: 100%;
     }
 
     .round-display {
-        color: rgb(80, 80, 80);
-        font-size: 2.5rem;
-        margin-left: 2rem;
-      }
+      color: rgb(80, 80, 80);
+      font-size: 2rem;
+      margin-left: 1rem;
+    }
 
     .timer-display {
-        background: transparent;
-        border: 1px solid red;  /* Changed to red border */
-        border-radius: 0.5rem;
-        padding: 0.5rem 1rem;
-        color: rgb(80, 80, 80);  /* Changed to dark gray */
-        font-size: 2rem;        /* Increased font size */
-        margin-right: 2rem;     /* Added right margin */
-        width: 20rem;          /* Fixed width */
-        height: 3rem;          /* Fixed height */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
+      background: transparent;
+      border: 1px solid red;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      color: rgb(80, 80, 80);
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      width: 15rem;
+      height: 3rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
     .timer-display span {
-      margin-left: 1rem;  /* Add space between "Waktu:" and the number */
-      font-size: 2rem;
+      margin-left: 0.5rem;
+      font-size: 1.5rem;
     }
-    
+
+    /* Main content layout */
     .main-content {
       display: flex;
       gap: 1rem;
       height: calc(100vh - 5rem);
+      align-items: stretch; /* This ensures panels stretch to match height */
     }
 
+    /* Left panel styles */
     .left-panel {
       width: 15rem;
       display: flex;
@@ -87,12 +93,14 @@
     .price-display {
       color: white;
       padding: 0.5rem;
+      text-align: center;
     }
 
     .price-value {
-      font-size: 1.8rem;
+      font-size: 2rem;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
     }
 
@@ -123,6 +131,16 @@
       align-items: center;
       margin: 0.3rem 0;
       color: rgb(80, 80, 80);
+      font-size: 0.92rem;
+    }
+
+    /* Middle panel styles */
+    .middle-panel {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      margin: 0 1rem;
+      position: relative;
     }
 
     .chart-container {
@@ -130,32 +148,28 @@
       border: 1px solid rgb(40, 40, 40);
       border-radius: 0.5rem;
       overflow: hidden;
-      height: calc(100vh - 15rem);
+      height: calc(100vh - 8rem);
       width: 100%;
-      margin-bottom: 0.5rem; /* Space between chart and buttons */
-      position: relative; /* Added */
-
+      margin-bottom: 0.5rem;
+      position: relative;
     }
+
     #chartContainer {
-      width: 100% !important;  
-      height: 100% !important; 
+      width: 100% !important;
+      height: 100% !important;
       margin: auto !important;
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -45%);
-      pointer-events: none;  /* Add this */
+      pointer-events: none;
     }
+
     #chartContainer canvas {
-      pointer-events: auto;  /* Add this */
+      pointer-events: auto;
     }
-    .middle-panel {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      margin: 0 1 rem;   /* Center the panel */
-      position: relative; /* Added */
-    }
+
+    /* Right panel styles */
     .right-panel {
       width: 12rem;
       display: flex;
@@ -178,25 +192,27 @@
       border-radius: 0.5rem;
       padding: 1rem;
       color: rgb(40, 180, 120);
-      text-align: center; 
-      align-items: center; 
+      text-align: center;
+      align-items: center;
     }
 
+    /* Action buttons */
     .action-buttons {
       display: flex;
       gap: 1rem;
       padding: 0 2rem;
-      width: 100%; /* Make buttons take full width */
-      z-index: 1;  /* Add this line */
-      position: relative;  /* Add this line */
+      width: 100%;
+      z-index: 1;
+      position: relative;
+      margin-top: auto; /* Pushes buttons to bottom */
     }
 
     .btn-action {
       flex: 1;
-      padding: 0.8rem;
+      padding: 1rem;
       border: none;
       border-radius: 0.5rem;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.2s;
@@ -217,15 +233,15 @@
       box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
-    /* Specific active states for buy and sell buttons */
     .btn-buy:active {
-      background-color: rgb(200, 200, 200); /* Lighter white when pressed */
+      background-color: rgb(200, 200, 200);
     }
 
     .btn-sell:active {
-      background-color: rgb(20, 140, 80); /* Darker green when pressed */
+      background-color: rgb(20, 140, 80);
     }
-    
+
+    /* Position indicator */
     .position-indicator {
       display: flex;
       align-items: center;
@@ -237,62 +253,197 @@
       padding: 0.5rem;
     }
 
-    @media (max-width: 1200px), (max-height: 750px) {
-      #container {
-        transform-origin: center top;
-        min-width: auto;
-        max-width: 95%;
-        margin: 10px auto;
-      }
+    /* Prevent text selection */
+    .disable-selection {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
 
-    @media screen and (orientation: portrait) and (max-width: 768px) {
-      html, body {
-        height: 100%;
-        width: 100%;
-        overflow: auto;
-        position: fixed;
+    /* Mobile and Tablet Responsiveness */
+    @media screen and (max-width: 1000px) {
+      #container {
+        transform-origin: left top;
+        transform: scale(calc(100vw / 1000));
+        margin: 0;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
       }
 
       body {
-        transform: rotate(-90deg);
-        transform-origin: left top;
-        width: 100vh;
-        height: 100vw;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        overflow-x: hidden;
-        overflow-y: auto;
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+        overflow: hidden;
       }
 
+      html {
+        height: -webkit-fill-available;
+      }
+
+      /* Ensure touch events work properly on scaled elements */
+      .btn-action, 
+      #chartContainer,
+      .chart-container {
+        touch-action: manipulation;
+      }
+
+      /* Improve touch targets */
+      .btn-action {
+        min-height: 60px;
+      }
+
+      /* Ensure proper chart rendering */
+      #chartContainer {
+        width: 100% !important;
+        height: 100% !important;
+      }
+    }
+
+
+    /* Adjust side panels to match chart height */
+    .left-panel, .right-panel {
+      height: calc(100vh - 5rem);
+      overflow-y: auto; /* Allow scrolling if content is too tall */
+    }
+    /* Tablet-specific adjustments */
+    @media screen and (min-width: 768px) and (max-width: 1000px) {
       #container {
-        transform: none;
-        min-height: 100%;
-        width: 100%;
-        margin: 0;
-        padding: 10px;
+        transform: scale(calc(100vw / 1000));
       }
     }
 
-    /* Add these new utility classes */
-    .zoom-wrapper {
-      width: 100%;
-      height: 100%;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
+    /* Landscape orientation specific */
+    @media screen and (max-width: 1000px) and (orientation: landscape) {
+      #container {
+        height: calc(100vh - 10rem); /* Slightly different calculation for mobile */
+      }
     }
 
-    .content-wrapper {
-      min-width: 100%;
-      min-height: 100%;
+    /* Handle notched phones */
+    @supports (padding: max(0px)) {
+      @media screen and (max-width: 1000px) {
+        #container {
+          padding-left: max(0px, env(safe-area-inset-left));
+          padding-right: max(0px, env(safe-area-inset-right));
+        }
+      }
     }
-  </style>
-</head>
+    /* Add the rotation prompt styles */
+    .rotate-prompt {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.95);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    }
+
+    .rotate-content {
+    color: white;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    }
+
+    .rotate-icon {
+    font-size: 48px;
+    animation: rotate 2s infinite linear;
+    }
+
+    @keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+    }
+
+    /* Updated mobile responsiveness */
+    @media screen and (max-width: 1000px) {
+    #container {
+      min-width: 1000px;
+      transform-origin: left top;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      min-height: -webkit-fill-available;
+      overflow: hidden;
+    }
+
+    html {
+      height: -webkit-fill-available;
+    }
+    }
+
+    /* Portrait mode: show rotation prompt */
+    @media screen and (max-width: 1000px) and (orientation: portrait) {
+    .rotate-prompt {
+      display: flex;
+    }
+
+    #container {
+      display: none;
+    }
+    }
+
+    /* Landscape mode: optimize layout */
+    @media screen and (max-width: 1000px) and (orientation: landscape) {
+    #container {
+      display: flex;
+      transform: scale(calc(100vh / 800));
+    }
+
+    .rotate-prompt {
+      display: none;
+    }
+
+    /* Ensure proper touch handling */
+    .btn-action, 
+    #chartContainer,
+    .chart-container {
+      touch-action: manipulation;
+    }
+
+    .btn-action {
+      min-height: 60px;
+    }
+    }
+
+    /* Handle notched phones */
+    @supports (padding: max(0px)) {
+    @media screen and (max-width: 1000px) {
+      #container {
+        padding-left: max(0px, env(safe-area-inset-left));
+        padding-right: max(0px, env(safe-area-inset-right));
+      }
+    }
+    }
+    </style>
+    </head>
+
+    <body class="disable-selection">
+    <!-- Add this right after body tag -->
+    <div id="rotateDevice" class="rotate-prompt">
+    <div class="rotate-content">
+    <div class="rotate-icon">⟳</div>
+    <p>Mohon putar perangkat Anda ke mode landscape</p>
+    </div>
+    </div>
 
 <body class="disable-selection">
-  <div class="zoom-wrapper">
-    <div class="content-wrapper">
   <div id="container">
     <div class="header">
       <div class="round-display">
@@ -300,7 +451,8 @@
       </div>
       <div class="timer-display">
         <span style="margin-right: 1rem; font-size: 2rem;">Waktu:</span>
-        <span id="countdown" style="font-size: 2rem;">40</span><span style="font-size: 2rem;">s</span>
+        <span id="countdown" style="font-size: 2rem;margin-right: 1rem;margin-left:1rem;">40</span>
+        <span style="font-size: 2rem;margin-left:1rem;">s</span>
       </div>
     </div>
 
@@ -314,8 +466,7 @@
             <span id="percPoint" style="font-size: 0.8rem"></span>
           </div>
         </div>
-
-        <div class="info-box">
+<div class="info-box">
           <div style="text-align: center; margin-bottom: 0.5rem;">
             <strong>Total Aset</strong>
           </div>
@@ -325,7 +476,7 @@
           </div>
           <div style="display: flex; justify-content: space-between;">
             <div>{{ data['asset_type'] }}</div>
-            <div id="crypto">{{ data['crypto']}}</div>
+            <div id="crypto">{{ data['crypto'] }}</div>
           </div>
         </div>
 
@@ -363,7 +514,7 @@
           <span>POSISI: <span id="pos" style="color: white;">{{ "BELI" if data.pos == "BUY" else "JUAL" }}</span></span>
         </div>
       </div>
-
+<!-- Middle Panel -->
       <div class="middle-panel">
         <div class="chart-container" style="pointer-events: none;">
           <div id="chartContainer" style="width: 100%; height: 100%; pointer-events: auto;"></div>
@@ -373,9 +524,9 @@
           <button type="button" id="buyButton" class="btn-action btn-buy" style="pointer-events: auto;">Beli</button>
           <button type="button" id="sellButton" class="btn-action btn-sell" style="pointer-events: auto;">Jual</button>
         </div>
-        
       </div>
 
+      <!-- Right Panel -->
       <div class="right-panel">
         <div class="transaction-count">
           Transaksi
@@ -409,11 +560,8 @@
         </div>
       </div>
     </div>
-
-
   </div>
-
-  <!-- Hidden fields -->
+<!-- Hidden fields -->
   <div style="display: none;">
     <span id="gr">{{ data.gr }}</span>
     <span id="id">{{ data.id }}</span>
@@ -436,188 +584,123 @@
     </form>
   </div>
 
-        </div>
-      </div>
   <script>
-    (function() {
-        let allowNavigation = false;
-        let navigationBlocked = false;
+     let allowNavigation = false;
 
-        // Warning Message Function
-        function showWarning(message) {
-            console.log('Showing warning message:', message);
-            const existingWarning = document.getElementById('warningMessage');
-            if (existingWarning) {
-                existingWarning.textContent = message;
-                existingWarning.style.display = 'block';
-                setTimeout(() => {
-                    existingWarning.style.display = 'none';
-                }, 3000);
-            } else {
-                const warningDiv = document.createElement('div');
-                warningDiv.id = 'warningMessage';
-                warningDiv.textContent = message;
-                warningDiv.style.position = 'fixed';
-                warningDiv.style.bottom = '20px';
-                warningDiv.style.left = '50%';
-                warningDiv.style.transform = 'translateX(-50%)';
-                warningDiv.style.backgroundColor = 'rgba(255, 69, 0, 0.9)';
-                warningDiv.style.color = 'white';
-                warningDiv.style.padding = '10px 20px';
-                warningDiv.style.borderRadius = '8px';
-                warningDiv.style.zIndex = '10000';
-                warningDiv.style.textAlign = 'center';
-                document.body.appendChild(warningDiv);
-                setTimeout(() => {
-                    warningDiv.remove();
-                }, 3000);
-            }
-        }
+     // Intercept navigation methods that timer might use
+     const originalSubmit = HTMLFormElement.prototype.submit;
+     HTMLFormElement.prototype.submit = function() {
+         allowNavigation = true;
+         originalSubmit.call(this);
+     };
 
-        // Override navigation methods more comprehensively
-        const overrideNavigationMethods = () => {
-            // Override form submission
-            const originalSubmit = HTMLFormElement.prototype.submit;
-            HTMLFormElement.prototype.submit = function() {
-                allowNavigation = true;
-                navigationBlocked = false;
-                originalSubmit.call(this);
-            };
+     // Also intercept direct location changes  
+     const originalAssign = window.location.assign;
+     window.location.assign = function(url) {
+         allowNavigation = true;
+         originalAssign.call(window.location, url);
+     };
 
-            // Override location changes
-            const originalAssign = window.location.assign;
-            window.location.assign = function(url) {
-                if (!allowNavigation) {
-                    navigationBlocked = true;
-                    showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
-                    return;
-                }
-                navigationBlocked = false;
-                originalAssign.call(window.location, url);
-            };
+     const originalReplace = window.location.replace;
+     window.location.replace = function(url) {
+         allowNavigation = true;
+         originalReplace.call(window.location, url);
+     };
 
-            const originalReplace = window.location.replace;
-            window.location.replace = function(url) {
-                if (!allowNavigation) {
-                    navigationBlocked = true;
-                    showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
-                    return;
-                }
-                navigationBlocked = false;
-                originalReplace.call(window.location, url);
-            };
+     Object.defineProperty(window.location, 'href', {
+         set: function(value) {
+             allowNavigation = true;
+             window.location.assign(value);
+         }
+     });
 
-            // Override href assignment
-            Object.defineProperty(window.location, 'href', {
-                set: function(value) {
-                    if (!allowNavigation) {
-                        navigationBlocked = true;
-                        showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
-                        return;
-                    }
-                    navigationBlocked = false;
-                    window.location.assign(value);
-                }
-            });
-        };
+     // Warning Message Function
+     function showWarning(message) {
+         const warningDiv = document.createElement('div');
+         warningDiv.textContent = message;
+         warningDiv.style.position = 'fixed';
+         warningDiv.style.bottom = '20px';
+         warningDiv.style.left = '50%';
+         warningDiv.style.transform = 'translateX(-50%)';
+         warningDiv.style.backgroundColor = 'rgba(255, 69, 0, 0.9)';
+         warningDiv.style.color = 'white';
+         warningDiv.style.padding = '10px 20px';
+         warningDiv.style.borderRadius = '8px';
+         warningDiv.style.zIndex = '10000';
+         document.body.appendChild(warningDiv);
+         setTimeout(() => {
+             warningDiv.remove();
+         }, 3000);
+     }
 
-        // Enhanced navigation protection
-        const enhanceNavigationProtection = () => {
-            // Prevent browser back/forward
-            window.addEventListener('popstate', function(event) {
-                if (!allowNavigation) {
-                    navigationBlocked = true;
-                    window.history.pushState(null, null, window.location.href);
-                    showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
-                    navigationBlocked = false;
-                }
-            });
+     // Navigation Protection
+     window.addEventListener('beforeunload', function(e) {
+         if (!allowNavigation) {
+             e.preventDefault();
+             e.returnValue = '';
+             showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+             return '';
+         }
+     });
 
-            // Prevent page reload and navigation
-            window.addEventListener('beforeunload', function(e) {
-                if (!allowNavigation) {
-                    e.preventDefault();
-                    e.returnValue = '';
-                    showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
-                    return '';
-                }
-            });
+     // Handle form submission to next page
+     $('#navigationForm').on('submit', function() {
+         allowNavigation = true;
+     });
 
-            // Continuous history state management
-            setInterval(() => {
-                if (!allowNavigation) {
-                    window.history.pushState(null, null, window.location.href);
-                }
-            }, 100);
+     // Handle buy/sell buttons
+     $('#buyButton, #sellButton').on('click', function() {
+         allowNavigation = true;
+     });
 
-            // Block specific keyboard shortcuts
-            document.addEventListener('keydown', function(e) {
-                const blockedKeys = [
-                    { key: 'F5', condition: true },
-                    { key: 'r', condition: e.ctrlKey || e.metaKey },
-                    { key: 'ArrowLeft', condition: e.altKey },
-                    { key: 'ArrowRight', condition: e.altKey },
-                    { key: 'w', condition: e.ctrlKey || e.metaKey },
-                    { key: 'u', condition: e.ctrlKey || e.metaKey },
-                    { key: 's', condition: e.ctrlKey || e.metaKey }
-                ];
+     // History state management
+     setInterval(() => {
+         if (!allowNavigation) {
+             window.history.pushState(null, null, window.location.href);
+         }
+     }, 100);
 
-                for (let combo of blockedKeys) {
-                    if (e.key === combo.key && combo.condition) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
-                        return false;
-                    }
-                }
-            }, true);
+     window.addEventListener('popstate', function(event) {
+         if (!allowNavigation) {
+             window.history.pushState(null, null, window.location.href);
+             showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+         }
+     });
 
-            // Prevent right-click context menu
-            document.addEventListener('contextmenu', function(e) {
-                e.preventDefault();
-                showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
-            });
+     // Security measures
+     document.addEventListener('contextmenu', function(e) {
+         e.preventDefault();
+         showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+     });
+
+     document.addEventListener('keydown', function(e) {
+         // Prevent refresh
+         if (e.key === 'F5' || ((e.ctrlKey || e.metaKey) && e.key === 'r')) {
+             e.preventDefault();
+             showWarning('Jangan kembali ke halaman sebelumnya atau memuat ulang halaman!');
+             return false;
+         }
+         // Prevent other shortcuts
+         if ((e.ctrlKey || e.metaKey) && 
+             (e.key === 'c' || e.key === 'v' || e.key === 'u' || 
+              e.key === 's' || e.key === 'p' || e.key === 'a')) {
+             e.preventDefault();
+             return false;
+         }
+     });
 
 
-        // Initialize protection methods
-        const initializeProtection = () => {
-            overrideNavigationMethods();
-            enhanceNavigationProtection();
-
-            // Allow navigation for specific actions
-            try {
-                document.getElementById('navigationForm')?.addEventListener('submit', function() {
-                    allowNavigation = true;
-                    navigationBlocked = false;
-                });
-
-                document.getElementById('buyButton')?.addEventListener('click', function() {
-                    allowNavigation = true;
-                    navigationBlocked = false;
-                });
-
-                document.getElementById('sellButton')?.addEventListener('click', function() {
-                    allowNavigation = true;
-                    navigationBlocked = false;
-                });
-            } catch (error) {
-                console.error('Error setting up navigation event listeners:', error);
-            }
-
-        };
-
-        // Run initialization when DOM is fully loaded
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initializeProtection);
-        } else {
-            initializeProtection();
-        }
-    })();
+     // Add warning div to body when page loads
+     document.addEventListener('DOMContentLoaded', function() {
+         const warningDiv = document.createElement('div');
+         warningDiv.id = 'warningMessage';
+         warningDiv.style.display = 'none';
+         document.body.appendChild(warningDiv);
+     });
   </script>
 
   {% include 'chartscript.html' %}
   {% include 'capture-timer.html' %}
-
-
+  
 </body>
 </html>
