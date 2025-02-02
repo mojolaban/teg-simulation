@@ -57,6 +57,42 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             box-sizing: border-box;
         }
+
+        /* Warning Box Styles */
+        .warning-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            color: #856404;
+            font-size: clamp(0.9rem, 3vw, 1rem);
+            line-height: 1.4;
+        }
+
+        .warning-box strong {
+            color: #664d03;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .warning-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .warning-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .warning-icon {
+            font-size: 1.2em;
+            line-height: 1;
+        }
+
+        /* Existing styles continue */
         .checkbox-container {
             display: flex;
             align-items: flex-start;
@@ -75,8 +111,8 @@
             transition: all 0.3s;
             position: relative;
             opacity: 0.8;
-            margin-top: 2px; /* Keep this to align with text */
-            flex-shrink: 0; /* Prevent checkbox from shrinking */
+            margin-top: 2px;
+            flex-shrink: 0;
         }
 
         .checkbox-container input[type="checkbox"]:checked {
@@ -105,7 +141,7 @@
             color: #dc3545;
             font-size: 14px;
             display: none;
-            margin-left: 30px; /* Align with label text */
+            margin-left: 30px;
             margin-top: 0px;
         }
         .math-problem {
@@ -182,6 +218,19 @@
 
             <form action="{{ url_for('index') }}" method="POST" id="indexForm">
                 <input type="hidden" name="language" value="Indonesian">
+
+                <!-- Warning Box -->
+                <div class="warning-box">
+                    <strong>⚠️ Perhatian:</strong>
+                    <div class="warning-item">
+                        <span class="warning-icon">🖥️</span>
+                        <div>Eksperimen ini dioptimalkan untuk perangkat desktop/laptop. Penggunaan perangkat mobile (smartphone/tablet) tidak disarankan karena keterbatasan ukuran layar.</div>
+                    </div>
+                    <div class="warning-item">
+                        <span class="warning-icon">⏱️</span>
+                        <div>Eksperimen ini akan membutuhkan waktu sekitar 30 menit untuk diselesaikan. Pastikan Anda memiliki waktu yang cukup sebelum memulai.</div>
+                    </div>
+                </div>
                 
                 <!-- Checklist statements -->
                 <div class="checkbox-container">
@@ -222,6 +271,7 @@ oninput="this.setCustomValidity('')">
     </div>
 
     <script>
+        // Your existing JavaScript remains unchanged
         // Prevent right-click
         document.addEventListener('contextmenu', e => e.preventDefault());
 
@@ -251,10 +301,8 @@ oninput="this.setCustomValidity('')">
             window.top.location = window.self.location;
         }
 
-        // Define correctAnswer in a broader scope
         let correctAnswer = 0;
 
-        // Generate a simple math problem
         function generateMathProblem() {
             const num1 = Math.floor(Math.random() * 10) + 1;
             const num2 = Math.floor(Math.random() * 10) + 1;
@@ -262,11 +310,9 @@ oninput="this.setCustomValidity('')">
             document.getElementById('mathQuestion').textContent = `Berapakah ${num1} + ${num2}?`;
         }
 
-        // Validate form
         function validateForm() {
             let isValid = true;
 
-            // Check all checkboxes
             for (let i = 1; i <= 4; i++) {
                 const checkbox = document.getElementById(`check${i}`);
                 const error = document.getElementById(`error${i}`);
@@ -278,7 +324,6 @@ oninput="this.setCustomValidity('')">
                 }
             }
 
-            // Validate math answer
             const userAnswer = parseInt(document.getElementById('mathAnswer').value);
             const mathError = document.getElementById('mathError');
             if (userAnswer !== correctAnswer) {
@@ -291,10 +336,8 @@ oninput="this.setCustomValidity('')">
             return isValid;
         }
 
-        // Generate math problem on page load
         document.addEventListener('DOMContentLoaded', generateMathProblem);
 
-        // Form submission handler
         document.getElementById('indexForm').onsubmit = function(e) {
             e.preventDefault();
 

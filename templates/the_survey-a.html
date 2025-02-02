@@ -216,10 +216,31 @@
                 {% endfor %}
               </table>
 <div class="row justify-content-center">
-                <div class="col-9 col-sm-4" style="margin-top: 1.25rem;">
-                  <label for="email" style="font-size: 1rem; margin-top: 1.125rem;">Email Anda untuk menerima e-gift voucher:</label>
-                  <input type="email" class="form-control form-control-sm" id="colFormLabelSm" style="font-size: 1rem; text-align: left;background-color: #f5f5f5;margin-top:0rem"  name="email" required>
-                </div>
+  <div class="col-12 col-sm-6" style="margin-top: 1.25rem;">
+    <label for="email" style="font-size: 1rem; margin-top: 1.125rem;">Email Anda untuk menerima e-gift voucher:</label>
+    <div style="color: #dc3545; font-size: 0.875rem; margin-bottom: 0.5rem;">
+      ⚠️ Pastikan email yang Anda masukkan aktif dan valid karena akan digunakan untuk pengiriman e-gift voucher.
+    </div>
+    <input type="email" 
+           class="form-control form-control-sm" 
+           id="email" 
+           name="email" 
+           style="font-size: 1rem; text-align: left; background-color: #f5f5f5; margin-bottom: 0.5rem;" 
+           required 
+           placeholder="Masukkan email Anda">
+
+    <label for="confirmEmail" style="font-size: 1rem;">Konfirmasi email Anda:</label>
+    <input type="email" 
+           class="form-control form-control-sm" 
+           id="confirmEmail" 
+           style="font-size: 1rem; text-align: left; background-color: #f5f5f5;" 
+           required 
+           placeholder="Masukkan ulang email Anda">
+
+    <div id="emailError" style="color: #dc3545; font-size: 0.875rem; display: none; margin-top: 0.25rem;">
+      Email tidak cocok. Mohon periksa kembali.
+    </div>
+  </div>
 
                 <div class="col-12 col-sm-7" style="margin-top: 0.9375rem;">
                   <label for="comments_a" style="font-size: 1rem; margin-top: 1.25rem;">Apakah instruksi eksperimen ini jelas dan mudah dimengerti? Jika tidak, bagaimana cara meningkatkannya?</label>
@@ -369,6 +390,35 @@
 
       // Initial check on page load
       window.addEventListener('load', checkFormCompletion);
+
+      // Email validation
+      document.getElementById('confirmEmail').addEventListener('input', function() {
+          const email = document.getElementById('email').value;
+          const confirmEmail = this.value;
+          const errorDiv = document.getElementById('emailError');
+
+          if (email !== confirmEmail) {
+              errorDiv.style.display = 'block';
+              this.setCustomValidity('Email tidak cocok');
+          } else {
+              errorDiv.style.display = 'none';
+              this.setCustomValidity('');
+          }
+      });
+
+      document.getElementById('email').addEventListener('input', function() {
+          const confirmEmail = document.getElementById('confirmEmail');
+          if (confirmEmail.value) {
+              const errorDiv = document.getElementById('emailError');
+              if (this.value !== confirmEmail.value) {
+                  errorDiv.style.display = 'block';
+                  confirmEmail.setCustomValidity('Email tidak cocok');
+              } else {
+                  errorDiv.style.display = 'none';
+                  confirmEmail.setCustomValidity('');
+              }
+          }
+      });
     </script>
   </body>
 </html>

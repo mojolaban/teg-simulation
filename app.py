@@ -572,42 +572,54 @@ def format_crypto(value, lang):
 app.jinja_env.filters['format_crypto'] = format_crypto
 
 
-# Add this route to your Flask app
-@app.route('/test-rounds-a')
-def test_round0_a():
-    # Create a dictionary with test data
-    test_data = {
-        "round": 0,
-        "gr": "1",
-        "id": "test123",
-        "trx": 0,
-        "crypto": "1.00",
-        "fiat": "0",
-        "buy": "0",
-        "sell": "0",
-        "pos": "JUAL",
-        "t_gain": "0",
-        "r_gain": "0",
-        "t_tax": "0",
-        "asset_type": "Saham",
-        "fiat_prev": "0",
-        "crypto_prev": "1.00",
-        "buy_prev": "0",
-        "r_tax": "0",
-        "r_gain_net": "0",
-        "t_gain_net": "0",
-        "r_gain_prev": "0",
-        "r_tax_prev": "0",
-        "tax_disclos": "0",
-        "tax_discre": "0",
-        "audit": "0",
-        "penalty": "0",
-        "r_gain_final": "0",
-        "lang": "1"
-    }
+@app.route('/survey-test', methods=['GET'])
+def survey_test():
+    # Test values
+    id = "test123"
+    gr = "2"  # or "1" depending on what you want to test
+    lang = "1"  # "1" for Indonesian version
 
-    # Render the round0-a.html template with the test data
-    return render_template('rounds-a.html', data=test_data)
+    questindo = [
+        '... karena bagi saya jelas ini yang harus saya lakukan.',
+        '... bahkan jika audit pajak tidak ada.',
+        '... tanpa menghabiskan waktu lama memikirkan bagaimana saya bisa menguranginya.',
+        'Saya merasa bahwa saya dipaksa untuk membayar pajak.',
+        'Saya membayar pajak karena risiko diaudit terlalu tinggi.',
+        'Saya membayar pajak karena saya tidak tahu cara menghindari pajak tanpa menarik perhatian.',
+        'Petugas pajak menyampaikan informasi dengan cara yang mudah dipahami.',
+        'Petugas pajak tahu persis bagaimana seharusnya laporan pajak yang benar.',
+        'Petugas pajak menginformasikan dan menasihati wajib pajak cara membayar pajak dengan benar.',
+        'Petugas pajak memiliki mandat hukum untuk mengumpulkan pajak.',
+        'Petugas pajak menerapkan hukuman yang berat.',
+        'Petugas pajak memprosekusi wajib pajak terutama dengan audit dan denda.',
+        'Petugas pajak memaksa wajib pajak patuh melalui audit dan denda.',
+        'Saya mempercayai petugas pajak tanpa berpikir panjang.',
+        'Saya secara otomatis mempercayai petugas pajak.',
+        'Biasanya saya mempercayai petugas pajak tanpa memikirkannya secara mendalam.',
+        'Saya mempercayai petugas pajak karena situasi politik dan ekonomi memungkinkan mereka bekerja secara profesional.',
+        'Saya mempercayai petugas pajak karena mereka melakukan pekerjaan mereka dengan sangat baik dan kompeten.',
+        'Saya mempercayai petugas pajak karena mereka memiliki niatan baik kepada wajib pajak.',
+        'Saya mempercayai petugas pajak karena petugas pajak bekerja untuk mencapai tujuan penting bernegara.',
+        'Sebagian besar wajib pajak lain membayar pajak mereka dengan benar tanpa memikirkannya.',
+        'Sebagian besar wajib pajak lain secara otomatis membayar pajak mereka.',
+        'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur tanpa memikirkannya secara mendalam.',
+        'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur karena audit dan denda.',
+        'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur karena mereka menghormati hukum.',
+        'Sebagian besar wajib pajak lain membayar pajak mereka dengan jujur karena mereka mencintai negaranya.',
+        'Sebagian besar wajib pajak lain membayar pajak karena mereka mendapatkan sesuatu sebagai imbalannya.',
+        'Sebagian besar wajib pajak lain membayar pajak karena pajak digunakan untuk kepentingan publik seperti pendidikan & kesehatan.',
+        'Sebagian besar wajib pajak lain membayar pajak sebagai cara untuk menutup kesenjangan antara kaya dan miskin.',
+        'Saya percaya kepada para perantara kripto tanpa berpikir panjang.',
+        'Saya secara otomatis mempercayai para perantara kripto.',
+        'Saya biasanya percaya kepada perantara kripto tanpa memikirkannya secara mendalam.',
+        'Saya percaya kepada perantara kripto karena lingkungan regulasi memungkinkan mereka beroperasi secara transparan dan profesional.',
+        'Saya percaya kepada perantara kripto karena mereka mengeksekusi transaksi secara efisien dan kompeten.',
+        'Saya percaya kepada perantara kripto karena mereka menunjukkan komitmen untuk melindungi kepentingan penggunanya.',
+        'Saya percaya kepada perantara kripto karena visi mereka selaras dengan tujuan-tujuan penting, seperti meningkatkan keamanan keuangan dan inovasi.',
+        'Seberapa mungkin Anda akan membayar pajak kripto Anda untuk tahun ini secara benar dan penuh kepada otoritas pajak?'
+    ]
+
+    return render_template('the_survey-a.html', id=id, gr=gr, lang=lang, questions=questindo)
 
 # Run the application
 if __name__ == "__main__":
