@@ -5,6 +5,7 @@
   <title>TEG</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.1, user-scalable=yes">
   <style>
+    /* Reset and base styles */
     *, *::before, *::after {
       margin: 0;
       padding: 0;
@@ -22,8 +23,10 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    /* Container styles */
     #container {
-      max-width: 95%;
+      min-width: 1000px;
+      max-width: 1400px;
       margin: 10px auto;
       background-color: black;
       border: 1px solid black;
@@ -33,6 +36,7 @@
       position: relative;
     }
 
+    /* Header styles */
     .header {
       display: flex;
       justify-content: space-between;
@@ -47,8 +51,8 @@
 
     .round-display {
       color: rgb(80, 80, 80);
-      font-size: 2.5rem;
-      margin-left: 2rem;
+      font-size: 2rem;
+      margin-left: 1rem;
     }
 
     .timer-display {
@@ -57,9 +61,9 @@
       border-radius: 0.5rem;
       padding: 0.5rem 1rem;
       color: rgb(80, 80, 80);
-      font-size: 2rem;
-      margin-right: 2rem;
-      width: 20rem;
+      font-size: 1.5rem;
+      margin-right: 1rem;
+      width: 15rem;
       height: 3rem;
       display: flex;
       justify-content: center;
@@ -67,31 +71,39 @@
     }
 
     .timer-display span {
-      margin-left: 1rem;
-      font-size: 2rem;
+      margin-left: 0.5rem;
+      font-size: 1.5rem;
     }
-.main-content {
+
+    /* Main content layout */
+    .main-content {
       display: flex;
       gap: 1rem;
       height: calc(100vh - 5rem);
+      align-items: stretch;
     }
 
+    /* Left panel styles */
     .left-panel {
       width: 15rem;
       display: flex;
       flex-direction: column;
       gap: 0.8rem;
+      height: calc(100vh - 5rem);
+      overflow-y: auto;
     }
 
     .price-display {
       color: white;
       padding: 0.5rem;
+      text-align: center;
     }
 
     .price-value {
-      font-size: 1.8rem;
+      font-size: 2rem;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
     }
 
@@ -125,20 +137,29 @@
       font-size: 0.92rem;
     }
 
+    /* Middle panel styles */
+    .middle-panel {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      margin: 0 1rem;
+      position: relative;
+    }
+
     .chart-container {
       background: rgb(0, 0, 0);
       border: 1px solid rgb(40, 40, 40);
       border-radius: 0.5rem;
       overflow: hidden;
-      height: calc(100vh - 15rem);
+      height: calc(100vh - 8rem);
       width: 100%;
       margin-bottom: 0.5rem;
       position: relative;
     }
 
     #chartContainer {
-      width: 100% !important;  
-      height: 100% !important; 
+      width: 100% !important;
+      height: 100% !important;
       margin: auto !important;
       position: absolute;
       top: 50%;
@@ -150,19 +171,15 @@
     #chartContainer canvas {
       pointer-events: auto;
     }
-.middle-panel {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      margin: 0 1rem;
-      position: relative;
-    }
 
+    /* Right panel styles */
     .right-panel {
       width: 12rem;
       display: flex;
       flex-direction: column;
       gap: 1rem;
+      height: calc(100vh - 5rem);
+      overflow-y: auto;
     }
 
     .transaction-count {
@@ -184,6 +201,7 @@
       align-items: center;
     }
 
+    /* Action buttons */
     .action-buttons {
       display: flex;
       gap: 1rem;
@@ -191,14 +209,15 @@
       width: 100%;
       z-index: 1;
       position: relative;
+      margin-top: auto;
     }
 
     .btn-action {
       flex: 1;
-      padding: 0.8rem;
+      padding: 1rem;
       border: none;
       border-radius: 0.5rem;
-      font-size: 1.1rem;
+      font-size: 1.2rem;
       font-weight: bold;
       cursor: pointer;
       transition: all 0.2s;
@@ -227,6 +246,7 @@
       background-color: rgb(20, 140, 80);
     }
 
+    /* Position indicator */
     .position-indicator {
       display: flex;
       align-items: center;
@@ -237,28 +257,129 @@
       border-radius: 0.5rem;
       padding: 0.5rem;
     }
-/* Responsive design */
-    @media (max-width: 1200px), (max-height: 750px) {
+
+    /* Prevent text selection */
+    .disable-selection {
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Rotation prompt */
+    .rotate-prompt {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    .rotate-content {
+      color: white;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .rotate-icon {
+      font-size: 48px;
+      animation: rotate 2s infinite linear;
+    }
+
+    @keyframes rotate {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Mobile and tablet responsiveness */
+    @media screen and (max-width: 1000px) {
       #container {
-        transform-origin: center top;
-        min-width: auto;
+        transform-origin: left top;
+        transform: scale(calc(100vw / 1000));
+        margin: 0;
+        height: 100vh;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      body {
+        min-height: 100vh;
+        min-height: -webkit-fill-available;
+        overflow: hidden;
+      }
+
+      html {
+        height: -webkit-fill-available;
+      }
+
+      /* Ensure touch events work properly on scaled elements */
+      .btn-action, 
+      #chartContainer,
+      .chart-container {
+        touch-action: manipulation;
+      }
+
+      /* Improve touch targets */
+      .btn-action {
+        min-height: 60px;
       }
     }
 
-    @media screen and (orientation: portrait) {
-      body {
-        position: relative;
-        width: 100%;
-        height: 100%;
-        }
+    /* Portrait mode: show rotation prompt */
+    @media screen and (max-width: 1000px) and (orientation: portrait) {
+      .rotate-prompt {
+        display: flex;
+      }
 
-        .main-content {
-        flex-direction: column;
+      #container {
+        display: none;
+      }
+    }
+
+    /* Landscape mode: optimize layout */
+    @media screen and (max-width: 1000px) and (orientation: landscape) {
+      #container {
+        display: flex;
+        transform: scale(calc(100vh / 800));
+      }
+
+      .rotate-prompt {
+        display: none;
+      }
+    }
+
+    /* Handle notched phones */
+    @supports (padding: max(0px)) {
+      @media screen and (max-width: 1000px) {
+        #container {
+          padding-left: max(0px, env(safe-area-inset-left));
+          padding-right: max(0px, env(safe-area-inset-right));
         }
+      }
     }
   </style>
 </head>
-
+  <body class="disable-selection">
+  <!-- Add this right after body tag -->
+  <div id="rotateDevice" class="rotate-prompt">
+  <div class="rotate-content">
+  <div class="rotate-icon">⟳</div>
+  <p>Mohon putar perangkat Anda ke mode landscape</p>
+  </div>
+  </div>
+  
 <body class="disable-selection">
   <div id="container">
     <div class="header">

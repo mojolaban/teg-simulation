@@ -573,7 +573,7 @@ app.jinja_env.filters['format_crypto'] = format_crypto
 
 
 # Add this route to your Flask app
-@app.route('/test-round0-a')
+@app.route('/test-rounds-a')
 def test_round0_a():
     # Create a dictionary with test data
     test_data = {
@@ -607,7 +607,7 @@ def test_round0_a():
     }
 
     # Render the round0-a.html template with the test data
-    return render_template('round0-a.html', data=test_data)
+    return render_template('rounds-a.html', data=test_data)
 
 # Run the application
 if __name__ == "__main__":
