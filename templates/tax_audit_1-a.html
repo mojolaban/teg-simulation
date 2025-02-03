@@ -409,15 +409,15 @@
                 <button type="button" id="compensation" name="compensation">
                   Rp
                   {% if summary_data.r_gain_final < 1000000 %}
-                    50.000,-
-                  {% elif 1000000 <= summary_data.r_gain_final <= 5000000 %}
                     100.000,-
+                  {% elif 1000000 <= summary_data.r_gain_final <= 5000000 %}
+                    150.000,-
                   {% else %}
-                    200.000,-
+                    250.000,-
                   {% endif %}
                 </button>
                 <p id="tooltip">
-                  (Keuntungan Riil < <i>f</i> 1 juta: <b>Rp 50.000,-</b>; <i>f</i>1-5 juta: <b>Rp 100.000,-</b>; > <i>f</i> 5 juta: <b>Rp 200.000)</b>
+                  (Keuntungan Riil < <i>f</i> 1 juta: <b>Rp 100.000,-</b>; <i>f</i>1-5 juta: <b>Rp 150.000,-</b>; > <i>f</i> 5 juta: <b>Rp 250.000)</b>
                 </p>
               </div>
 

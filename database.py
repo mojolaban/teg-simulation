@@ -16,10 +16,23 @@ engine = create_engine(db_connection_string,
 #----0.1 Assign treatment based on language selection
 def insert_group_lang(lang):
     with engine.connect() as conn:
-        # Generate a random 2-character ID
-        random_id = ''.join(random.choices(string.ascii_uppercase +
-                                           string.ascii_lowercase + string.digits,
-                                           k=2))
+        while True:
+            # Generate a random 2-character ID
+            random_id = ''.join(random.choices(string.ascii_uppercase +
+                                               string.ascii_lowercase + string.digits,
+                                               k=2))
+
+            # Check if the generated ID already exists in the database
+            existing_id_result = conn.execute(text("""
+                SELECT `id`
+                FROM `log`
+                WHERE `id` = :random_id
+            """), {'random_id': random_id})
+            existing_id = existing_id_result.fetchone()
+
+            # If the ID does not exist, break the loop
+            if not existing_id:
+                break
 
         # Convert lang to the expected format for comparison
         lang_value = 1 if lang == 'Indonesian' else 0
