@@ -284,7 +284,7 @@ def index():
                 else:  # English format
                     # Convert from format like "1,262,079" to "1262079"
                     taxdisclos = taxdisclos.replace(',', '')
-                    
+                                          
                 audit_value = 0 if random.random() < 0.8 else 1
 
                 if not id or not lang or taxdisclos is None:

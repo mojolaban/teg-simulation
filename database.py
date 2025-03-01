@@ -5,12 +5,13 @@ from datetime import datetime
 
 #----0. Setting db connection
 db_connection_string = os.environ['DB_CONNECTION_STRING']
-engine = create_engine(db_connection_string,
-                       connect_args={
-                         "ssl": {
-                           "ssl_ca": "/etc/ssl/cert.pem"
-                         }
-                       })
+engine = create_engine(db_connection_string)
+#engine = create_engine(db_connection_string,
+#                       connect_args={
+#                         "ssl": {
+#                           "ssl_ca": "/etc/ssl/cert.pem"
+#                         }
+#                       })
 
 
 #----0.1 Assign treatment based on language selection
