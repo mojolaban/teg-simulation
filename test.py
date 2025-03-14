@@ -1,18 +1,16 @@
-from sqlalchemy import create_engine, text
-import os
+import sqlite3
 
-# Load the connection string from Replit environment variables
-db_connection_string = os.environ['DB_CONNECTION_STRING']
+# Connect to SQLite database (creates database.db if it doesn’t exist)
+conn = sqlite3.connect('database.db')
+cursor = conn.cursor()
 
-# Create database engine
-engine = create_engine(db_connection_string)
+# Read and execute the schema.sql file
+with open('schema.sql', 'r') as f:
+    schema = f.read()
+    cursor.executescript(schema)
 
-# Test connection
-try:
-    with engine.connect() as conn:
-        result = conn.execute(text("SHOW DATABASES;"))
-        print("✅ Connected to MySQL! Here are the available databases:")
-        for row in result:
-            print(row)
-except Exception as e:
-    print("❌ Failed to connect to MySQL:", e)
+# Commit changes and close connection
+conn.commit()
+conn.close()
+
+print("SQLite database initialized successfully!")
